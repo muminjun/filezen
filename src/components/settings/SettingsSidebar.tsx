@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import { useAppContext } from '../../context/AppContext';
 import { usePresetNames } from '../../hooks/usePresetNames';
 import { Button } from '../ui/button';
+import type { ImageFormat, ResizeMode } from '../../lib/types';
 
 export function SettingsSidebar() {
   const t = useTranslations('settings');
@@ -38,7 +39,7 @@ export function SettingsSidebar() {
                 variant={settings.format === format ? 'default' : 'outline'}
                 size="sm"
                 className="w-full justify-start"
-                onClick={() => updateSettings({ format: format as any })}
+                onClick={() => updateSettings({ format: format as ImageFormat })}
               >
                 {label}
               </Button>
@@ -81,7 +82,7 @@ export function SettingsSidebar() {
                 variant={settings.resizeMode === mode ? 'default' : 'outline'}
                 size="sm"
                 className="w-full justify-start text-xs"
-                onClick={() => updateSettings({ resizeMode: mode as any })}
+                onClick={() => updateSettings({ resizeMode: mode as ResizeMode })}
               >
                 {label}
               </Button>

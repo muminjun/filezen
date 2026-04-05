@@ -11,6 +11,7 @@ import type {
   PresetConfig,
   FavoriteSettings,
   AppContextType,
+  RotationDegrees,
 } from '../lib/types';
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -22,6 +23,7 @@ interface AppProviderProps {
 export function AppProvider({ children }: AppProviderProps) {
   const [files, setFiles] = useState<ProcessingFile[]>([]);
   const [selectedFileId, setSelectedFileId] = useState<string | null>(null);
+  const [selectedFileIds, setSelectedFileIds] = useState<string[]>([]);
   const [settings, setSettingsState] = useState<ConversionSettings>(DEFAULT_SETTINGS);
   const [history, setHistory] = useState<ProcessingRecord[]>([]);
   const [presets, setPresets] = useState<PresetConfig[]>(DEFAULT_PRESETS);
@@ -50,28 +52,62 @@ export function AppProvider({ children }: AppProviderProps) {
         processedUrl: '',
         status: 'pending' as const,
         progress: 0,
+        rotation: 0,
       };
     });
 
     setFiles((prev) => [...prev, ...processingFiles]);
     if (processingFiles.length > 0) {
       setSelectedFileId(processingFiles[0].id);
+      setSelectedFileIds([processingFiles[0].id]);
     }
   }, []);
 
   const removeFile = useCallback((fileId: string) => {
     setFiles((prev) => {
       const updated = prev.filter((f) => f.id !== fileId);
-      if (selectedFileId === fileId && updated.length > 0) {
-        setSelectedFileId(updated[0].id);
+      if (selectedFileId === fileId) {
+        setSelectedFileId(updated.length > 0 ? updated[0].id : null);
       }
       return updated;
     });
+    setSelectedFileIds((prev) => prev.filter((id) => id !== fileId));
   }, [selectedFileId]);
 
   const selectFile = useCallback((fileId: string) => {
     setSelectedFileId(fileId);
+    setSelectedFileIds([fileId]);
   }, []);
+
+  const toggleFileSelection = useCallback((fileId: string) => {
+    setSelectedFileIds((prev) => {
+      if (prev.includes(fileId)) {
+        return prev.filter((id) => id !== fileId);
+      }
+      return [...prev, fileId];
+    });
+    setSelectedFileId(fileId);
+  }, []);
+
+  const selectAllFiles = useCallback(() => {
+    const allIds = files.map((f) => f.id);
+    setSelectedFileIds(allIds);
+    if (allIds.length > 0) setSelectedFileId(allIds[0]);
+  }, [files]);
+
+  const clearSelection = useCallback(() => {
+    setSelectedFileIds([]);
+  }, []);
+
+  const rotateSelectedFiles = useCallback((degrees: 90 | 180 | 270 | 360) => {
+    setFiles((prev) =>
+      prev.map((f) => {
+        if (!selectedFileIds.includes(f.id)) return f;
+        if (degrees === 360) return { ...f, rotation: 0 }; // 리셋: 0으로 초기화
+        return { ...f, rotation: f.rotation + degrees }; // 누적: 항상 앞방향 회전
+      })
+    );
+  }, [selectedFileIds]);
 
   const updateSettings = useCallback((newSettings: Partial<ConversionSettings>) => {
     setSettingsState((prev) => {
@@ -162,6 +198,7 @@ export function AppProvider({ children }: AppProviderProps) {
   const value: AppContextType = {
     files,
     selectedFileId,
+    selectedFileIds,
     settings,
     history,
     presets,
@@ -170,6 +207,10 @@ export function AppProvider({ children }: AppProviderProps) {
     addFiles,
     removeFile,
     selectFile,
+    toggleFileSelection,
+    selectAllFiles,
+    clearSelection,
+    rotateSelectedFiles,
     updateSettings,
     processFiles,
     addToHistory,
