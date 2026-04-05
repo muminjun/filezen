@@ -1,0 +1,24 @@
+{
+  "project": "filezen",
+  "version": "1.0.0",
+  "last_sync": "2026-04-05T00:00:00Z",
+  "designs": [],
+  "system": {
+    "colors": {
+      "status": "pending",
+      "file": "design/system/colors.md"
+    },
+    "typography": {
+      "status": "pending",
+      "file": "design/system/typography.md"
+    },
+    "spacing": {
+      "status": "pending",
+      "file": "design/system/spacing.md"
+    },
+    "shadows": {
+      "status": "pending",
+      "file": "design/system/shadows.md"
+    }
+  }
+}
