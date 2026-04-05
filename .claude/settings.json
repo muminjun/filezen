@@ -1,0 +1,42 @@
+{
+  "enabledPlugins": {
+    "superpowers@claude-plugins-official": true,
+    "everything-claude-code@affaan-plugins": true,
+    "vercel-plugin@vercel-vercel-plugin": true,
+    "vercel@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "affaan-plugins": {
+      "source": {
+        "source": "github",
+        "repo": "affaan-m/everything-claude-code"
+      }
+    }
+  },
+  "language": "korean",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path // .tool_response.filePath' | { read -r f; [[ $f =~ \\.(ts|tsx|js|jsx)$ ]] && npm run lint -- \"$f\" 2>/dev/null || true; }",
+            "statusMessage": "ESLint 검사 중..."
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "SessionStart",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"systemMessage\": \"✅ filezen 하네스 프로그래밍이 활성화되었습니다. Phase 1 진행 중입니다.\"}'"
+          }
+        ]
+      }
+    ]
+  }
+}
