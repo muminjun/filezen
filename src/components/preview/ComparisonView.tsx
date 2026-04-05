@@ -1,11 +1,13 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '../ui/button';
 import { useAppContext } from '../../context/AppContext';
 
 export function ComparisonView() {
+  const t = useTranslations('preview');
   const { files, selectedFileId } = useAppContext();
   const [sliderPos, setSliderPos] = useState(50);
 
@@ -14,14 +16,14 @@ export function ComparisonView() {
   if (!selectedFile?.originalUrl || !selectedFile?.processedUrl) {
     return (
       <div className="flex h-full items-center justify-center rounded-lg border border-dashed border-muted-foreground/25 bg-muted/50">
-        <p className="text-muted-foreground">Process a file to compare</p>
+        <p className="text-muted-foreground">{t('process')}</p>
       </div>
     );
   }
 
   return (
     <div className="space-y-2">
-      <h3 className="text-sm font-semibold">Comparison (Original vs Converted)</h3>
+      <h3 className="text-sm font-semibold">{t('comparison')}</h3>
       <div className="relative w-full overflow-hidden rounded-lg border border-muted-foreground/25">
         <div className="relative">
           <img
@@ -63,10 +65,10 @@ export function ComparisonView() {
             }}
           />
           <div className="absolute bottom-2 left-2 text-xs text-white bg-black/50 px-2 py-1 rounded">
-            Original
+            {t('original')}
           </div>
           <div className="absolute bottom-2 right-2 text-xs text-white bg-black/50 px-2 py-1 rounded">
-            Processed
+            {t('processed')}
           </div>
         </div>
       </div>

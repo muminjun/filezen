@@ -7,10 +7,17 @@
     "title": "FileZen",
     "description": "Convert and resize images instantly. Client-side processing, no uploads."
   },
+  "pages": {
+    "uploadSection": "Upload Images",
+    "filesSection": "Files",
+    "downloadSection": "Download"
+  },
   "upload": {
     "title": "Upload Images",
     "dragDrop": "Drag & drop images here",
-    "orClick": "or click to select files",
+    "dropHere": "Drop files here",
+    "selectFiles": "Select Files",
+    "orClick": "or click to select up to {count} files (max 50MB each)",
     "maxFiles": "Select up to {{count}} files (max 50MB each)",
     "supportedFormats": "Supported formats",
     "formats": "PNG, JPG, WebP, GIF"
@@ -29,7 +36,9 @@
     "title": "Preview",
     "selectFile": "Select a file to preview",
     "comparison": "Comparison (Original vs Converted)",
-    "process": "Process a file to compare"
+    "process": "Process a file to compare",
+    "original": "Original",
+    "processed": "Processed"
   },
   "settings": {
     "title": "Settings",

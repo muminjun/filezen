@@ -7,10 +7,17 @@
     "title": "FileZen",
     "description": "이미지를 즉시 변환하고 리사이징하세요. 클라이언트 사이드 처리, 업로드 없음."
   },
+  "pages": {
+    "uploadSection": "이미지 업로드",
+    "filesSection": "파일",
+    "downloadSection": "다운로드"
+  },
   "upload": {
     "title": "이미지 업로드",
     "dragDrop": "이미지를 여기에 드래그&드롭하세요",
-    "orClick": "클릭하여 파일 선택",
+    "dropHere": "파일을 여기에 놓으세요",
+    "selectFiles": "파일 선택",
+    "orClick": "또는 클릭하여 최대 {count}개 파일 선택 (최대 50MB 각)",
     "maxFiles": "최대 {{count}}개 파일 선택 가능 (최대 50MB)",
     "supportedFormats": "지원 형식",
     "formats": "PNG, JPG, WebP, GIF"
@@ -27,9 +34,11 @@
   },
   "preview": {
     "title": "미리보기",
-    "selectFile": "파일을 선택하여 미리보기",
+    "selectFile": "미리보기할 파일을 선택하세요",
     "comparison": "비교 (원본 vs 변환)",
-    "process": "파일을 처리하여 비교"
+    "process": "비교할 파일을 처리하세요",
+    "original": "원본",
+    "processed": "변환됨"
   },
   "settings": {
     "title": "설정",
@@ -65,7 +74,7 @@
     "title": "다운로드",
     "downloadSelected": "선택한 파일 다운로드",
     "downloadZip": "ZIP으로 다운로드",
-    "processFiles": "파일을 처리하여 다운로드"
+    "processFiles": "다운로드할 파일을 처리하세요"
   },
   "formats": {
     "png": "PNG (손실 없음)",

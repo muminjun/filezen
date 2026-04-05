@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback } from 'react';
+import { useTranslations } from 'next-intl';
 import { useDropzone } from 'react-dropzone';
 import { Cloud, AlertCircle } from 'lucide-react';
 import { Button } from '../ui/button';
@@ -12,6 +13,7 @@ interface UploadZoneProps {
 }
 
 export function UploadZone({ disabled = false }: UploadZoneProps) {
+  const t = useTranslations('upload');
   const { handleFileInput } = useFileManagement();
 
   const onDrop = useCallback(
@@ -51,22 +53,22 @@ export function UploadZone({ disabled = false }: UploadZoneProps) {
       <Cloud className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
 
       <h3 className="mb-2 text-lg font-semibold">
-        {isDragActive ? 'Drop files here' : 'Drag & drop images here'}
+        {isDragActive ? t('dropHere') : t('dragDrop')}
       </h3>
 
       <p className="mb-4 text-sm text-muted-foreground">
-        or click to select up to {MAX_FILES} files (max 50MB each)
+        {t('orClick', { count: MAX_FILES })}
       </p>
 
       <Button type="button" variant="outline" disabled={disabled}>
-        Select Files
+        {t('selectFiles')}
       </Button>
 
       <div className="mt-4 flex items-start gap-2 rounded-md bg-muted p-3 text-sm text-muted-foreground">
         <AlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0" />
         <div>
-          <p className="font-medium">Supported formats:</p>
-          <p>PNG, JPG, WebP, GIF</p>
+          <p className="font-medium">{t('supportedFormats')}</p>
+          <p>{t('formats')}</p>
         </div>
       </div>
     </div>

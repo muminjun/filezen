@@ -1,9 +1,11 @@
 'use client';
 
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import { useAppContext } from '../../context/AppContext';
 
 export function PreviewPanel() {
+  const t = useTranslations('preview');
   const { files, selectedFileId } = useAppContext();
 
   const selectedFile = files.find((f) => f.id === selectedFileId);
@@ -11,14 +13,14 @@ export function PreviewPanel() {
   if (!selectedFile) {
     return (
       <div className="flex h-full items-center justify-center rounded-lg border border-dashed border-muted-foreground/25 bg-muted/50">
-        <p className="text-muted-foreground">Select a file to preview</p>
+        <p className="text-muted-foreground">{t('selectFile')}</p>
       </div>
     );
   }
 
   return (
     <div className="space-y-2">
-      <h3 className="text-sm font-semibold">Preview</h3>
+      <h3 className="text-sm font-semibold">{t('title')}</h3>
       <div className="space-y-2">
         {selectedFile.originalUrl && (
           <div className="rounded-lg border border-muted-foreground/25 overflow-hidden bg-muted">

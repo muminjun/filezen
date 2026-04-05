@@ -1,10 +1,12 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { Download, Package } from 'lucide-react';
 import { Button } from '../ui/button';
 import { useAppContext } from '../../context/AppContext';
 
 export function DownloadManager() {
+  const t = useTranslations('download');
   const { files, selectedFileId, downloadFile, downloadAllAsZip } = useAppContext();
 
   const selectedFile = files.find((f) => f.id === selectedFileId);
@@ -19,7 +21,7 @@ export function DownloadManager() {
           onClick={() => downloadFile(selectedFile.id)}
         >
           <Download className="h-4 w-4" />
-          Download Selected
+          {t('downloadSelected')}
         </Button>
       )}
 
@@ -31,12 +33,12 @@ export function DownloadManager() {
           onClick={() => downloadAllAsZip()}
         >
           <Package className="h-4 w-4" />
-          Download as ZIP
+          {t('downloadZip')}
         </Button>
       )}
 
       {!hasProcessedFiles && (
-        <p className="text-sm text-muted-foreground">Process files to download</p>
+        <p className="text-sm text-muted-foreground">{t('processFiles')}</p>
       )}
     </div>
   );

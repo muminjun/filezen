@@ -1,18 +1,20 @@
 'use client';
 
 import { X } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { Progress } from '../ui/progress';
 import { Button } from '../ui/button';
 import { useAppContext } from '../../context/AppContext';
 import { formatFileSize } from '../../lib/utils';
 
 export function FileList() {
+  const t = useTranslations('files');
   const { files, selectedFileId, selectFile, removeFile } = useAppContext();
 
   if (files.length === 0) {
     return (
       <div className="rounded-lg border border-muted-foreground/25 p-8 text-center">
-        <p className="text-muted-foreground">No files uploaded yet</p>
+        <p className="text-muted-foreground">{t('noFiles')}</p>
       </div>
     );
   }
@@ -43,7 +45,7 @@ export function FileList() {
               <p className="text-xs text-destructive mt-1">{file.error}</p>
             )}
             {file.status === 'completed' && (
-              <p className="text-xs text-green-600">✓ Processed</p>
+              <p className="text-xs text-green-600">✓ {t('status.completed')}</p>
             )}
           </div>
 
