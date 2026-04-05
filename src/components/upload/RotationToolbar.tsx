@@ -33,9 +33,9 @@ export function RotationToolbar() {
 
       for (let i = 0; i < targets.length; i++) {
         const file = targets[i];
-        const blob = await rotateImageBlob(file.originalUrl, file.rotation);
-        const ext = file.file.name.split('.').pop() ?? 'jpg';
+        const blob = await rotateImageBlob(file.originalUrl, file.rotation, file.file.type);
         const baseName = file.file.name.replace(/\.[^.]+$/, '');
+        const ext = file.file.name.split('.').pop() ?? 'jpg';
         zip.file(`${baseName}_rotated.${ext}`, blob);
         setProgress(Math.round(((i + 1) / targets.length) * 100));
       }
@@ -85,22 +85,22 @@ export function RotationToolbar() {
         ))}
       </div>
 
-      {/* 저장 버튼 */}
+      {/* 변환하기 버튼 */}
       <Button
-        size="sm"
+        size="default"
         disabled={!hasSelection || isSaving}
         onClick={handleSave}
-        className="ml-auto gap-2"
+        className="ml-auto gap-2 font-bold px-5"
       >
         {isSaving ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" />
-            {progress}%
+            저장 중 {progress}%
           </>
         ) : (
           <>
             <Download className="h-4 w-4" />
-            저장
+            변환하기 {hasSelection ? `(${selectedFileIds.length}장)` : ''}
           </>
         )}
       </Button>

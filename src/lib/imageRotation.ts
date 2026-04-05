@@ -3,7 +3,8 @@
  */
 export async function rotateImageBlob(
   originalUrl: string,
-  rotation: number
+  rotation: number,
+  mimeType: string = 'image/jpeg'
 ): Promise<Blob> {
   const degrees = ((rotation % 360) + 360) % 360; // 0~359 범위 정규화
 
@@ -40,7 +41,7 @@ export async function rotateImageBlob(
           if (blob) resolve(blob);
           else reject(new Error('Canvas toBlob failed'));
         },
-        'image/jpeg',
+        mimeType,
         0.92
       );
     };
