@@ -105,5 +105,18 @@
   "language": {
     "ko": "한글",
     "en": "English"
+  },
+  "gallery": {
+    "noFiles": "업로드된 파일이 없습니다",
+    "fileCount": "{count}개 파일",
+    "selectedCount": "{count}개 선택됨",
+    "selectAll": "전체 선택",
+    "deselectAll": "전체 해제",
+    "clearSelection": "선택 해제",
+    "removeFile": "파일 삭제",
+    "rotateSelected": "{count}개 선택 — 회전",
+    "rotationApply": "{degrees}° 회전",
+    "rotationReset": "원본 방향으로 리셋",
+    "rotationHint": "Ctrl+클릭: 개별 선택 | Shift+클릭: 범위 선택"
   }
 }

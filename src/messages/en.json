@@ -105,5 +105,18 @@
   "language": {
     "ko": "한글",
     "en": "English"
+  },
+  "gallery": {
+    "noFiles": "No files uploaded yet",
+    "fileCount": "{count} files",
+    "selectedCount": "{count} selected",
+    "selectAll": "Select All",
+    "deselectAll": "Deselect All",
+    "clearSelection": "Clear Selection",
+    "removeFile": "Remove file",
+    "rotateSelected": "{count} selected — Rotate",
+    "rotationApply": "Rotate {degrees}°",
+    "rotationReset": "Reset to original orientation",
+    "rotationHint": "Ctrl+click: toggle | Shift+click: range select"
   }
 }
