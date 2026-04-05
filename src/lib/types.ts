@@ -2,6 +2,7 @@
 export type ImageFormat = 'png' | 'jpg' | 'webp';
 export type ResizeMode = 'contain' | 'cover' | 'stretch' | 'crop';
 export type FileStatus = 'pending' | 'processing' | 'completed' | 'error';
+export type RotationDegrees = 0 | 90 | 180 | 270;
 
 // Interfaces
 export interface ConversionSettings {
@@ -25,6 +26,7 @@ export interface ProcessingFile {
   error?: string;
   processedFile?: Blob;
   settings?: ConversionSettings;
+  rotation: RotationDegrees; // CSS 회전 각도
 }
 
 export interface ProcessingRecord {
@@ -55,7 +57,8 @@ export interface FavoriteSettings {
 
 export interface AppContextType {
   files: ProcessingFile[];
-  selectedFileId: string | null;
+  selectedFileId: string | null;   // 미리보기용 단일 선택 (PreviewPanel 호환)
+  selectedFileIds: string[];        // 일괄 작업용 다중 선택
   settings: ConversionSettings;
   history: ProcessingRecord[];
   presets: PresetConfig[];
@@ -65,7 +68,11 @@ export interface AppContextType {
   // Actions (dispatch functions)
   addFiles: (newFiles: File[]) => Promise<void>;
   removeFile: (fileId: string) => void;
-  selectFile: (fileId: string) => void;
+  selectFile: (fileId: string) => void;          // 단일 선택 (selectedFileId + selectedFileIds 모두 업데이트)
+  toggleFileSelection: (fileId: string) => void; // selectedFileIds 토글 (체크박스용)
+  selectAllFiles: () => void;
+  clearSelection: () => void;
+  rotateSelectedFiles: (degrees: 90 | 180 | 270 | 360) => void;
   updateSettings: (settings: Partial<ConversionSettings>) => void;
   processFiles: () => Promise<void>;
   addToHistory: (record: ProcessingRecord) => void;
