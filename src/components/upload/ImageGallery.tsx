@@ -12,7 +12,6 @@ export function ImageGallery() {
     files,
     selectedFileId,
     selectedFileIds,
-    selectFile,
     toggleFileSelection,
     selectAllFiles,
     clearSelection,
@@ -31,13 +30,12 @@ export function ImageGallery() {
         clearSelection();
         rangeIds.forEach((id) => toggleFileSelection(id));
       } else {
-        // 단순 클릭: 토글 (구글 포토 스타일)
+        // 단순 클릭: 토글 (구글 포토 스타일, 다중 선택 유지)
         toggleFileSelection(fileId);
-        selectFile(fileId);
       }
       lastClickedIndexRef.current = index;
     },
-    [files, selectFile, toggleFileSelection, clearSelection]
+    [files, toggleFileSelection, clearSelection]
   );
 
   if (files.length === 0) {
