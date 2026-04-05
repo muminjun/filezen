@@ -3,6 +3,7 @@
 import { Image as ImageIcon, Settings } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { LanguageSwitcher } from '../LanguageSwitcher';
+import { ThemeToggle } from '../ThemeToggle';
 import { Button } from '../ui/button';
 
 interface HeaderProps {
@@ -23,6 +24,7 @@ export function Header({ onToggleSidebar }: HeaderProps) {
           </div>
         </div>
         <div className="flex items-center gap-2 shrink-0">
+          <ThemeToggle />
           <Button
             variant="ghost"
             size="icon-sm"

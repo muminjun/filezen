@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -22,9 +23,12 @@ export default function RootLayout({
       lang="en"
       className={`${geistMono.variable} h-full antialiased`}
       style={{ fontFamily: "'SUIT', -apple-system, BlinkMacSystemFont, sans-serif" }}
+      suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
-        {children}
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
