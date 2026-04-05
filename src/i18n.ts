@@ -5,17 +5,18 @@ export type Locale = (typeof locales)[number];
 
 export const defaultLocale: Locale = 'en';
 
-export default getRequestConfig(async ({ locale }) => {
-  // Type safety check
-  if (!locales.includes(locale as Locale)) {
-    return {
-      locale: 'en',
-      messages: (await import(`./messages/en.json`)).default,
-    };
+export default getRequestConfig(async ({ requestLocale }) => {
+  let locale = await requestLocale;
+
+  if (!locale) {
+    locale = defaultLocale;
   }
 
-  return {
-    locale,
-    messages: (await import(`./messages/${locale}.json`)).default,
-  };
+  try {
+    const messages = (await import(`./messages/${locale}.json`)).default;
+    return { locale, messages };
+  } catch (error) {
+    const messages = (await import('./messages/en.json')).default;
+    return { locale: 'en', messages };
+  }
 });

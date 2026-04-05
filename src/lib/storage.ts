@@ -6,9 +6,27 @@ import type { ProcessingRecord, PresetConfig, FavoriteSettings, ConversionSettin
  */
 export class StorageManager {
   /**
+   * Check if localStorage is available
+   */
+  private static isLocalStorageAvailable(): boolean {
+    if (typeof window === 'undefined') {
+      return false;
+    }
+    try {
+      const test = '__localStorage_test__';
+      window.localStorage.setItem(test, test);
+      window.localStorage.removeItem(test);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
    * Save history record
    */
   static saveHistory(record: ProcessingRecord): void {
+    if (!this.isLocalStorageAvailable()) return;
     try {
       const history = this.getHistory();
       // Keep only MAX_HISTORY_ITEMS
@@ -26,6 +44,7 @@ export class StorageManager {
    * Get all history records
    */
   static getHistory(): ProcessingRecord[] {
+    if (!this.isLocalStorageAvailable()) return [];
     try {
       const data = localStorage.getItem(STORAGE_KEYS.HISTORY);
       return data ? JSON.parse(data) : [];
@@ -39,6 +58,7 @@ export class StorageManager {
    * Clear all history
    */
   static clearHistory(): void {
+    if (!this.isLocalStorageAvailable()) return;
     try {
       localStorage.removeItem(STORAGE_KEYS.HISTORY);
     } catch (error) {
@@ -50,6 +70,7 @@ export class StorageManager {
    * Save preset
    */
   static savePreset(preset: PresetConfig): void {
+    if (!this.isLocalStorageAvailable()) return;
     try {
       const presets = this.getPresets();
       const index = presets.findIndex((p) => p.id === preset.id);
@@ -68,6 +89,7 @@ export class StorageManager {
    * Get all presets
    */
   static getPresets(): PresetConfig[] {
+    if (!this.isLocalStorageAvailable()) return [];
     try {
       const data = localStorage.getItem(STORAGE_KEYS.PRESETS);
       return data ? JSON.parse(data) : [];
@@ -81,6 +103,7 @@ export class StorageManager {
    * Delete preset
    */
   static deletePreset(presetId: string): void {
+    if (!this.isLocalStorageAvailable()) return;
     try {
       const presets = this.getPresets();
       const filtered = presets.filter((p) => p.id !== presetId);
@@ -94,6 +117,7 @@ export class StorageManager {
    * Save favorite settings
    */
   static saveFavorite(favorite: FavoriteSettings): void {
+    if (!this.isLocalStorageAvailable()) return;
     try {
       const favorites = this.getFavorites();
       if (favorites.length >= MAX_FAVORITES) {
@@ -110,6 +134,7 @@ export class StorageManager {
    * Get all favorites
    */
   static getFavorites(): FavoriteSettings[] {
+    if (!this.isLocalStorageAvailable()) return [];
     try {
       const data = localStorage.getItem(STORAGE_KEYS.FAVORITES);
       return data ? JSON.parse(data) : [];
@@ -123,6 +148,7 @@ export class StorageManager {
    * Delete favorite
    */
   static deleteFavorite(favoriteId: string): void {
+    if (!this.isLocalStorageAvailable()) return;
     try {
       const favorites = this.getFavorites();
       const filtered = favorites.filter((f) => f.id !== favoriteId);
@@ -136,6 +162,7 @@ export class StorageManager {
    * Save current settings
    */
   static saveSettings(settings: ConversionSettings): void {
+    if (!this.isLocalStorageAvailable()) return;
     try {
       localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
     } catch (error) {
@@ -147,6 +174,7 @@ export class StorageManager {
    * Load saved settings or return default
    */
   static getSettings(defaultSettings: ConversionSettings): ConversionSettings {
+    if (!this.isLocalStorageAvailable()) return defaultSettings;
     try {
       const data = localStorage.getItem(STORAGE_KEYS.SETTINGS);
       return data ? JSON.parse(data) : defaultSettings;
@@ -160,6 +188,7 @@ export class StorageManager {
    * Clear all data (for reset)
    */
   static clearAll(): void {
+    if (!this.isLocalStorageAvailable()) return;
     try {
       Object.values(STORAGE_KEYS).forEach((key) => {
         localStorage.removeItem(key);

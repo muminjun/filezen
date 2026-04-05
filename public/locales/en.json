@@ -1,0 +1,79 @@
+{
+  "app": {
+    "title": "FileZen",
+    "subtitle": "Convert and resize images instantly"
+  },
+  "header": {
+    "title": "FileZen",
+    "description": "Convert and resize images instantly. Client-side processing, no uploads."
+  },
+  "upload": {
+    "title": "Upload Images",
+    "dragDrop": "Drag & drop images here",
+    "orClick": "or click to select files",
+    "maxFiles": "Select up to {{count}} files (max 50MB each)",
+    "supportedFormats": "Supported formats",
+    "formats": "PNG, JPG, WebP, GIF"
+  },
+  "files": {
+    "title": "Files",
+    "noFiles": "No files uploaded yet",
+    "status": {
+      "pending": "Pending",
+      "processing": "Processing",
+      "completed": "Completed",
+      "error": "Error"
+    }
+  },
+  "preview": {
+    "title": "Preview",
+    "selectFile": "Select a file to preview",
+    "comparison": "Comparison (Original vs Converted)",
+    "process": "Process a file to compare"
+  },
+  "settings": {
+    "title": "Settings",
+    "format": "Format",
+    "dimensions": "Dimensions",
+    "width": "Width",
+    "height": "Height",
+    "resizeMode": "Resize Mode",
+    "contain": "Fit Inside (Contain)",
+    "cover": "Cover (Auto Crop)",
+    "stretch": "Stretch to Fit",
+    "crop": "Manual Crop",
+    "quality": "Quality",
+    "jpgQuality": "JPG Quality",
+    "webpQuality": "WebP Quality",
+    "pngCompression": "Compression Level",
+    "presets": "Quick Presets",
+    "metadata": "Remove Metadata (EXIF)"
+  },
+  "presets": {
+    "thumbnail": "Thumbnail (200x200)",
+    "square": "Square (500x500)",
+    "instagram_feed": "Instagram Feed (1080x1350)",
+    "instagram_story": "Instagram Story (1080x1920)",
+    "twitter_header": "Twitter Header (1500x500)",
+    "linkedin": "LinkedIn Cover (1200x627)",
+    "facebook": "Facebook (1200x630)",
+    "youtube": "YouTube Thumbnail (1280x720)",
+    "web_small": "Web Small (640x480)",
+    "web_large": "Web Large (1920x1080)"
+  },
+  "download": {
+    "title": "Download",
+    "downloadSelected": "Download Selected",
+    "downloadZip": "Download as ZIP",
+    "processFiles": "Process files to download"
+  },
+  "formats": {
+    "png": "PNG (Lossless)",
+    "jpg": "JPG (Lossy)",
+    "webp": "WebP (Modern)"
+  },
+  "language": {
+    "ko": "한글",
+    "en": "English"
+  }
+}

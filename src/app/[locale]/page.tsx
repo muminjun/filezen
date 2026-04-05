@@ -7,6 +7,8 @@ import { PreviewPanel } from '@/components/preview/PreviewPanel';
 import { ComparisonView } from '@/components/preview/ComparisonView';
 import { DownloadManager } from '@/components/manager/DownloadManager';
 
+export const dynamic = 'force-dynamic';
+
 export default function Home() {
   return (
     <MainLayout>

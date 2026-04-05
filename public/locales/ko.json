@@ -1,0 +1,79 @@
+{
+  "app": {
+    "title": "FileZen",
+    "subtitle": "이미지를 즉시 변환하고 리사이징하세요"
+  },
+  "header": {
+    "title": "FileZen",
+    "description": "이미지를 즉시 변환하고 리사이징하세요. 클라이언트 사이드 처리, 업로드 없음."
+  },
+  "upload": {
+    "title": "이미지 업로드",
+    "dragDrop": "이미지를 여기에 드래그&드롭하세요",
+    "orClick": "클릭하여 파일 선택",
+    "maxFiles": "최대 {{count}}개 파일 선택 가능 (최대 50MB)",
+    "supportedFormats": "지원 형식",
+    "formats": "PNG, JPG, WebP, GIF"
+  },
+  "files": {
+    "title": "파일",
+    "noFiles": "업로드된 파일이 없습니다",
+    "status": {
+      "pending": "대기중",
+      "processing": "처리중",
+      "completed": "완료",
+      "error": "오류"
+    }
+  },
+  "preview": {
+    "title": "미리보기",
+    "selectFile": "파일을 선택하여 미리보기",
+    "comparison": "비교 (원본 vs 변환)",
+    "process": "파일을 처리하여 비교"
+  },
+  "settings": {
+    "title": "설정",
+    "format": "형식",
+    "dimensions": "크기",
+    "width": "너비",
+    "height": "높이",
+    "resizeMode": "리사이즈 모드",
+    "contain": "내부에 맞추기 (Contain)",
+    "cover": "영역 덮기 (Cover)",
+    "stretch": "늘이기 (Stretch)",
+    "crop": "수동 자르기 (Crop)",
+    "quality": "품질",
+    "jpgQuality": "JPG 품질",
+    "webpQuality": "WebP 품질",
+    "pngCompression": "압축 레벨",
+    "presets": "빠른 프리셋",
+    "metadata": "메타데이터 제거 (EXIF)"
+  },
+  "presets": {
+    "thumbnail": "썸네일 (200x200)",
+    "square": "정사각형 (500x500)",
+    "instagram_feed": "인스타그램 피드 (1080x1350)",
+    "instagram_story": "인스타그램 스토리 (1080x1920)",
+    "twitter_header": "트위터 헤더 (1500x500)",
+    "linkedin": "LinkedIn 커버 (1200x627)",
+    "facebook": "페이스북 (1200x630)",
+    "youtube": "유튜브 썸네일 (1280x720)",
+    "web_small": "웹 소형 (640x480)",
+    "web_large": "웹 대형 (1920x1080)"
+  },
+  "download": {
+    "title": "다운로드",
+    "downloadSelected": "선택한 파일 다운로드",
+    "downloadZip": "ZIP으로 다운로드",
+    "processFiles": "파일을 처리하여 다운로드"
+  },
+  "formats": {
+    "png": "PNG (손실 없음)",
+    "jpg": "JPG (손실)",
+    "webp": "WebP (현대식)"
+  },
+  "language": {
+    "ko": "한글",
+    "en": "English"
+  }
+}
