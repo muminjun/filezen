@@ -5,19 +5,19 @@
   "designs": [],
   "system": {
     "colors": {
-      "status": "pending",
+      "status": "completed",
       "file": "design/system/colors.md"
     },
     "typography": {
-      "status": "pending",
+      "status": "completed",
       "file": "design/system/typography.md"
     },
     "spacing": {
-      "status": "pending",
+      "status": "completed",
       "file": "design/system/spacing.md"
     },
     "shadows": {
-      "status": "pending",
+      "status": "completed",
       "file": "design/system/shadows.md"
     }
   }
