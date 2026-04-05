@@ -66,8 +66,8 @@ export function AppProvider({ children }: AppProviderProps) {
   const removeFile = useCallback((fileId: string) => {
     setFiles((prev) => {
       const updated = prev.filter((f) => f.id !== fileId);
-      if (selectedFileId === fileId && updated.length > 0) {
-        setSelectedFileId(updated[0].id);
+      if (selectedFileId === fileId) {
+        setSelectedFileId(updated.length > 0 ? updated[0].id : null);
       }
       return updated;
     });
@@ -90,13 +90,10 @@ export function AppProvider({ children }: AppProviderProps) {
   }, []);
 
   const selectAllFiles = useCallback(() => {
-    setFiles((prev) => {
-      const allIds = prev.map((f) => f.id);
-      setSelectedFileIds(allIds);
-      if (allIds.length > 0) setSelectedFileId(allIds[0]);
-      return prev;
-    });
-  }, []);
+    const allIds = files.map((f) => f.id);
+    setSelectedFileIds(allIds);
+    if (allIds.length > 0) setSelectedFileId(allIds[0]);
+  }, [files]);
 
   const clearSelection = useCallback(() => {
     setSelectedFileIds([]);
