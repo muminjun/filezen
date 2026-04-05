@@ -54,7 +54,7 @@
     "quality": "Quality",
     "jpgQuality": "JPG Quality",
     "webpQuality": "WebP Quality",
-    "pngCompression": "Compression Level",
+    "pngCompression": "Compression",
     "presets": "Quick Presets",
     "metadata": "Remove Metadata (EXIF)"
   },

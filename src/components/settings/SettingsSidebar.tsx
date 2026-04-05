@@ -1,10 +1,12 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useAppContext } from '../../context/AppContext';
 import { FORMAT_LABELS, RESIZE_MODE_LABELS } from '../../lib/constants';
 import { Button } from '../ui/button';
 
 export function SettingsSidebar() {
+  const t = useTranslations('settings');
   const { settings, updateSettings, presets } = useAppContext();
 
   return (
@@ -12,7 +14,7 @@ export function SettingsSidebar() {
       <div className="space-y-6">
         {/* Format */}
         <div>
-          <label className="text-sm font-semibold block mb-2">Format</label>
+          <label className="text-sm font-semibold block mb-2">{t('format')}</label>
           <div className="space-y-1">
             {Object.entries(FORMAT_LABELS).map(([format, label]) => (
               <Button
@@ -30,10 +32,10 @@ export function SettingsSidebar() {
 
         {/* Dimensions */}
         <div>
-          <label className="text-sm font-semibold block mb-2">Dimensions</label>
+          <label className="text-sm font-semibold block mb-2">{t('dimensions')}</label>
           <div className="space-y-2">
             <div>
-              <label className="text-xs text-muted-foreground">Width</label>
+              <label className="text-xs text-muted-foreground">{t('width')}</label>
               <input
                 type="number"
                 value={settings.width}
@@ -42,7 +44,7 @@ export function SettingsSidebar() {
               />
             </div>
             <div>
-              <label className="text-xs text-muted-foreground">Height</label>
+              <label className="text-xs text-muted-foreground">{t('height')}</label>
               <input
                 type="number"
                 value={settings.height}
@@ -55,7 +57,7 @@ export function SettingsSidebar() {
 
         {/* Resize Mode */}
         <div>
-          <label className="text-sm font-semibold block mb-2">Resize Mode</label>
+          <label className="text-sm font-semibold block mb-2">{t('resizeMode')}</label>
           <div className="space-y-1">
             {Object.entries(RESIZE_MODE_LABELS).map(([mode, label]) => (
               <Button
@@ -73,7 +75,7 @@ export function SettingsSidebar() {
 
         {/* Quality */}
         <div>
-          <label className="text-sm font-semibold block mb-2">Quality</label>
+          <label className="text-sm font-semibold block mb-2">{t('quality')}</label>
           {settings.format === 'jpg' && (
             <div>
               <div className="flex justify-between mb-1">
@@ -109,7 +111,7 @@ export function SettingsSidebar() {
           {settings.format === 'png' && (
             <div>
               <div className="flex justify-between mb-1">
-                <span className="text-xs text-muted-foreground">Compression</span>
+                <span className="text-xs text-muted-foreground">{t('pngCompression')}</span>
                 <span className="text-xs font-semibold">{settings.pngCompressionLevel}/9</span>
               </div>
               <input
@@ -127,7 +129,7 @@ export function SettingsSidebar() {
         {/* Presets */}
         {presets && presets.length > 0 && (
           <div>
-            <label className="text-sm font-semibold block mb-2">Quick Presets</label>
+            <label className="text-sm font-semibold block mb-2">{t('presets')}</label>
             <div className="space-y-1 max-h-48 overflow-y-auto">
               {presets.slice(0, 5).map((preset) => (
                 <Button
@@ -160,7 +162,7 @@ export function SettingsSidebar() {
               onChange={(e) => updateSettings({ removeMetadata: e.target.checked })}
               className="w-4 h-4"
             />
-            <span>Remove Metadata (EXIF)</span>
+            <span>{t('metadata')}</span>
           </label>
         </div>
       </div>
