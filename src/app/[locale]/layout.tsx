@@ -11,8 +11,16 @@ export default async function LocaleLayout({
 }) {
   const { locale } = await params;
 
+  // Dynamically import messages based on locale
+  let messages;
+  try {
+    messages = (await import(`@/messages/${locale}.json`)).default;
+  } catch (error) {
+    messages = (await import('@/messages/en.json')).default;
+  }
+
   return (
-    <NextIntlClientProvider locale={locale}>
+    <NextIntlClientProvider locale={locale} messages={messages}>
       <AppProvider>
         {children}
       </AppProvider>
