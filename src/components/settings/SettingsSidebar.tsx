@@ -2,12 +2,26 @@
 
 import { useTranslations } from 'next-intl';
 import { useAppContext } from '../../context/AppContext';
-import { FORMAT_LABELS, RESIZE_MODE_LABELS } from '../../lib/constants';
 import { Button } from '../ui/button';
 
 export function SettingsSidebar() {
   const t = useTranslations('settings');
   const { settings, updateSettings, presets } = useAppContext();
+
+  // 동적 포맷 라벨
+  const formatLabels: Record<string, string> = {
+    png: t('formatLabels.png'),
+    jpg: t('formatLabels.jpg'),
+    webp: t('formatLabels.webp'),
+  };
+
+  // 동적 리사이즈 모드 라벨
+  const resizeModeLabels: Record<string, string> = {
+    contain: t('resizeLabels.contain'),
+    cover: t('resizeLabels.cover'),
+    stretch: t('resizeLabels.stretch'),
+    crop: t('resizeLabels.crop'),
+  };
 
   return (
     <div className="w-64 border-l border-muted-foreground/25 bg-muted/50 p-4 overflow-y-auto">
@@ -16,7 +30,7 @@ export function SettingsSidebar() {
         <div>
           <label className="text-sm font-semibold block mb-2">{t('format')}</label>
           <div className="space-y-1">
-            {Object.entries(FORMAT_LABELS).map(([format, label]) => (
+            {Object.entries(formatLabels).map(([format, label]) => (
               <Button
                 key={format}
                 variant={settings.format === format ? 'default' : 'outline'}
@@ -59,7 +73,7 @@ export function SettingsSidebar() {
         <div>
           <label className="text-sm font-semibold block mb-2">{t('resizeMode')}</label>
           <div className="space-y-1">
-            {Object.entries(RESIZE_MODE_LABELS).map(([mode, label]) => (
+            {Object.entries(resizeModeLabels).map(([mode, label]) => (
               <Button
                 key={mode}
                 variant={settings.resizeMode === mode ? 'default' : 'outline'}

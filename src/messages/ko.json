@@ -56,7 +56,18 @@
     "webpQuality": "WebP 품질",
     "pngCompression": "압축",
     "presets": "빠른 프리셋",
-    "metadata": "메타데이터 제거 (EXIF)"
+    "metadata": "메타데이터 제거 (EXIF)",
+    "formatLabels": {
+      "png": "PNG (손실 없음)",
+      "jpg": "JPG (손실)",
+      "webp": "WebP (현대식)"
+    },
+    "resizeLabels": {
+      "contain": "내부에 맞추기 (Contain)",
+      "cover": "영역 덮기 (Cover)",
+      "stretch": "늘이기 (Stretch)",
+      "crop": "수동 자르기 (Crop)"
+    }
   },
   "presets": {
     "thumbnail": "썸네일 (200x200)",

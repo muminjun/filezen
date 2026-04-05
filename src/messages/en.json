@@ -56,7 +56,18 @@
     "webpQuality": "WebP Quality",
     "pngCompression": "Compression",
     "presets": "Quick Presets",
-    "metadata": "Remove Metadata (EXIF)"
+    "metadata": "Remove Metadata (EXIF)",
+    "formatLabels": {
+      "png": "PNG (Lossless)",
+      "jpg": "JPG (Lossy)",
+      "webp": "WebP (Modern)"
+    },
+    "resizeLabels": {
+      "contain": "Fit Inside (Contain)",
+      "cover": "Cover (Auto Crop)",
+      "stretch": "Stretch to Fit",
+      "crop": "Manual Crop"
+    }
   },
   "presets": {
     "thumbnail": "Thumbnail (200x200)",
