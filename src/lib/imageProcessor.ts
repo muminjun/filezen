@@ -103,7 +103,7 @@ export class ImageProcessor {
    */
   private async fileToCanvas(uint8Array: Uint8Array): Promise<HTMLCanvasElement> {
     return new Promise((resolve, reject) => {
-      const blob = new Blob([uint8Array], { type: 'image/jpeg' });
+      const blob = new Blob([uint8Array.buffer as ArrayBuffer], { type: 'image/jpeg' });
       const url = URL.createObjectURL(blob);
 
       const img = new Image();

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { RotateCw, Download, Loader2, Trash2 } from 'lucide-react';
+import { RotateCw, Download, Loader2, Trash2, FolderDown } from 'lucide-react';
 import { Button } from '../ui/button';
 import { useAppContext } from '../../context/AppContext';
 import { rotateImageBlob } from '../../lib/imageRotation';
@@ -13,10 +13,23 @@ const ROTATION_OPTIONS: Array<{ degrees: 90 | 180 | 270 | 360; label: string }> 
   { degrees: 360, label: '↺'   },
 ];
 
+function getDefaultFolderName(): string {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, '0');
+  const d = String(now.getDate()).padStart(2, '0');
+  return `rotated_${y}${m}${d}`;
+}
+
+function sanitizeFolderName(name: string): string {
+  return name.replace(/[/\\:*?"<>|]/g, '_').trim() || getDefaultFolderName();
+}
+
 export function RotationToolbar() {
   const { files, selectedFileIds, rotateSelectedFiles, removeFile, clearSelection } = useAppContext();
   const [isSaving, setIsSaving] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [folderName, setFolderName] = useState(getDefaultFolderName);
 
   const hasSelection = selectedFileIds.length > 0;
 
@@ -27,16 +40,17 @@ export function RotationToolbar() {
     setIsSaving(true);
     setProgress(0);
 
+    const safeFolder = sanitizeFolderName(folderName);
+
     try {
       const JSZip = (await import('jszip')).default;
       const zip = new JSZip();
+      const folder = zip.folder(safeFolder)!;
 
       for (let i = 0; i < targets.length; i++) {
         const file = targets[i];
         const blob = await rotateImageBlob(file.originalUrl, file.rotation, file.file.type);
-        const baseName = file.file.name.replace(/\.[^.]+$/, '');
-        const ext = file.file.name.split('.').pop() ?? 'jpg';
-        zip.file(`${baseName}_rotated.${ext}`, blob);
+        folder.file(file.file.name, blob);
         setProgress(Math.round(((i + 1) / targets.length) * 100));
       }
 
@@ -44,7 +58,7 @@ export function RotationToolbar() {
       const url = URL.createObjectURL(zipBlob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `rotated_images.zip`;
+      a.download = `${safeFolder}.zip`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -100,25 +114,40 @@ export function RotationToolbar() {
         삭제
       </Button>
 
-      {/* 변환하기 버튼 */}
-      <Button
-        size="default"
-        disabled={!hasSelection || isSaving}
-        onClick={handleSave}
-        className="ml-auto gap-2 font-bold px-5"
-      >
-        {isSaving ? (
-          <>
-            <Loader2 className="h-4 w-4 animate-spin" />
-            저장 중 {progress}%
-          </>
-        ) : (
-          <>
-            <Download className="h-4 w-4" />
-            변환하기 {hasSelection ? `(${selectedFileIds.length}장)` : ''}
-          </>
-        )}
-      </Button>
+      {/* 폴더 이름 입력 + 저장 */}
+      <div className="ml-auto flex items-center gap-2">
+        <div className="flex items-center gap-1.5 rounded-lg border border-muted-foreground/30 bg-background px-2 py-1">
+          <FolderDown className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+          <input
+            type="text"
+            value={folderName}
+            onChange={(e) => setFolderName(e.target.value)}
+            placeholder={getDefaultFolderName()}
+            disabled={isSaving}
+            className="w-36 bg-transparent text-sm outline-none placeholder:text-muted-foreground/50 disabled:opacity-50"
+            aria-label="저장할 폴더 이름"
+          />
+        </div>
+
+        <Button
+          size="default"
+          disabled={!hasSelection || isSaving}
+          onClick={handleSave}
+          className="gap-2 font-bold px-5"
+        >
+          {isSaving ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              저장 중 {progress}%
+            </>
+          ) : (
+            <>
+              <Download className="h-4 w-4" />
+              변환하기 {hasSelection ? `(${selectedFileIds.length}장)` : ''}
+            </>
+          )}
+        </Button>
+      </div>
     </div>
   );
 }
