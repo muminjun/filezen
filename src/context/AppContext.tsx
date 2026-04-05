@@ -52,7 +52,7 @@ export function AppProvider({ children }: AppProviderProps) {
         processedUrl: '',
         status: 'pending' as const,
         progress: 0,
-        rotation: 0 as RotationDegrees,
+        rotation: 0,
       };
     });
 
@@ -103,9 +103,8 @@ export function AppProvider({ children }: AppProviderProps) {
     setFiles((prev) =>
       prev.map((f) => {
         if (!selectedFileIds.includes(f.id)) return f;
-        if (degrees === 360) return { ...f, rotation: 0 as RotationDegrees };
-        const newRotation = ((f.rotation + degrees) % 360) as RotationDegrees;
-        return { ...f, rotation: newRotation };
+        if (degrees === 360) return { ...f, rotation: 0 }; // 리셋: 0으로 초기화
+        return { ...f, rotation: f.rotation + degrees }; // 누적: 항상 앞방향 회전
       })
     );
   }, [selectedFileIds]);

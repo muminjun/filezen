@@ -2,9 +2,8 @@
 
 import { useCallback, useRef } from 'react';
 import { useTranslations } from 'next-intl';
-import { X } from 'lucide-react';
+import { X, Check } from 'lucide-react';
 import { Button } from '../ui/button';
-import { Checkbox } from '../ui/checkbox';
 import { useAppContext } from '../../context/AppContext';
 
 export function ImageGallery() {
@@ -57,7 +56,7 @@ export function ImageGallery() {
         <span className="text-sm text-muted-foreground">
           {t('fileCount', { count: files.length })}
           {selectedFileIds.length > 0 && (
-            <span className="ml-2 text-primary font-medium">
+            <span className="ml-2 font-semibold text-primary">
               {t('selectedCount', { count: selectedFileIds.length })}
             </span>
           )}
@@ -87,40 +86,47 @@ export function ImageGallery() {
           return (
             <div
               key={file.id}
-              className={`relative group rounded-lg overflow-hidden border-2 cursor-pointer transition-all ${
-                isPrimary
-                  ? 'border-primary shadow-md'
-                  : isSelected
-                  ? 'border-primary/60 bg-primary/5'
-                  : 'border-muted-foreground/25 hover:border-muted-foreground/50'
+              className={`relative group rounded-lg overflow-hidden cursor-pointer transition-all duration-200 ${
+                isSelected
+                  ? 'ring-2 ring-primary ring-offset-1 shadow-lg shadow-primary/30 scale-[0.97]'
+                  : isPrimary
+                  ? 'ring-2 ring-primary/50 ring-offset-1 shadow-md'
+                  : 'ring-1 ring-muted-foreground/20 hover:ring-primary/40 hover:shadow-md hover:scale-[0.98]'
               }`}
               onClick={(e) => handleThumbnailClick(e, file.id, index)}
             >
-              {/* 썸네일 이미지 */}
+              {/* 썸네일 이미지 — 부드러운 회전 애니메이션 */}
               <div className="aspect-square overflow-hidden bg-muted">
                 <img
                   src={file.originalUrl}
                   alt={file.file.name}
                   loading="lazy"
-                  className="w-full h-full object-cover transition-transform duration-200"
+                  className="w-full h-full object-cover"
                   style={{
                     transform: `rotate(${file.rotation}deg)`,
+                    transition: 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
                   }}
                 />
               </div>
 
-              {/* 체크박스 (좌상단) */}
+              {/* 선택 오버레이 */}
+              {isSelected && (
+                <div className="absolute inset-0 bg-primary/15 pointer-events-none" />
+              )}
+
+              {/* 선택 체크 표시 (좌상단) */}
               <div
-                className="absolute top-1 left-1 z-10"
+                className={`absolute top-1 left-1 z-10 w-5 h-5 rounded-full flex items-center justify-center transition-all duration-200 ${
+                  isSelected
+                    ? 'bg-primary text-primary-foreground scale-100 shadow-md'
+                    : 'bg-black/30 text-white/70 scale-90 opacity-0 group-hover:opacity-100'
+                }`}
                 onClick={(e) => {
                   e.stopPropagation();
                   toggleFileSelection(file.id);
                 }}
               >
-                <Checkbox
-                  checked={isSelected}
-                  className="bg-white/80 backdrop-blur-sm shadow-sm"
-                />
+                <Check className="h-3 w-3 stroke-[3]" />
               </div>
 
               {/* 삭제 버튼 (우상단, hover 시 표시) */}
@@ -136,9 +142,9 @@ export function ImageGallery() {
               </button>
 
               {/* 회전 각도 배지 */}
-              {file.rotation > 0 && (
+              {file.rotation % 360 !== 0 && (
                 <div className="absolute bottom-1 right-1 z-10 bg-primary text-primary-foreground text-[10px] font-bold rounded px-1 py-0.5">
-                  {file.rotation}°
+                  {file.rotation % 360}°
                 </div>
               )}
 

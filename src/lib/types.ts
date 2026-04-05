@@ -2,7 +2,7 @@
 export type ImageFormat = 'png' | 'jpg' | 'webp';
 export type ResizeMode = 'contain' | 'cover' | 'stretch' | 'crop';
 export type FileStatus = 'pending' | 'processing' | 'completed' | 'error';
-export type RotationDegrees = 0 | 90 | 180 | 270;
+export type RotationDegrees = 0 | 90 | 180 | 270; // 표시용 (0~270 범위)
 
 // Interfaces
 export interface ConversionSettings {
@@ -26,7 +26,7 @@ export interface ProcessingFile {
   error?: string;
   processedFile?: Blob;
   settings?: ConversionSettings;
-  rotation: RotationDegrees; // CSS 회전 각도
+  rotation: number; // CSS 누적 회전 각도 (항상 증가, 애니메이션용)
 }
 
 export interface ProcessingRecord {
