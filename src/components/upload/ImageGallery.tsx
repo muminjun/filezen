@@ -24,14 +24,15 @@ export function ImageGallery() {
   const handleThumbnailClick = useCallback(
     (e: React.MouseEvent, fileId: string, index: number) => {
       if (e.shiftKey && lastClickedIndexRef.current >= 0) {
+        // Shift+클릭: 범위 선택
         const start = Math.min(lastClickedIndexRef.current, index);
         const end = Math.max(lastClickedIndexRef.current, index);
         const rangeIds = files.slice(start, end + 1).map((f) => f.id);
         clearSelection();
         rangeIds.forEach((id) => toggleFileSelection(id));
-      } else if (e.ctrlKey || e.metaKey) {
-        toggleFileSelection(fileId);
       } else {
+        // 단순 클릭: 토글 (구글 포토 스타일)
+        toggleFileSelection(fileId);
         selectFile(fileId);
       }
       lastClickedIndexRef.current = index;
