@@ -5,7 +5,7 @@ import { FORMAT_LABELS, RESIZE_MODE_LABELS } from '../../lib/constants';
 import { Button } from '../ui/button';
 
 export function SettingsSidebar() {
-  const { settings, updateSettings, presets, applyPreset } = useAppContext();
+  const { settings, updateSettings, presets } = useAppContext();
 
   return (
     <div className="w-64 border-l border-muted-foreground/25 bg-muted/50 p-4 overflow-y-auto">

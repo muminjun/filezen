@@ -1,6 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  turbopack: {
+    resolveAlias: {
+      '@': './src',
+    },
+  },
   webpack: (config) => {
     config.experiments = {
       ...config.experiments,
