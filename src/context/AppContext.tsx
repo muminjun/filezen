@@ -11,6 +11,7 @@ import type {
   PresetConfig,
   FavoriteSettings,
   AppContextType,
+  RotationDegrees,
 } from '../lib/types';
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -22,6 +23,7 @@ interface AppProviderProps {
 export function AppProvider({ children }: AppProviderProps) {
   const [files, setFiles] = useState<ProcessingFile[]>([]);
   const [selectedFileId, setSelectedFileId] = useState<string | null>(null);
+  const [selectedFileIds, setSelectedFileIds] = useState<string[]>([]);
   const [settings, setSettingsState] = useState<ConversionSettings>(DEFAULT_SETTINGS);
   const [history, setHistory] = useState<ProcessingRecord[]>([]);
   const [presets, setPresets] = useState<PresetConfig[]>(DEFAULT_PRESETS);
@@ -50,12 +52,14 @@ export function AppProvider({ children }: AppProviderProps) {
         processedUrl: '',
         status: 'pending' as const,
         progress: 0,
+        rotation: 0 as RotationDegrees,
       };
     });
 
     setFiles((prev) => [...prev, ...processingFiles]);
     if (processingFiles.length > 0) {
       setSelectedFileId(processingFiles[0].id);
+      setSelectedFileIds([processingFiles[0].id]);
     }
   }, []);
 
@@ -67,11 +71,47 @@ export function AppProvider({ children }: AppProviderProps) {
       }
       return updated;
     });
+    setSelectedFileIds((prev) => prev.filter((id) => id !== fileId));
   }, [selectedFileId]);
 
   const selectFile = useCallback((fileId: string) => {
     setSelectedFileId(fileId);
+    setSelectedFileIds([fileId]);
   }, []);
+
+  const toggleFileSelection = useCallback((fileId: string) => {
+    setSelectedFileIds((prev) => {
+      if (prev.includes(fileId)) {
+        return prev.filter((id) => id !== fileId);
+      }
+      return [...prev, fileId];
+    });
+    setSelectedFileId(fileId);
+  }, []);
+
+  const selectAllFiles = useCallback(() => {
+    setFiles((prev) => {
+      const allIds = prev.map((f) => f.id);
+      setSelectedFileIds(allIds);
+      if (allIds.length > 0) setSelectedFileId(allIds[0]);
+      return prev;
+    });
+  }, []);
+
+  const clearSelection = useCallback(() => {
+    setSelectedFileIds([]);
+  }, []);
+
+  const rotateSelectedFiles = useCallback((degrees: 90 | 180 | 270 | 360) => {
+    setFiles((prev) =>
+      prev.map((f) => {
+        if (!selectedFileIds.includes(f.id)) return f;
+        if (degrees === 360) return { ...f, rotation: 0 as RotationDegrees };
+        const newRotation = ((f.rotation + degrees) % 360) as RotationDegrees;
+        return { ...f, rotation: newRotation };
+      })
+    );
+  }, [selectedFileIds]);
 
   const updateSettings = useCallback((newSettings: Partial<ConversionSettings>) => {
     setSettingsState((prev) => {
@@ -162,6 +202,7 @@ export function AppProvider({ children }: AppProviderProps) {
   const value: AppContextType = {
     files,
     selectedFileId,
+    selectedFileIds,
     settings,
     history,
     presets,
@@ -170,6 +211,10 @@ export function AppProvider({ children }: AppProviderProps) {
     addFiles,
     removeFile,
     selectFile,
+    toggleFileSelection,
+    selectAllFiles,
+    clearSelection,
+    rotateSelectedFiles,
     updateSettings,
     processFiles,
     addToHistory,
