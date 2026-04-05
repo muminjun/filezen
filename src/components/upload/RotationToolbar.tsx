@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { RotateCw, Download, Loader2 } from 'lucide-react';
+import { RotateCw, Download, Loader2, Trash2 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { useAppContext } from '../../context/AppContext';
 import { rotateImageBlob } from '../../lib/imageRotation';
@@ -14,7 +14,7 @@ const ROTATION_OPTIONS: Array<{ degrees: 90 | 180 | 270 | 360; label: string }> 
 ];
 
 export function RotationToolbar() {
-  const { files, selectedFileIds, rotateSelectedFiles } = useAppContext();
+  const { files, selectedFileIds, rotateSelectedFiles, removeFile, clearSelection } = useAppContext();
   const [isSaving, setIsSaving] = useState(false);
   const [progress, setProgress] = useState(0);
 
@@ -84,6 +84,21 @@ export function RotationToolbar() {
           </Button>
         ))}
       </div>
+
+      {/* 삭제 버튼 */}
+      <Button
+        variant="destructive"
+        size="sm"
+        disabled={!hasSelection || isSaving}
+        onClick={() => {
+          selectedFileIds.forEach((id) => removeFile(id));
+          clearSelection();
+        }}
+        className="gap-1"
+      >
+        <Trash2 className="h-4 w-4" />
+        삭제
+      </Button>
 
       {/* 변환하기 버튼 */}
       <Button
