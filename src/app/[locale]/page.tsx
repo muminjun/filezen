@@ -3,7 +3,8 @@
 import { useTranslations } from 'next-intl';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { UploadZone } from '@/components/upload/UploadZone';
-import { FileList } from '@/components/upload/FileList';
+import { ImageGallery } from '@/components/upload/ImageGallery';
+import { RotationToolbar } from '@/components/upload/RotationToolbar';
 import { PreviewPanel } from '@/components/preview/PreviewPanel';
 import { ComparisonView } from '@/components/preview/ComparisonView';
 import { DownloadManager } from '@/components/manager/DownloadManager';
@@ -22,10 +23,13 @@ export default function Home() {
           <UploadZone />
         </section>
 
-        {/* Files Section */}
+        {/* Gallery Section */}
         <section>
           <h2 className="text-base sm:text-lg font-semibold mb-2 sm:mb-3">{t('filesSection')}</h2>
-          <FileList />
+          <div className="space-y-2">
+            <RotationToolbar />
+            <ImageGallery />
+          </div>
         </section>
 
         {/* Preview Section */}
