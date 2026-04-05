@@ -1,0 +1,51 @@
+{
+  "project": "filezen",
+  "version": "1.0.0",
+  "last_sync": "2026-04-05T00:00:00Z",
+  "designs": {
+    "button": {
+      "status": "completed",
+      "file": "design/components/Button.md",
+      "sections": [
+        "Visual Design",
+        "States & Interactions",
+        "Accessibility",
+        "Icon Support",
+        "Responsive Behavior",
+        "Implementation Notes",
+        "Testing Checklist"
+      ]
+    },
+    "card": {
+      "status": "completed",
+      "file": "design/components/Card.md",
+      "sections": [
+        "Visual Design",
+        "Content Structure",
+        "Visual States",
+        "Responsive Behavior",
+        "Accessibility",
+        "Implementation Notes",
+        "Testing Checklist"
+      ]
+    }
+  },
+  "system": {
+    "colors": {
+      "status": "completed",
+      "file": "design/system/colors.md"
+    },
+    "typography": {
+      "status": "completed",
+      "file": "design/system/typography.md"
+    },
+    "spacing": {
+      "status": "completed",
+      "file": "design/system/spacing.md"
+    },
+    "shadows": {
+      "status": "completed",
+      "file": "design/system/shadows.md"
+    }
+  }
+}
