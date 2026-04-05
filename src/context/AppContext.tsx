@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
 import { DEFAULT_SETTINGS, DEFAULT_PRESETS } from '../lib/constants';
 import { StorageManager } from '../lib/storage';
 import { generateFileId } from '../lib/utils';
@@ -22,20 +22,22 @@ interface AppProviderProps {
 export function AppProvider({ children }: AppProviderProps) {
   const [files, setFiles] = useState<ProcessingFile[]>([]);
   const [selectedFileId, setSelectedFileId] = useState<string | null>(null);
-  const [settings, setSettingsState] = useState<ConversionSettings>(() =>
-    StorageManager.getSettings(DEFAULT_SETTINGS)
-  );
-  const [history, setHistory] = useState<ProcessingRecord[]>(() =>
-    StorageManager.getHistory()
-  );
-  const [presets, setPresets] = useState<PresetConfig[]>(() => {
-    const saved = StorageManager.getPresets();
-    return saved.length > 0 ? saved : DEFAULT_PRESETS;
-  });
-  const [favorites, setFavorites] = useState<FavoriteSettings[]>(() =>
-    StorageManager.getFavorites()
-  );
+  const [settings, setSettingsState] = useState<ConversionSettings>(DEFAULT_SETTINGS);
+  const [history, setHistory] = useState<ProcessingRecord[]>([]);
+  const [presets, setPresets] = useState<PresetConfig[]>(DEFAULT_PRESETS);
+  const [favorites, setFavorites] = useState<FavoriteSettings[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  // Load from localStorage after hydration
+  useEffect(() => {
+    setSettingsState(StorageManager.getSettings(DEFAULT_SETTINGS));
+    setHistory(StorageManager.getHistory());
+    const saved = StorageManager.getPresets();
+    setPresets(saved.length > 0 ? saved : DEFAULT_PRESETS);
+    setFavorites(StorageManager.getFavorites());
+    setIsHydrated(true);
+  }, []);
 
   const addFiles = useCallback(async (newFiles: File[]) => {
     const processingFiles: ProcessingFile[] = newFiles.map((file) => {
