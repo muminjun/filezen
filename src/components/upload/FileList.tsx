@@ -13,8 +13,8 @@ export function FileList() {
 
   if (files.length === 0) {
     return (
-      <div className="rounded-lg border border-muted-foreground/25 p-8 text-center">
-        <p className="text-muted-foreground">{t('noFiles')}</p>
+      <div className="rounded-lg border border-muted-foreground/25 p-4 sm:p-8 text-center">
+        <p className="text-sm sm:text-base text-muted-foreground">{t('noFiles')}</p>
       </div>
     );
   }

@@ -2,11 +2,13 @@
 
 import { useTranslations } from 'next-intl';
 import { useAppContext } from '../../context/AppContext';
+import { usePresetNames } from '../../hooks/usePresetNames';
 import { Button } from '../ui/button';
 
 export function SettingsSidebar() {
   const t = useTranslations('settings');
   const { settings, updateSettings, presets } = useAppContext();
+  const { getPresetName } = usePresetNames();
 
   // 동적 포맷 라벨
   const formatLabels: Record<string, string> = {
@@ -24,8 +26,8 @@ export function SettingsSidebar() {
   };
 
   return (
-    <div className="w-64 border-l border-muted-foreground/25 bg-muted/50 p-4 overflow-y-auto">
-      <div className="space-y-6">
+    <div className="w-64 lg:border-l border-muted-foreground/25 bg-muted/50 p-4 overflow-y-auto">
+      <div className="space-y-6 lg:space-y-6">
         {/* Format */}
         <div>
           <label className="text-sm font-semibold block mb-2">{t('format')}</label>
@@ -93,7 +95,7 @@ export function SettingsSidebar() {
           {settings.format === 'jpg' && (
             <div>
               <div className="flex justify-between mb-1">
-                <span className="text-xs text-muted-foreground">JPG Quality</span>
+                <span className="text-xs text-muted-foreground">{t('jpgQuality')}</span>
                 <span className="text-xs font-semibold">{settings.jpgQuality}%</span>
               </div>
               <input
@@ -109,7 +111,7 @@ export function SettingsSidebar() {
           {settings.format === 'webp' && (
             <div>
               <div className="flex justify-between mb-1">
-                <span className="text-xs text-muted-foreground">WebP Quality</span>
+                <span className="text-xs text-muted-foreground">{t('webpQuality')}</span>
                 <span className="text-xs font-semibold">{settings.webpQuality}%</span>
               </div>
               <input
@@ -160,7 +162,7 @@ export function SettingsSidebar() {
                     });
                   }}
                 >
-                  {preset.name}
+                  {getPresetName(preset.id)}
                 </Button>
               ))}
             </div>

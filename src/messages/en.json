@@ -79,7 +79,17 @@
     "facebook": "Facebook (1200x630)",
     "youtube": "YouTube Thumbnail (1280x720)",
     "web_small": "Web Small (640x480)",
-    "web_large": "Web Large (1920x1080)"
+    "web_large": "Web Large (1920x1080)",
+    "preset-1": "Thumbnail (200x200)",
+    "preset-2": "Square (500x500)",
+    "preset-3": "Instagram Feed (1080x1350)",
+    "preset-4": "Instagram Story (1080x1920)",
+    "preset-5": "Twitter Header (1500x500)",
+    "preset-6": "LinkedIn Cover (1200x627)",
+    "preset-7": "Facebook (1200x630)",
+    "preset-8": "YouTube Thumbnail (1280x720)",
+    "preset-9": "Web Small (640x480)",
+    "preset-10": "Web Large (1920x1080)"
   },
   "download": {
     "title": "Download",

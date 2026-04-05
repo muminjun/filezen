@@ -42,7 +42,7 @@ export function UploadZone({ disabled = false }: UploadZoneProps) {
   return (
     <div
       {...getRootProps()}
-      className={`relative rounded-lg border-2 border-dashed p-8 text-center transition-colors ${
+      className={`relative rounded-lg border-2 border-dashed p-4 sm:p-8 text-center transition-colors ${
         isDragActive
           ? 'border-primary bg-primary/5'
           : 'border-muted-foreground/25 hover:border-muted-foreground/50'
@@ -50,23 +50,23 @@ export function UploadZone({ disabled = false }: UploadZoneProps) {
     >
       <input {...getInputProps()} />
 
-      <Cloud className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
+      <Cloud className="mx-auto mb-3 sm:mb-4 h-10 w-10 sm:h-12 sm:w-12 text-muted-foreground" />
 
-      <h3 className="mb-2 text-lg font-semibold">
+      <h3 className="mb-2 text-base sm:text-lg font-semibold">
         {isDragActive ? t('dropHere') : t('dragDrop')}
       </h3>
 
-      <p className="mb-4 text-sm text-muted-foreground">
+      <p className="mb-4 text-xs sm:text-sm text-muted-foreground line-clamp-2">
         {t('orClick', { count: MAX_FILES })}
       </p>
 
-      <Button type="button" variant="outline" disabled={disabled}>
+      <Button type="button" variant="outline" disabled={disabled} size="sm">
         {t('selectFiles')}
       </Button>
 
-      <div className="mt-4 flex items-start gap-2 rounded-md bg-muted p-3 text-sm text-muted-foreground">
+      <div className="mt-3 sm:mt-4 flex items-start gap-2 rounded-md bg-muted p-2 sm:p-3 text-xs sm:text-sm text-muted-foreground">
         <AlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0" />
-        <div>
+        <div className="text-left">
           <p className="font-medium">{t('supportedFormats')}</p>
           <p>{t('formats')}</p>
         </div>
