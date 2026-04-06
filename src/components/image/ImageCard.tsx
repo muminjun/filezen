@@ -1,9 +1,10 @@
 'use client';
 
-import { useRef, useEffect, useState, memo } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { X } from 'lucide-react';
+import { Maximize2, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { rotateImageBlob } from '@/lib/imageRotation';
 import type { ImageFile } from '@/lib/types';
 
 interface ImageCardProps {
@@ -46,19 +47,19 @@ export const ImageCard = memo(function ImageCard({
       ref={containerRef}
       onClick={(e) => onToggle(image.id, e)}
       className={cn(
-        'group relative aspect-square cursor-pointer overflow-hidden rounded-lg border-2 transition-all',
+        'group relative aspect-square cursor-pointer overflow-hidden rounded-xl border border-border/50 bg-muted/30 transition-all select-none active:scale-[0.97]',
         isSelected
-          ? 'border-primary ring-2 ring-primary ring-offset-2 ring-offset-background'
-          : 'border-transparent hover:border-muted-foreground/40'
+          ? 'border-primary bg-primary/5 ring-1 ring-primary'
+          : 'hover:border-primary/30 hover:shadow-md'
       )}
     >
       {isSelected && (
-        <div className="absolute left-1.5 top-1.5 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground">
+        <div className="absolute left-2 top-2 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm">
           <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
             <path
               d="M1 4L3.5 6.5L9 1"
               stroke="currentColor"
-              strokeWidth="1.5"
+              strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
@@ -66,15 +67,33 @@ export const ImageCard = memo(function ImageCard({
         </div>
       )}
 
+      <div className="absolute right-2 top-2 z-10 flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onRemove(image.id);
+          }}
+          title={t('removeImage')}
+          className="flex h-7 w-7 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm hover:bg-destructive transition-colors"
+        >
+          <X size={14} />
+        </button>
+      </div>
+
       <button
-        onClick={(e) => {
+        onClick={async (e) => {
           e.stopPropagation();
-          onRemove(image.id);
+          if (image.rotation === 0) {
+            window.open(image.previewUrl, '_blank');
+          } else {
+            const blob = await rotateImageBlob(image.previewUrl, image.rotation, image.file.type || 'image/jpeg');
+            const url = URL.createObjectURL(blob);
+            window.open(url, '_blank');
+          }
         }}
-        title={t('removeImage')}
-        className="absolute right-1.5 top-1.5 z-10 hidden h-6 w-6 items-center justify-center rounded-full bg-black/60 text-white opacity-0 transition-opacity group-hover:flex group-hover:opacity-100"
+        className="absolute bottom-2 right-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm opacity-0 transition-opacity group-hover:opacity-100 hover:bg-primary transition-colors"
       >
-        <X size={12} />
+        <Maximize2 size={14} />
       </button>
 
       {isVisible ? (
@@ -85,7 +104,7 @@ export const ImageCard = memo(function ImageCard({
           style={{
             transform: `rotate(${image.rotation}deg)${needsScale ? ' scale(0.71)' : ''}`,
           }}
-          className="h-full w-full object-cover transition-transform duration-200"
+          className="h-full w-full object-cover transition-transform duration-300 ease-out"
         />
       ) : (
         <div className="h-full w-full animate-pulse bg-muted" />

@@ -1,9 +1,10 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useAppContext } from '@/context/AppContext';
 import { ImageCard } from './ImageCard';
+import { cn } from '@/lib/utils';
 
 export function ImageGallery() {
   const t = useTranslations('gallery');
@@ -16,9 +17,11 @@ export function ImageGallery() {
     clearSelection,
     removeImage,
     removeAllImages,
+    reorderImages,
   } = useAppContext();
 
   const lastClickedId = useRef<string | null>(null);
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
 
   const handleToggle = (id: string, event: React.MouseEvent) => {
     if (event.shiftKey && lastClickedId.current) {
@@ -35,6 +38,29 @@ export function ImageGallery() {
     }
   };
 
+  const handleRemoveSelected = () => {
+    if (selectedIds.size === 0) return;
+    if (window.confirm(t('removeSelected') + '?')) {
+      Array.from(selectedIds).forEach((id) => removeImage(id));
+    }
+  };
+
+  const onDragStart = (e: React.DragEvent, index: number) => {
+    setDraggedIndex(index);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const onDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    if (draggedIndex === null || draggedIndex === index) return;
+    reorderImages(draggedIndex, index);
+    setDraggedIndex(index);
+  };
+
+  const onDragEnd = () => {
+    setDraggedIndex(null);
+  };
+
   const allSelected = images.length > 0 && selectedIds.size === images.length;
 
   return (
@@ -43,15 +69,23 @@ export function ImageGallery() {
         <button
           onClick={allSelected ? clearSelection : selectAll}
           disabled={images.length === 0}
-          className="text-xs font-medium text-muted-foreground hover:text-foreground disabled:opacity-40"
+          className="cursor-pointer text-xs font-medium text-muted-foreground hover:text-foreground disabled:opacity-40"
         >
           {allSelected ? t('deselectAll') : t('selectAll')}
         </button>
 
         <button
+          onClick={handleRemoveSelected}
+          disabled={selectedIds.size === 0}
+          className="cursor-pointer text-xs font-medium text-destructive hover:text-destructive/80 disabled:opacity-40"
+        >
+          {t('removeSelected')}
+        </button>
+
+        <button
           onClick={handleRemoveAll}
           disabled={images.length === 0}
-          className="text-xs font-medium text-destructive hover:text-destructive/80 disabled:opacity-40"
+          className="cursor-pointer text-xs font-medium text-destructive/60 hover:text-destructive disabled:opacity-40"
         >
           {t('removeAll')}
         </button>
@@ -73,15 +107,26 @@ export function ImageGallery() {
             <p className="text-sm text-muted-foreground">{t('noImages')}</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-            {images.map((image) => (
-              <ImageCard
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+            {images.map((image, index) => (
+              <div
                 key={image.id}
-                image={image}
-                isSelected={selectedIds.has(image.id)}
-                onToggle={handleToggle}
-                onRemove={removeImage}
-              />
+                onDragStart={(e) => onDragStart(e, index)}
+                onDragOver={(e) => onDragOver(e, index)}
+                onDragEnd={onDragEnd}
+                draggable
+                className={cn(
+                  'cursor-move transition-opacity',
+                  draggedIndex === index && 'opacity-30'
+                )}
+              >
+                <ImageCard
+                  image={image}
+                  isSelected={selectedIds.has(image.id)}
+                  onToggle={handleToggle}
+                  onRemove={removeImage}
+                />
+              </div>
             ))}
           </div>
         )}
