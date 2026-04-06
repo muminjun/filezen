@@ -1,0 +1,84 @@
+<h2>Phase 1 — 설계 개요</h2>
+<p class="subtitle">승인하면 바로 스펙 문서 작성 → 구현 계획으로 넘어갑니다</p>
+
+<div class="section">
+  <h3>A+B — 이미지 변환 연결 + 진행률/비교</h3>
+  <div class="mockup">
+    <div class="mockup-header">변환 흐름 (현재 → 완성 후)</div>
+    <div class="mockup-body" style="font-size:13px;line-height:2">
+      <div style="display:flex;gap:32px;flex-wrap:wrap">
+        <div style="flex:1;min-width:200px">
+          <div style="opacity:0.4;font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">현재 (broken)</div>
+          선택 → 설정 변경 → <span style="color:#ef4444">변환하기 클릭 → 아무것도 안 됨</span>
+        </div>
+        <div style="flex:1;min-width:200px">
+          <div style="opacity:0.4;font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">완성 후</div>
+          선택 → 설정 변경 → 변환하기 클릭<br>
+          → <strong>회전 + 포맷변환 + 리사이즈 동시 적용</strong><br>
+          → 툴바에 진행률 표시 (n/총n장)<br>
+          → 완료 시 PreviewPanel에 전/후 비교<br>
+          → ZIP 다운로드
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:12px;font-size:13px">
+    <strong>변경 파일:</strong>
+    <ul style="margin:6px 0 0 16px;line-height:1.8">
+      <li><code>AppContext.tsx</code> — processFiles() 실제 구현 (imageProcessor 호출)</li>
+      <li><code>RotationToolbar.tsx</code> — 변환하기 버튼을 processFiles + ZIP으로 연결</li>
+      <li><code>PreviewPanel.tsx</code> — processedUrl 연결, 전/후 비교 뷰 활성화</li>
+    </ul>
+  </div>
+</div>
+
+<div class="section">
+  <h3>G — 라이트박스</h3>
+  <div class="mockup">
+    <div class="mockup-header">동작 방식</div>
+    <div class="mockup-body" style="font-size:13px;line-height:1.8">
+      썸네일 <strong>더블클릭</strong> → 전체화면 오버레이 열림<br>
+      ← → 화살표로 이미지 탐색 / ESC 닫기 / 처리된 이미지면 전/후 탭 전환<br>
+      <strong>새 파일:</strong> <code>src/components/upload/LightboxModal.tsx</code>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>H — 썸네일 크기 슬라이더</h3>
+  <div class="mockup">
+    <div class="mockup-header">갤러리 상단 컨트롤바</div>
+    <div class="mockup-body" style="font-size:13px;line-height:1.8">
+      갤러리 위에 한 줄 컨트롤바 추가:<br>
+      <code>[전체선택] [n장 선택됨]  ————————  [🔲 ——슬라이더—— 🔳]</code><br>
+      슬라이더 값 → CSS grid <code>grid-template-columns</code> 조절 (2~8열)<br>
+      <strong>변경:</strong> <code>ImageGallery.tsx</code> 상단에 컨트롤바 추가
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>J — 키보드 단축키</h3>
+  <div class="mockup">
+    <div class="mockup-header">단축키 목록</div>
+    <div class="mockup-body" style="font-size:13px">
+      <div style="display:grid;grid-template-columns:auto 1fr;gap:4px 16px">
+        <code>⌘A / Ctrl+A</code><span>전체 선택</span>
+        <code>Escape</code><span>선택 해제 / 라이트박스 닫기</span>
+        <code>Delete / Backspace</code><span>선택한 이미지 삭제</span>
+        <code>← →</code><span>갤러리 포커스 이동 (라이트박스에서도)</span>
+        <code>Space</code><span>포커스 이미지 선택 토글</span>
+      </div>
+      <div style="margin-top:8px"><strong>새 파일:</strong> <code>src/hooks/useKeyboardShortcuts.ts</code></div>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top:24px;padding:16px;border-radius:12px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.25)">
+  <p style="margin:0;font-size:14px">
+    <strong>신규 파일 2개</strong> (LightboxModal, useKeyboardShortcuts) +
+    <strong>기존 파일 3개 수정</strong> (AppContext, RotationToolbar, ImageGallery)<br>
+    <span style="opacity:0.7">이 설계로 맞으면 "ㅇㅇ" — 스펙 작성 → 구현 계획 순으로 끊김 없이 진행합니다.</span>
+  </p>
+</div>

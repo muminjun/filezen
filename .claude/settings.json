@@ -37,6 +37,19 @@
           }
         ]
       }
+    ],
+    "file_modified": [
+      {
+        "path": "design/components/**/*.md",
+        "event": "created_or_modified",
+        "action": "notify",
+        "message": "🎨 Design updated: {filename}\nReady to generate code? Run: ./scripts/design-to-code.sh {filepath}"
+      }
     ]
+  },
+  "automation": {
+    "auto_code_review": true,
+    "auto_update_collab_json": true,
+    "design_system_path": "design/system"
   }
 }
