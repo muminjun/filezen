@@ -18,7 +18,8 @@
     "deselectAll": "Deselect All",
     "selectedCount": "{count} selected",
     "totalCount": "{count} total",
-    "removeImage": "Remove"
+    "removeImage": "Remove",
+    "removeAll": "Clear All"
   },
   "actionBar": {
     "noneSelected": "Select images to rotate",
@@ -29,7 +30,10 @@
     "customAngle": "Custom angle",
     "apply": "Apply",
     "downloadZip": "Save as ZIP",
-    "downloading": "Saving..."
+    "downloading": "Saving...",
+    "format": "Format",
+    "quality": "Quality",
+    "original": "Original"
   },
   "filePage": {
     "title": "File Conversion",
@@ -38,5 +42,10 @@
   "language": {
     "ko": "한글",
     "en": "English"
+  },
+  "seo": {
+    "title": "FileZen - Online Image Rotation & Conversion Tool",
+    "description": "Rotate, convert, and compress images instantly in your browser. No uploads needed. Privacy-focused and lightning-fast with FileZen.",
+    "keywords": "rotate image, convert image, online image editor, PNG converter, JPG converter, FileZen"
   }
 }

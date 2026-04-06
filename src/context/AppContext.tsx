@@ -31,6 +31,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [images, setImages] = useState<ImageFile[]>([]);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [isDownloading, setIsDownloading] = useState(false);
+  const [outputFormat, setOutputFormat] = useState<OutputFormat>('original');
+  const [quality, setQuality] = useState(90);
 
   const addImages = useCallback((files: File[]) => {
     const next: ImageFile[] = files.map((file) => ({
@@ -53,6 +55,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
       next.delete(id);
       return next;
     });
+  }, []);
+
+  const removeAllImages = useCallback(() => {
+    setImages((prev) => {
+      prev.forEach((img) => URL.revokeObjectURL(img.previewUrl));
+      return [];
+    });
+    setSelectedIds(new Set());
   }, []);
 
   const toggleSelect = useCallback((id: string) => {
@@ -108,12 +118,20 @@ export function AppProvider({ children }: { children: ReactNode }) {
         const batch = selected.slice(i, i + MAX_CONCURRENT_PROCESSING);
         await Promise.all(
           batch.map(async (img) => {
-            const mimeType = img.file.type || 'image/jpeg';
-            const blob =
-              img.rotation === 0
+            const targetMime = outputFormat === 'original' 
+              ? (img.file.type || 'image/jpeg')
+              : `image/${outputFormat}`;
+            
+            const blob = (img.rotation === 0 && outputFormat === 'original')
                 ? img.file
-                : await rotateImageBlob(img.previewUrl, img.rotation, mimeType);
-            zip.file(img.file.name, blob);
+                : await rotateImageBlob(img.previewUrl, img.rotation, targetMime, quality / 100);
+            
+            const extension = outputFormat === 'original'
+              ? img.file.name.split('.').pop()
+              : outputFormat;
+            
+            const baseName = img.file.name.replace(/\.[^/.]+$/, "");
+            zip.file(`${baseName}.${extension}`, blob);
           })
         );
       }
@@ -138,13 +156,18 @@ export function AppProvider({ children }: { children: ReactNode }) {
         images,
         selectedIds,
         isDownloading,
+        outputFormat,
+        quality,
         addImages,
         removeImage,
+        removeAllImages,
         toggleSelect,
         rangeSelect,
         selectAll,
         clearSelection,
         rotateSelected,
+        setOutputFormat,
+        setQuality,
         downloadAsZip,
       }}
     >

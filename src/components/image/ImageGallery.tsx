@@ -15,6 +15,7 @@ export function ImageGallery() {
     selectAll,
     clearSelection,
     removeImage,
+    removeAllImages,
   } = useAppContext();
 
   const lastClickedId = useRef<string | null>(null);
@@ -28,17 +29,31 @@ export function ImageGallery() {
     lastClickedId.current = id;
   };
 
+  const handleRemoveAll = () => {
+    if (window.confirm(t('removeAll') + '?')) {
+      removeAllImages();
+    }
+  };
+
   const allSelected = images.length > 0 && selectedIds.size === images.length;
 
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
-      <div className="flex flex-shrink-0 items-center gap-3 border-b border-border px-4 py-2">
+      <div className="flex flex-shrink-0 items-center gap-4 border-b border-border px-4 py-2">
         <button
           onClick={allSelected ? clearSelection : selectAll}
           disabled={images.length === 0}
           className="text-xs font-medium text-muted-foreground hover:text-foreground disabled:opacity-40"
         >
           {allSelected ? t('deselectAll') : t('selectAll')}
+        </button>
+
+        <button
+          onClick={handleRemoveAll}
+          disabled={images.length === 0}
+          className="text-xs font-medium text-destructive hover:text-destructive/80 disabled:opacity-40"
+        >
+          {t('removeAll')}
         </button>
 
         {selectedIds.size > 0 && (
