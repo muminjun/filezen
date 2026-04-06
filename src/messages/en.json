@@ -1,122 +1,42 @@
 {
   "app": {
     "title": "FileZen",
-    "subtitle": "Convert and resize images instantly"
+    "subtitle": "Rotate and export images fast"
   },
-  "header": {
-    "title": "FileZen",
-    "description": "Convert and resize images instantly. Client-side processing, no uploads."
-  },
-  "pages": {
-    "uploadSection": "Upload Images",
-    "filesSection": "Files",
-    "downloadSection": "Download"
+  "drawer": {
+    "images": "Images",
+    "files": "Files"
   },
   "upload": {
-    "title": "Upload Images",
-    "dragDrop": "Drag & drop images here",
-    "dropHere": "Drop files here",
-    "selectFiles": "Select Files",
-    "orClick": "or click to select up to {count} files (max 50MB each)",
-    "maxFiles": "Select up to {{count}} files (max 50MB each)",
-    "supportedFormats": "Supported formats",
-    "formats": "PNG, JPG, WebP, GIF"
+    "dragDrop": "Drag images here or click to upload",
+    "dropHere": "Drop here",
+    "formats": "PNG, JPG, WebP, GIF · Up to 500 files · 50MB each"
   },
-  "files": {
-    "title": "Files",
-    "noFiles": "No files uploaded yet",
-    "status": {
-      "pending": "Pending",
-      "processing": "Processing",
-      "completed": "Completed",
-      "error": "Error"
-    }
+  "gallery": {
+    "noImages": "Upload images to get started",
+    "selectAll": "Select All",
+    "deselectAll": "Deselect All",
+    "selectedCount": "{count} selected",
+    "totalCount": "{count} total",
+    "removeImage": "Remove"
   },
-  "preview": {
-    "title": "Preview",
-    "selectFile": "Select a file to preview",
-    "comparison": "Comparison (Original vs Converted)",
-    "process": "Process a file to compare",
-    "original": "Original",
-    "processed": "Processed"
+  "actionBar": {
+    "noneSelected": "Select images to rotate",
+    "selectedCount": "{count} selected",
+    "rotate90": "Rotate 90°",
+    "rotate180": "Rotate 180°",
+    "rotate270": "Rotate 270°",
+    "customAngle": "Custom angle",
+    "apply": "Apply",
+    "downloadZip": "Save as ZIP",
+    "downloading": "Saving..."
   },
-  "settings": {
-    "title": "Settings",
-    "format": "Format",
-    "dimensions": "Dimensions",
-    "width": "Width",
-    "height": "Height",
-    "resizeMode": "Resize Mode",
-    "contain": "Fit Inside (Contain)",
-    "cover": "Cover (Auto Crop)",
-    "stretch": "Stretch to Fit",
-    "crop": "Manual Crop",
-    "quality": "Quality",
-    "jpgQuality": "JPG Quality",
-    "webpQuality": "WebP Quality",
-    "pngCompression": "Compression",
-    "presets": "Quick Presets",
-    "metadata": "Remove Metadata (EXIF)",
-    "formatLabels": {
-      "png": "PNG (Lossless)",
-      "jpg": "JPG (Lossy)",
-      "webp": "WebP (Modern)"
-    },
-    "resizeLabels": {
-      "contain": "Fit Inside (Contain)",
-      "cover": "Cover (Auto Crop)",
-      "stretch": "Stretch to Fit",
-      "crop": "Manual Crop"
-    }
-  },
-  "presets": {
-    "thumbnail": "Thumbnail (200x200)",
-    "square": "Square (500x500)",
-    "instagram_feed": "Instagram Feed (1080x1350)",
-    "instagram_story": "Instagram Story (1080x1920)",
-    "twitter_header": "Twitter Header (1500x500)",
-    "linkedin": "LinkedIn Cover (1200x627)",
-    "facebook": "Facebook (1200x630)",
-    "youtube": "YouTube Thumbnail (1280x720)",
-    "web_small": "Web Small (640x480)",
-    "web_large": "Web Large (1920x1080)",
-    "preset-1": "Thumbnail (200x200)",
-    "preset-2": "Square (500x500)",
-    "preset-3": "Instagram Feed (1080x1350)",
-    "preset-4": "Instagram Story (1080x1920)",
-    "preset-5": "Twitter Header (1500x500)",
-    "preset-6": "LinkedIn Cover (1200x627)",
-    "preset-7": "Facebook (1200x630)",
-    "preset-8": "YouTube Thumbnail (1280x720)",
-    "preset-9": "Web Small (640x480)",
-    "preset-10": "Web Large (1920x1080)"
-  },
-  "download": {
-    "title": "Download",
-    "downloadSelected": "Download Selected",
-    "downloadZip": "Download as ZIP",
-    "processFiles": "Process files to download"
-  },
-  "formats": {
-    "png": "PNG (Lossless)",
-    "jpg": "JPG (Lossy)",
-    "webp": "WebP (Modern)"
+  "filePage": {
+    "title": "File Conversion",
+    "comingSoon": "PDF, video, and other file conversion coming soon"
   },
   "language": {
     "ko": "한글",
     "en": "English"
-  },
-  "gallery": {
-    "noFiles": "No files uploaded yet",
-    "fileCount": "{count} files",
-    "selectedCount": "{count} selected",
-    "selectAll": "Select All",
-    "deselectAll": "Deselect All",
-    "clearSelection": "Clear Selection",
-    "removeFile": "Remove file",
-    "rotateSelected": "{count} selected — Rotate",
-    "rotationApply": "Rotate {degrees}°",
-    "rotationReset": "Reset to original orientation",
-    "rotationHint": "Ctrl+click: toggle | Shift+click: range select"
   }
 }
