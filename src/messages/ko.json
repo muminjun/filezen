@@ -19,7 +19,8 @@
     "selectedCount": "{count}개 선택됨",
     "totalCount": "총 {count}개",
     "removeImage": "삭제",
-    "removeAll": "전체 삭제"
+    "removeAll": "전체 삭제",
+    "removeSelected": "선택 삭제"
   },
   "actionBar": {
     "noneSelected": "이미지를 선택하세요",

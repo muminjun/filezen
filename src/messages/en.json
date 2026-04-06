@@ -19,7 +19,8 @@
     "selectedCount": "{count} selected",
     "totalCount": "{count} total",
     "removeImage": "Remove",
-    "removeAll": "Clear All"
+    "removeAll": "Clear All",
+    "removeSelected": "Remove Selected"
   },
   "actionBar": {
     "noneSelected": "Select images to rotate",
