@@ -9,3 +9,4 @@
 {"type":"screen-added","file":"/Users/minjun/Documents/filezen/.superpowers/brainstorm/6378-1775473659/content/action-bar.html"}
 {"source":"user-event","type":"click","text":"3개 선택됨\n        \n        \n        ↻ 90°\n        ↻ 180°\n        ↻ 270°\n        \n        \n        \n          직접 입력\n          \n          °\n          적용\n        \n        \n          ⬇ ZIP 저장\n        \n      \n      프리셋 버튼 클릭 시 즉시 회전 적용 → ZIP 저장은 별도 버튼\n    \n    \n      A — 프리셋 + 직접 입력 분리\n      90/180/270 버튼은 누르는 즉시 적용. 직접 입력은 숫자 쓰고 \"적용\" 버튼.","choice":"a","id":null,"timestamp":1775473909056}
 {"type":"screen-added","file":"/Users/minjun/Documents/filezen/.superpowers/brainstorm/6378-1775473659/content/waiting-2.html"}
+{"type":"server-stopped","reason":"idle timeout"}
