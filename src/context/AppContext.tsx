@@ -65,24 +65,18 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const rangeSelect = useCallback((fromId: string, toId: string) => {
-    setImages((prev) => {
-      const fromIdx = prev.findIndex((img) => img.id === fromId);
-      const toIdx = prev.findIndex((img) => img.id === toId);
-      if (fromIdx === -1 || toIdx === -1) return prev;
-      const start = Math.min(fromIdx, toIdx);
-      const end = Math.max(fromIdx, toIdx);
-      const rangeIds = prev.slice(start, end + 1).map((img) => img.id);
-      setSelectedIds((prevSel) => new Set([...prevSel, ...rangeIds]));
-      return prev;
-    });
-  }, []);
+    const fromIdx = images.findIndex((img) => img.id === fromId);
+    const toIdx = images.findIndex((img) => img.id === toId);
+    if (fromIdx === -1 || toIdx === -1) return;
+    const start = Math.min(fromIdx, toIdx);
+    const end = Math.max(fromIdx, toIdx);
+    const rangeIds = images.slice(start, end + 1).map((img) => img.id);
+    setSelectedIds((prevSel) => new Set([...prevSel, ...rangeIds]));
+  }, [images]);
 
   const selectAll = useCallback(() => {
-    setImages((prev) => {
-      setSelectedIds(new Set(prev.map((img) => img.id)));
-      return prev;
-    });
-  }, []);
+    setSelectedIds(new Set(images.map((img) => img.id)));
+  }, [images]);
 
   const clearSelection = useCallback(() => {
     setSelectedIds(new Set());
