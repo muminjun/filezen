@@ -1,17 +1,33 @@
 <svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background Circle (Zen Enso style but clean) -->
-  <circle cx="256" cy="256" r="220" stroke="currentColor" stroke-width="12" stroke-dasharray="1000 300" stroke-linecap="round" opacity="0.1" />
-  
-  <!-- File Icon -->
-  <path d="M160 80C160 62.3269 174.327 48 192 48H320L416 144V432C416 449.673 401.673 464 384 464H192C174.327 464 160 449.673 160 432V80Z" fill="currentColor" fill-opacity="0.05" stroke="currentColor" stroke-width="20" stroke-linejoin="round" />
-  
-  <!-- Corner Fold -->
-  <path d="M320 48V144H416" stroke="currentColor" stroke-width="20" stroke-linejoin="round" />
-  
-  <!-- Rotation Arrow (The "Action") -->
-  <path d="M256 220C289.137 220 316 246.863 316 280C316 313.137 289.137 340 256 340C222.863 340 196 313.137 196 280C196 265.522 201.121 252.241 209.626 242" stroke="currentColor" stroke-width="24" stroke-linecap="round" />
-  <path d="M210 200V245H255" stroke="currentColor" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" />
-  
-  <!-- "Z" shape hidden in the file lines -->
-  <path d="M220 180H292L220 380H292" stroke="currentColor" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" opacity="0.2" />
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#000000;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#333333;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="10" />
+      <feOffset dx="0" dy="10" result="offsetblur" />
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.3" />
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Base App Icon Shape (Rounded Square) -->
+  <rect width="512" height="512" rx="120" fill="url(#grad)" />
+
+  <!-- The "Z" - Sharp, Minimal, Modern -->
+  <path d="M160 170H352L160 342H352" 
+        stroke="white" 
+        stroke-width="45" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+        filter="url(#shadow)" />
+
+  <!-- Accent: Small dot symbolizing 'Focus' or 'Zen' -->
+  <circle cx="352" cy="170" r="10" fill="#666" />
 </svg>
