@@ -1,0 +1,68 @@
+<h2>하단 액션바 — 회전 UX 선택</h2>
+<p class="subtitle">선택된 이미지들을 회전시키는 방식. 어떤 게 더 직관적인가요?</p>
+
+<div class="cards" style="gap: 24px; flex-direction: column;">
+
+  <!-- Option A -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding: 20px; background: #0f0f0f;">
+      <!-- Bottom bar mockup -->
+      <div style="background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 12px 16px; display: flex; align-items: center; gap: 12px; font-family: monospace; font-size: 12px;">
+        <span style="color: #888;">3개 선택됨</span>
+        <div style="width: 1px; height: 24px; background: #333;"></div>
+        <!-- Preset buttons -->
+        <button style="background:#2a2a2a; border:1px solid #444; border-radius:6px; padding:6px 12px; color:#ccc; cursor:pointer;">↻ 90°</button>
+        <button style="background:#2a2a2a; border:1px solid #444; border-radius:6px; padding:6px 12px; color:#ccc; cursor:pointer;">↻ 180°</button>
+        <button style="background:#2a2a2a; border:1px solid #444; border-radius:6px; padding:6px 12px; color:#ccc; cursor:pointer;">↻ 270°</button>
+        <div style="width: 1px; height: 24px; background: #333;"></div>
+        <!-- Number input -->
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span style="color:#888; font-size:11px;">직접 입력</span>
+          <input style="width:56px; background:#222; border:1px solid #555; border-radius:6px; padding:5px 8px; color:#fff; font-size:12px; text-align:center;" value="45" />
+          <span style="color:#888; font-size:11px;">°</span>
+          <button style="background:#374151; border:1px solid #555; border-radius:6px; padding:6px 10px; color:#ccc; font-size:11px;">적용</button>
+        </div>
+        <div style="margin-left:auto; display:flex; gap:8px;">
+          <button style="background:#3b82f6; border:none; border-radius:6px; padding:7px 16px; color:white; font-size:12px; cursor:pointer;">⬇ ZIP 저장</button>
+        </div>
+      </div>
+      <p style="color:#555; font-size:11px; margin:8px 0 0; text-align:center;">프리셋 버튼 클릭 시 즉시 회전 적용 → ZIP 저장은 별도 버튼</p>
+    </div>
+    <div class="card-body">
+      <h3>A — 프리셋 + 직접 입력 분리</h3>
+      <p>90/180/270 버튼은 누르는 즉시 적용. 직접 입력은 숫자 쓰고 "적용" 버튼.</p>
+    </div>
+  </div>
+
+  <!-- Option B -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding: 20px; background: #0f0f0f;">
+      <div style="background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 12px 16px; display: flex; align-items: center; gap: 12px; font-family: monospace; font-size: 12px;">
+        <span style="color: #888;">3개 선택됨</span>
+        <div style="width: 1px; height: 24px; background: #333;"></div>
+        <!-- Unified input with presets as quick-fill -->
+        <div style="display:flex; align-items:center; gap:4px;">
+          <span style="color:#888; font-size:11px;">회전</span>
+          <button style="background:#2a2a2a; border:1px solid #444; border-radius:4px; padding:4px 8px; color:#ccc; font-size:11px; cursor:pointer;">90</button>
+          <button style="background:#2a2a2a; border:1px solid #444; border-radius:4px; padding:4px 8px; color:#ccc; font-size:11px; cursor:pointer;">180</button>
+          <button style="background:#2a2a2a; border:1px solid #444; border-radius:4px; padding:4px 8px; color:#ccc; font-size:11px; cursor:pointer;">270</button>
+          <input style="width:60px; background:#222; border:1px solid #555; border-radius:6px; padding:5px 8px; color:#fff; font-size:13px; text-align:center;" value="90" />
+          <span style="color:#888; font-size:11px;">°</span>
+        </div>
+        <div style="margin-left:auto; display:flex; gap:8px;">
+          <button style="background:#3b82f6; border:none; border-radius:6px; padding:7px 16px; color:white; font-size:12px; cursor:pointer;">↻ 회전 후 ZIP 저장</button>
+        </div>
+      </div>
+      <p style="color:#555; font-size:11px; margin:8px 0 0; text-align:center;">프리셋 버튼은 입력창에 숫자만 채워줌 → "회전 후 ZIP 저장" 한 번에 실행</p>
+    </div>
+    <div class="card-body">
+      <h3>B — 입력창 통합 + 원클릭 실행</h3>
+      <p>90/180/270 클릭하면 입력창에 값만 채워줌. "회전 후 ZIP 저장" 버튼 하나로 회전+다운로드 한번에.</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="section" style="margin-top:16px; padding:12px 16px; background:rgba(59,130,246,0.08); border-radius:8px; border:1px solid rgba(59,130,246,0.2);">
+  <p style="margin:0; color:var(--text-secondary); font-size:13px;">💡 B안이 Figma export 느낌에 더 가깝습니다 — 각도 확인하고 한 번에 내보내기.</p>
+</div>

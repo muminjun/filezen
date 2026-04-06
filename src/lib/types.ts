@@ -70,6 +70,7 @@ export interface AppContextType {
   removeFile: (fileId: string) => void;
   selectFile: (fileId: string) => void;          // 단일 선택 (selectedFileId + selectedFileIds 모두 업데이트)
   toggleFileSelection: (fileId: string) => void; // selectedFileIds 토글 (체크박스용)
+  selectRangeFiles: (fileIds: string[]) => void;  // 범위 선택 (한 번에 여러 파일)
   selectAllFiles: () => void;
   clearSelection: () => void;
   rotateSelectedFiles: (degrees: 90 | 180 | 270 | 360) => void;

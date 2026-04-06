@@ -1,0 +1,91 @@
+<h2>어떤 걸 만들까요?</h2>
+<p class="subtitle">관심 있는 항목을 모두 클릭해 주세요 (복수 선택 가능)</p>
+
+<h3 style="margin: 24px 0 8px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.5;">🔧 핵심 처리 (현재 미구현)</h3>
+<div class="options" data-multiselect>
+  <div class="option" data-choice="core-convert" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>실제 이미지 변환 연결</h3>
+      <p>포맷 변환(JPG/PNG/WebP), 리사이즈, 품질 설정을 실제로 적용. 지금은 설정만 있고 처리가 안 됨.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="progress-ui" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>처리 진행률 + 결과 미리보기</h3>
+      <p>변환 중 진행바 표시, 완료 후 원본↔변환 전/후 비교 뷰 연결.</p>
+    </div>
+  </div>
+</div>
+
+<h3 style="margin: 28px 0 8px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.5;">✨ 새 기능</h3>
+<div class="options" data-multiselect>
+  <div class="option" data-choice="crop" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>이미지 크롭</h3>
+      <p>선택한 이미지를 자유롭게 자르기. 비율 고정(1:1, 16:9 등) 옵션 포함.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="adjust" onclick="toggleSelect(this)">
+    <div class="letter">D</div>
+    <div class="content">
+      <h3>밝기 / 대비 / 채도 조절</h3>
+      <p>Canvas filter를 이용한 기본 보정. 일괄 적용 가능.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="rename" onclick="toggleSelect(this)">
+    <div class="letter">E</div>
+    <div class="content">
+      <h3>일괄 파일명 변경</h3>
+      <p>패턴 입력으로 이름 일괄 변경. 예: <code>photo_{n:001}.jpg</code></p>
+    </div>
+  </div>
+  <div class="option" data-choice="watermark" onclick="toggleSelect(this)">
+    <div class="letter">F</div>
+    <div class="content">
+      <h3>워터마크</h3>
+      <p>텍스트 또는 이미지 워터마크를 일괄 삽입. 위치/투명도 조절.</p>
+    </div>
+  </div>
+</div>
+
+<h3 style="margin: 28px 0 8px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.5;">🎨 UI/UX 개선</h3>
+<div class="options" data-multiselect>
+  <div class="option" data-choice="lightbox" onclick="toggleSelect(this)">
+    <div class="letter">G</div>
+    <div class="content">
+      <h3>라이트박스 (이미지 크게 보기)</h3>
+      <p>썸네일 더블클릭 시 전체화면 미리보기. 좌우 화살표로 탐색.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="thumb-size" onclick="toggleSelect(this)">
+    <div class="letter">H</div>
+    <div class="content">
+      <h3>썸네일 크기 조절 슬라이더</h3>
+      <p>갤러리 썸네일 크기를 작게~크게 실시간 조절. 많은 이미지 탐색 편의성 향상.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="sort-filter" onclick="toggleSelect(this)">
+    <div class="letter">I</div>
+    <div class="content">
+      <h3>정렬 + 필터</h3>
+      <p>이름/크기/날짜 정렬. 포맷별 필터(JPG만 보기 등). 검색.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="keyboard" onclick="toggleSelect(this)">
+    <div class="letter">J</div>
+    <div class="content">
+      <h3>키보드 단축키</h3>
+      <p>⌘A 전체선택, Delete 삭제, ←→ 탐색, Space 선택 토글.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="drag-reorder" onclick="toggleSelect(this)">
+    <div class="letter">K</div>
+    <div class="content">
+      <h3>드래그로 이미지 순서 변경</h3>
+      <p>갤러리에서 드래그 앤 드롭으로 순서 재배치. ZIP 저장 순서에 반영.</p>
+    </div>
+  </div>
+</div>
