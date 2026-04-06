@@ -1,99 +1,20 @@
-// Enums
-export type ImageFormat = 'png' | 'jpg' | 'webp';
-export type ResizeMode = 'contain' | 'cover' | 'stretch' | 'crop';
-export type FileStatus = 'pending' | 'processing' | 'completed' | 'error';
-export type RotationDegrees = 0 | 90 | 180 | 270; // 표시용 (0~270 범위)
-
-// Interfaces
-export interface ConversionSettings {
-  format: ImageFormat;
-  width: number;
-  height: number;
-  resizeMode: ResizeMode;
-  jpgQuality: number; // 50-100
-  pngCompressionLevel: number; // 0-9
-  webpQuality: number; // 50-100
-  removeMetadata: boolean;
-}
-
-export interface ProcessingFile {
+export interface ImageFile {
   id: string;
   file: File;
-  originalUrl: string; // ObjectURL of original
-  processedUrl: string; // ObjectURL of processed image
-  status: FileStatus;
-  progress: number; // 0-100
-  error?: string;
-  processedFile?: Blob;
-  settings?: ConversionSettings;
-  rotation: number; // CSS 누적 회전 각도 (항상 증가, 애니메이션용)
-}
-
-export interface ProcessingRecord {
-  id: string;
-  timestamp: number;
-  originalFileName: string;
-  format: ImageFormat;
-  width: number;
-  height: number;
-  resizeMode: ResizeMode;
-}
-
-export interface PresetConfig {
-  id: string;
-  name: string;
-  width: number;
-  height: number;
-  resizeMode: ResizeMode;
-  format: ImageFormat;
-}
-
-export interface FavoriteSettings {
-  id: string;
-  name: string;
-  settings: ConversionSettings;
-  createdAt: number;
+  previewUrl: string; // ObjectURL (썸네일 표시용, revokeObjectURL 필요)
+  rotation: number;   // CSS 미리보기 회전각 (0~359, 누적)
 }
 
 export interface AppContextType {
-  files: ProcessingFile[];
-  selectedFileId: string | null;   // 미리보기용 단일 선택 (PreviewPanel 호환)
-  selectedFileIds: string[];        // 일괄 작업용 다중 선택
-  settings: ConversionSettings;
-  history: ProcessingRecord[];
-  presets: PresetConfig[];
-  favorites: FavoriteSettings[];
-  isProcessing: boolean;
-
-  // Actions (dispatch functions)
-  addFiles: (newFiles: File[]) => Promise<void>;
-  removeFile: (fileId: string) => void;
-  selectFile: (fileId: string) => void;          // 단일 선택 (selectedFileId + selectedFileIds 모두 업데이트)
-  toggleFileSelection: (fileId: string) => void; // selectedFileIds 토글 (체크박스용)
-  selectRangeFiles: (fileIds: string[]) => void;  // 범위 선택 (한 번에 여러 파일)
-  selectAllFiles: () => void;
+  images: ImageFile[];
+  selectedIds: Set<string>;
+  isDownloading: boolean;
+  addImages: (files: File[]) => void;
+  removeImage: (id: string) => void;
+  toggleSelect: (id: string) => void;
+  rangeSelect: (fromId: string, toId: string) => void;
+  selectAll: () => void;
   clearSelection: () => void;
-  rotateSelectedFiles: (degrees: 90 | 180 | 270 | 360) => void;
-  updateSettings: (settings: Partial<ConversionSettings>) => void;
-  processFiles: () => Promise<void>;
-  addToHistory: (record: ProcessingRecord) => void;
-  clearHistory: () => void;
-  addPreset: (preset: PresetConfig) => void;
-  removePreset: (presetId: string) => void;
-  addFavorite: (favorite: FavoriteSettings) => void;
-  removeFavorite: (favoriteId: string) => void;
-  downloadFile: (fileId: string) => void;
-  downloadAllAsZip: () => void;
-}
-
-export interface SquooshOptions {
-  png?: {
-    level?: number; // 0-9
-  };
-  jpeg?: {
-    quality?: number; // 0-100
-  };
-  webp?: {
-    quality?: number; // 0-100
-  };
+  rotateSelected: (degrees: number) => void;
+  downloadAsZip: () => Promise<void>;
 }
