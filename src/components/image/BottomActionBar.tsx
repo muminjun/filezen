@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { RotateCw, Download } from 'lucide-react';
+import { RotateCw, Download, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAppContext } from '@/context/AppContext';
 import {
@@ -30,11 +30,21 @@ export function BottomActionBar() {
     outputFormat,
     setOutputFormat,
     quality,
-    setQuality
+    setQuality,
+    removeImage
   } = useAppContext();
   const [customAngle, setCustomAngle] = useState('');
 
   const hasSelection = selectedIds.size > 0;
+
+  const handleRemoveSelected = () => {
+    if (!hasSelection) return;
+    if (window.confirm(t('removeSelected') + '?')) {
+      // Create a copy of IDs to remove as state might change
+      const idsToRemove = Array.from(selectedIds);
+      idsToRemove.forEach(id => removeImage(id));
+    }
+  };
 
   const handleApplyCustom = () => {
     const deg = parseInt(customAngle, 10);
@@ -61,7 +71,7 @@ export function BottomActionBar() {
             disabled={!hasSelection}
             title={t(ROTATION_LABEL_KEYS[deg])}
             className={cn(
-              'flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium transition-colors whitespace-nowrap',
+              'flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium transition-all active:scale-95 cursor-pointer whitespace-nowrap',
               hasSelection
                 ? 'bg-muted hover:bg-muted/80 text-foreground'
                 : 'cursor-not-allowed text-muted-foreground opacity-40'
@@ -90,7 +100,7 @@ export function BottomActionBar() {
           onClick={handleApplyCustom}
           disabled={!hasSelection || customAngle === ''}
           className={cn(
-            'rounded-md px-2 py-1 text-xs font-medium transition-colors whitespace-nowrap',
+            'rounded-md px-2 py-1 text-xs font-medium transition-all active:scale-95 cursor-pointer whitespace-nowrap',
             hasSelection && customAngle !== ''
               ? 'bg-muted hover:bg-muted/80 text-foreground'
               : 'cursor-not-allowed text-muted-foreground opacity-40'
@@ -104,7 +114,7 @@ export function BottomActionBar() {
 
       <div className="flex flex-shrink-0 items-center gap-2">
         <Select value={outputFormat} onValueChange={(val) => setOutputFormat(val as any)}>
-          <SelectTrigger className="h-8 w-[100px] text-xs">
+          <SelectTrigger className="h-8 w-[100px] text-xs cursor-pointer">
             <SelectValue placeholder={t('format')} />
           </SelectTrigger>
           <SelectContent>
@@ -136,7 +146,7 @@ export function BottomActionBar() {
           onClick={downloadAsZip}
           disabled={!hasSelection || isDownloading}
           className={cn(
-            'flex items-center gap-2 rounded-md px-3 py-1.5 text-xs font-medium transition-colors whitespace-nowrap',
+            'flex items-center gap-2 rounded-md px-3 py-1.5 text-xs font-medium transition-all active:scale-95 cursor-pointer whitespace-nowrap',
             hasSelection && !isDownloading
               ? 'bg-primary text-primary-foreground hover:bg-primary/90'
               : 'cursor-not-allowed bg-muted text-muted-foreground opacity-50'

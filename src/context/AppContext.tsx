@@ -65,6 +65,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setSelectedIds(new Set());
   }, []);
 
+  const reorderImages = useCallback((startIndex: number, endIndex: number) => {
+    setImages((prev) => {
+      const result = Array.from(prev);
+      const [removed] = result.splice(startIndex, 1);
+      result.splice(endIndex, 0, removed);
+      return result;
+    });
+  }, []);
+
   const toggleSelect = useCallback((id: string) => {
     setSelectedIds((prev) => {
       const next = new Set(prev);
@@ -161,6 +170,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         addImages,
         removeImage,
         removeAllImages,
+        reorderImages,
         toggleSelect,
         rangeSelect,
         selectAll,
