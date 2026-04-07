@@ -44,7 +44,7 @@ export function LanguageSwitcher() {
     <Select value={locale} onValueChange={handleLanguageChange}>
       <SelectTrigger className="w-[120px]">
         <Globe className="h-4 w-4 mr-2" />
-        <SelectValue />
+        <SelectValue>{locale === 'ko' ? '한국어' : 'English'}</SelectValue>
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="en">English</SelectItem>

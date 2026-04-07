@@ -5,6 +5,15 @@ import { useTranslations } from 'next-intl';
 import { useAppContext } from '@/context/AppContext';
 import { ImageCard } from './ImageCard';
 import { cn } from '@/lib/utils';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
+
+const COLUMN_OPTIONS = [2, 3, 4, 5] as const;
 
 export function ImageGallery() {
   const t = useTranslations('gallery');
@@ -22,6 +31,7 @@ export function ImageGallery() {
 
   const lastClickedId = useRef<string | null>(null);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const [columns, setColumns] = useState(4);
 
   const handleToggle = (id: string, event: React.MouseEvent) => {
     if (event.shiftKey && lastClickedId.current) {
@@ -96,9 +106,21 @@ export function ImageGallery() {
           </span>
         )}
 
-        <span className="ml-auto text-xs text-muted-foreground">
-          {t('totalCount', { count: images.length })}
-        </span>
+        <div className="ml-auto flex items-center gap-2">
+          <span className="text-xs text-muted-foreground">
+            {t('totalCount', { count: images.length })}
+          </span>
+          <Select value={String(columns)} onValueChange={(v) => setColumns(Number(v))}>
+            <SelectTrigger className="h-7 w-[70px] text-xs cursor-pointer">
+              <SelectValue>{columns}열</SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {COLUMN_OPTIONS.map((n) => (
+                <SelectItem key={n} value={String(n)}>{n}열</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       <div className="flex-1 overflow-y-auto p-4">
@@ -107,7 +129,7 @@ export function ImageGallery() {
             <p className="text-sm text-muted-foreground">{t('noImages')}</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+          <div className="gap-4" style={{ columns }}>
             {images.map((image, index) => (
               <div
                 key={image.id}
@@ -116,7 +138,7 @@ export function ImageGallery() {
                 onDragEnd={onDragEnd}
                 draggable
                 className={cn(
-                  'cursor-move transition-opacity',
+                  'mb-4 break-inside-avoid cursor-move transition-opacity',
                   draggedIndex === index && 'opacity-30'
                 )}
               >

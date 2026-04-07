@@ -41,13 +41,14 @@ export const ImageCard = memo(function ImageCard({
   }, []);
 
   const needsScale = image.rotation === 90 || image.rotation === 270;
+  const flipScale = image.flipped ? ' scaleX(-1)' : '';
 
   return (
     <div
       ref={containerRef}
       onClick={(e) => onToggle(image.id, e)}
       className={cn(
-        'group relative aspect-square cursor-pointer overflow-hidden rounded-xl border border-border/50 bg-muted/30 transition-all select-none active:scale-[0.97]',
+        'group relative cursor-pointer overflow-hidden rounded-xl border border-border/50 bg-muted/30 transition-all select-none active:scale-[0.97] will-change-transform',
         isSelected
           ? 'border-primary bg-primary/5 ring-1 ring-primary'
           : 'hover:border-primary/30 hover:shadow-md'
@@ -83,10 +84,10 @@ export const ImageCard = memo(function ImageCard({
       <button
         onClick={async (e) => {
           e.stopPropagation();
-          if (image.rotation === 0) {
+          if (image.rotation === 0 && !image.flipped) {
             window.open(image.previewUrl, '_blank');
           } else {
-            const blob = await rotateImageBlob(image.previewUrl, image.rotation, image.file.type || 'image/jpeg');
+            const blob = await rotateImageBlob(image.previewUrl, image.rotation, image.flipped, image.file.type || 'image/jpeg');
             const url = URL.createObjectURL(blob);
             window.open(url, '_blank');
           }
@@ -102,12 +103,12 @@ export const ImageCard = memo(function ImageCard({
           alt={image.file.name}
           draggable={false}
           style={{
-            transform: `rotate(${image.rotation}deg)${needsScale ? ' scale(0.71)' : ''}`,
+            transform: `rotate(${image.rotation}deg)${needsScale ? ' scale(0.71)' : ''}${flipScale}`,
           }}
-          className="h-full w-full object-cover transition-transform duration-300 ease-out"
+          className="w-full h-auto object-contain transition-transform duration-300 ease-out"
         />
       ) : (
-        <div className="h-full w-full animate-pulse bg-muted" />
+        <div className="w-full aspect-video animate-pulse bg-muted" />
       )}
     </div>
   );
