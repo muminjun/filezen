@@ -59,6 +59,7 @@ export function EditDrawer({ isOpen, onClose }: Props) {
   });
   const [showDiscardModal, setShowDiscardModal] = useState(false);
   const dragStartY = useRef<number | null>(null);
+  const imgRef     = useRef<HTMLImageElement>(null);
 
   const hasChanges = useCallback((): boolean => {
     const adjChanged = (Object.keys(adjustment) as (keyof ColorAdjustment)[])
@@ -107,18 +108,25 @@ export function EditDrawer({ isOpen, onClose }: Props) {
   const handleCropSectionChange = useCallback((data: Partial<CropData>) => {
     setCropData((prev) => ({ ...prev, ...data }));
     if (data.aspectRatio !== undefined) {
-      const aspect = data.aspectRatio ? ASPECT_MAP[data.aspectRatio] : undefined;
-      if (aspect) {
-        const w = 80;
-        const h = w / aspect;
-        const cappedH = Math.min(h, 80);
-        const cappedW = cappedH * aspect;
+      const newAspect = data.aspectRatio ? ASPECT_MAP[data.aspectRatio] : undefined;
+      if (newAspect && imgRef.current) {
+        const { width: iw, height: ih } = imgRef.current;
+        // widthPct / heightPct = newAspect * ih / iw (rendered pixel ratio)
+        const ratio = newAspect * ih / iw;
+        let cropW: number, cropH: number;
+        if (ratio * 80 <= 100) {
+          cropH = 80;
+          cropW = ratio * cropH;
+        } else {
+          cropW = 80;
+          cropH = cropW / ratio;
+        }
         setCrop({
           unit: '%',
-          x: (100 - cappedW) / 2,
-          y: (100 - cappedH) / 2,
-          width: cappedW,
-          height: cappedH,
+          x: (100 - cropW) / 2,
+          y: (100 - cropH) / 2,
+          width: cropW,
+          height: cropH,
         });
       } else {
         setCrop({ unit: '%', x: 0, y: 0, width: 100, height: 100 });
@@ -255,6 +263,7 @@ export function EditDrawer({ isOpen, onClose }: Props) {
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
+              ref={imgRef}
               src={previewImage.previewUrl}
               alt="preview"
               style={{ filter: cssFilter || undefined }}
