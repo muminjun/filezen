@@ -60,11 +60,9 @@ export function CropSection({ cropData, onChange, onRotate }: Props) {
       <button
         onClick={onRotate}
         title={t('rotate90')}
-        className="flex flex-shrink-0 flex-col items-center gap-1.5 cursor-pointer opacity-70 hover:opacity-100 transition-opacity"
+        className="flex flex-shrink-0 flex-col items-center gap-1.5 cursor-pointer opacity-40 hover:opacity-70 transition-opacity"
       >
-        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#2c2c2e] text-white">
-          <RotateCw size={13} />
-        </div>
+        <RotateCw size={16} className="text-[#777]" />
         <span className="text-[10px] text-[#777]">{t('rotate90')}</span>
       </button>
     </div>
