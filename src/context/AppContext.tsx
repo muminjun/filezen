@@ -9,7 +9,9 @@ import React, {
 } from 'react';
 import { rotateImageBlob } from '../lib/imageRotation';
 import { MAX_CONCURRENT_PROCESSING } from '../lib/constants';
-import type { ImageFile, AppContextType } from '../lib/types';
+import { buildCssFilter, isDefaultAdjustment } from '../lib/colorAdjustment';
+import { useSavedAdjustments } from '../hooks/useSavedAdjustments';
+import type { ImageFile, AppContextType, ColorAdjustment, CropData, OutputFormat } from '../lib/types';
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
@@ -28,11 +30,18 @@ function normalizeRotation(deg: number): number {
 }
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  const [images, setImages] = useState<ImageFile[]>([]);
+  const [images, setImages]           = useState<ImageFile[]>([]);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [isDownloading, setIsDownloading] = useState(false);
-  const [outputFormat, setOutputFormat] = useState<OutputFormat>('original');
-  const [quality, setQuality] = useState(90);
+  const [outputFormat, setOutputFormat]   = useState<OutputFormat>('original');
+  const [quality, setQuality]             = useState(90);
+
+  const {
+    saved: savedAdjustments,
+    recent: recentAdjustments,
+    saveAdjustment,
+    addRecentAdjustment,
+  } = useSavedAdjustments();
 
   const addImages = useCallback((files: File[]) => {
     const next: ImageFile[] = files.map((file) => ({
@@ -40,6 +49,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       file,
       previewUrl: URL.createObjectURL(file),
       rotation: 0,
+      flipped: false,
     }));
     setImages((prev) => [...prev, ...next]);
   }, []);
@@ -85,12 +95,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const rangeSelect = useCallback((fromId: string, toId: string) => {
     const fromIdx = images.findIndex((img) => img.id === fromId);
-    const toIdx = images.findIndex((img) => img.id === toId);
+    const toIdx   = images.findIndex((img) => img.id === toId);
     if (fromIdx === -1 || toIdx === -1) return;
-    const start = Math.min(fromIdx, toIdx);
-    const end = Math.max(fromIdx, toIdx);
+    const start   = Math.min(fromIdx, toIdx);
+    const end     = Math.max(fromIdx, toIdx);
     const rangeIds = images.slice(start, end + 1).map((img) => img.id);
-    setSelectedIds((prevSel) => new Set([...prevSel, ...rangeIds]));
+    setSelectedIds((prev) => new Set([...prev, ...rangeIds]));
   }, [images]);
 
   const selectAll = useCallback(() => {
@@ -101,17 +111,36 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setSelectedIds(new Set());
   }, []);
 
-  const rotateSelected = useCallback(
-    (degrees: number) => {
+  const rotateSelected = useCallback((degrees: number) => {
+    setImages((prev) =>
+      prev.map((img) =>
+        selectedIds.has(img.id)
+          ? { ...img, rotation: normalizeRotation(img.rotation + degrees) }
+          : img
+      )
+    );
+  }, [selectedIds]);
+
+  const flipSelected = useCallback(() => {
+    setImages((prev) =>
+      prev.map((img) =>
+        selectedIds.has(img.id) ? { ...img, flipped: !img.flipped } : img
+      )
+    );
+  }, [selectedIds]);
+
+  const applyEditToSelected = useCallback(
+    (edit: { colorAdjustment?: ColorAdjustment; cropData?: CropData }) => {
       setImages((prev) =>
         prev.map((img) =>
-          selectedIds.has(img.id)
-            ? { ...img, rotation: normalizeRotation(img.rotation + degrees) }
-            : img
+          selectedIds.has(img.id) ? { ...img, ...edit } : img
         )
       );
+      if (edit.colorAdjustment && !isDefaultAdjustment(edit.colorAdjustment)) {
+        addRecentAdjustment(edit.colorAdjustment);
+      }
     },
-    [selectedIds]
+    [selectedIds, addRecentAdjustment]
   );
 
   const downloadAsZip = useCallback(async () => {
@@ -121,25 +150,43 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setIsDownloading(true);
     try {
       const JSZip = (await import('jszip')).default;
-      const zip = new JSZip();
+      const zip   = new JSZip();
 
       for (let i = 0; i < selected.length; i += MAX_CONCURRENT_PROCESSING) {
         const batch = selected.slice(i, i + MAX_CONCURRENT_PROCESSING);
         await Promise.all(
           batch.map(async (img) => {
-            const targetMime = outputFormat === 'original' 
+            const targetMime = outputFormat === 'original'
               ? (img.file.type || 'image/jpeg')
               : `image/${outputFormat}`;
-            
-            const blob = (img.rotation === 0 && outputFormat === 'original')
-                ? img.file
-                : await rotateImageBlob(img.previewUrl, img.rotation, targetMime, quality / 100);
-            
+
+            const cssFilter = img.colorAdjustment && !isDefaultAdjustment(img.colorAdjustment)
+              ? buildCssFilter(img.colorAdjustment)
+              : undefined;
+
+            const needsProcessing =
+              img.rotation !== 0 ||
+              img.flipped ||
+              outputFormat !== 'original' ||
+              cssFilter !== undefined ||
+              img.cropData !== undefined;
+
+            const blob = needsProcessing
+              ? await rotateImageBlob(
+                  img.previewUrl,
+                  img.rotation,
+                  img.flipped,
+                  targetMime,
+                  quality / 100,
+                  cssFilter,
+                  img.cropData,
+                )
+              : img.file;
+
             const extension = outputFormat === 'original'
               ? img.file.name.split('.').pop()
               : outputFormat;
-            
-            const baseName = img.file.name.replace(/\.[^/.]+$/, "");
+            const baseName = img.file.name.replace(/\.[^/.]+$/, '');
             zip.file(`${baseName}.${extension}`, blob);
           })
         );
@@ -147,9 +194,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
       const content = await zip.generateAsync({ type: 'blob' });
       const url = URL.createObjectURL(content);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `filezen-rotated-${Date.now()}.zip`;
+      const a   = document.createElement('a');
+      a.href     = url;
+      a.download = `filezen-${Date.now()}.zip`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -157,7 +204,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     } finally {
       setIsDownloading(false);
     }
-  }, [images, selectedIds]);
+  }, [images, selectedIds, outputFormat, quality]);
 
   return (
     <AppContext.Provider
@@ -167,6 +214,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
         isDownloading,
         outputFormat,
         quality,
+        savedAdjustments,
+        recentAdjustments,
         addImages,
         removeImage,
         removeAllImages,
@@ -176,9 +225,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
         selectAll,
         clearSelection,
         rotateSelected,
+        flipSelected,
         setOutputFormat,
         setQuality,
         downloadAsZip,
+        applyEditToSelected,
+        saveAdjustment,
       }}
     >
       {children}

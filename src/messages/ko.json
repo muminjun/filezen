@@ -34,7 +34,51 @@
     "downloading": "저장 중...",
     "format": "포맷",
     "quality": "품질",
-    "original": "원본 유지"
+    "original": "원본 유지",
+    "flipHorizontal": "좌우반전",
+    "edit": "편집",
+    "removeSelected": "선택 삭제"
+  },
+  "editDrawer": {
+    "title": "편집",
+    "bulkLabel": "{count}장 · 동일 적용",
+    "singleLabel": "단일 이미지",
+    "done": "완료",
+    "applyToThis": "이 이미지에만 적용",
+    "applyToAll": "{count}장 모두에 적용",
+    "cropSection": "크롭",
+    "adjustSection": "색상 조정",
+    "rotate90": "90° 회전",
+    "flipH": "좌우반전",
+    "reset": "초기화",
+    "aspectFree": "자유",
+    "savePreset": "즐겨찾기에 저장",
+    "saved": "저장됨 ✓",
+    "recentLabel": "최근 사용",
+    "favoritesLabel": "즐겨찾기",
+    "resetAll": "전체 초기화",
+    "params": {
+      "exposure": "노출",
+      "brilliance": "생동감",
+      "highlights": "하이라이트",
+      "shadows": "어두운 영역",
+      "contrast": "대비",
+      "brightness": "밝기",
+      "blackpoint": "검정점",
+      "saturation": "채도",
+      "vibrance": "활기",
+      "warmth": "따뜻함",
+      "tint": "색조",
+      "sharpness": "선명도",
+      "noise": "노이즈 감소",
+      "vignette": "비네팅"
+    },
+    "paramRanges": {
+      "warmthMin": "차갑게",
+      "warmthMax": "따뜻하게",
+      "tintMin": "녹색",
+      "tintMax": "자홍색"
+    }
   },
   "filePage": {
     "title": "파일 변환",

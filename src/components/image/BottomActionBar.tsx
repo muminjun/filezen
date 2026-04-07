@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { RotateCw, Download, Trash2 } from 'lucide-react';
+import { RotateCw, Download, Trash2, FlipHorizontal } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAppContext } from '@/context/AppContext';
 import {
@@ -20,11 +20,16 @@ const ROTATION_LABEL_KEYS = {
   270: 'rotate270',
 } as const;
 
-export function BottomActionBar() {
+interface Props {
+  onEditClick: () => void;
+}
+
+export function BottomActionBar({ onEditClick }: Props) {
   const t = useTranslations('actionBar');
   const { 
     selectedIds, 
-    rotateSelected, 
+    rotateSelected,
+    flipSelected,
     downloadAsZip, 
     isDownloading,
     outputFormat,
@@ -93,7 +98,7 @@ export function BottomActionBar() {
           onKeyDown={(e) => e.key === 'Enter' && handleApplyCustom()}
           disabled={!hasSelection}
           placeholder={t('customAngle')}
-          className="w-16 rounded-md border border-border bg-background px-2 py-1 text-xs disabled:opacity-40"
+          className="w-24 rounded-md border border-border bg-background px-2 py-1 text-xs disabled:opacity-40"
         />
         <span className="text-xs text-muted-foreground">°</span>
         <button
@@ -112,10 +117,51 @@ export function BottomActionBar() {
 
       <div className="h-5 w-px flex-shrink-0 bg-border" />
 
+      <button
+        onClick={flipSelected}
+        disabled={!hasSelection}
+        title={t('flipHorizontal')}
+        className={cn(
+          'flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium transition-all active:scale-95 cursor-pointer whitespace-nowrap',
+          hasSelection
+            ? 'bg-muted hover:bg-muted/80 text-foreground'
+            : 'cursor-not-allowed text-muted-foreground opacity-40'
+        )}
+      >
+        <FlipHorizontal size={12} className="flex-shrink-0" />
+        {t('flipHorizontal')}
+      </button>
+
+      <div className="h-5 w-px flex-shrink-0 bg-border" />
+
+      <button
+        onClick={onEditClick}
+        disabled={!hasSelection}
+        title={t('edit')}
+        className={cn(
+          'flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium transition-all active:scale-95 cursor-pointer whitespace-nowrap',
+          hasSelection
+            ? 'border border-primary/30 text-primary hover:bg-primary/10'
+            : 'cursor-not-allowed text-muted-foreground opacity-40'
+        )}
+      >
+        ✏️ {t('edit')}
+      </button>
+
+      <div className="h-5 w-px flex-shrink-0 bg-border" />
+
       <div className="flex flex-shrink-0 items-center gap-2">
         <Select value={outputFormat} onValueChange={(val) => setOutputFormat(val as any)}>
           <SelectTrigger className="h-8 w-[100px] text-xs cursor-pointer">
-            <SelectValue placeholder={t('format')} />
+            <SelectValue placeholder={t('format')}>
+              {outputFormat === 'original'
+                ? t('original')
+                : outputFormat === 'png'
+                ? 'PNG'
+                : outputFormat === 'jpeg'
+                ? 'JPEG'
+                : 'WebP'}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="original">{t('original')}</SelectItem>

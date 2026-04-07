@@ -1,27 +1,69 @@
+export interface ColorAdjustment {
+  exposure:   number; // -100 ~ 100
+  brilliance: number; // -100 ~ 100
+  highlights: number; // -100 ~ 0
+  shadows:    number; //    0 ~ 100
+  contrast:   number; // -100 ~ 100
+  brightness: number; // -100 ~ 100
+  blackpoint: number; //    0 ~ 100
+  saturation: number; // -100 ~ 100
+  vibrance:   number; // -100 ~ 100
+  warmth:     number; // -100 ~ 100
+  tint:       number; // -100 ~ 100
+  sharpness:  number; //    0 ~ 100
+  noise:      number; //    0 ~ 100
+  vignette:   number; //    0 ~ 100
+}
+
+export interface CropData {
+  x:           number;       // 0.0 ~ 1.0 (비율)
+  y:           number;
+  width:       number;
+  height:      number;
+  rotation:    number;       // -45 ~ 45
+  aspectRatio: string | null; // '4:3', '16:9', null(자유)
+}
+
+export interface SavedAdjustment {
+  id:         string;
+  name:       string;
+  adjustment: ColorAdjustment;
+  createdAt:  number;
+}
+
 export interface ImageFile {
-  id: string;
-  file: File;
-  previewUrl: string; // ObjectURL (썸네일 표시용, revokeObjectURL 필요)
-  rotation: number;   // CSS 미리보기 회전각 (0~359, 누적)
+  id:               string;
+  file:             File;
+  previewUrl:       string;
+  rotation:         number;
+  flipped:          boolean;
+  colorAdjustment?: ColorAdjustment;
+  cropData?:        CropData;
 }
 
 export type OutputFormat = 'original' | 'png' | 'jpeg' | 'webp';
 
 export interface AppContextType {
-  images: ImageFile[];
-  selectedIds: Set<string>;
-  isDownloading: boolean;
-  outputFormat: OutputFormat;
-  quality: number;
-  addImages: (files: File[]) => void;
-  removeImage: (id: string) => void;
-  removeAllImages: () => void;
-  toggleSelect: (id: string) => void;
-  rangeSelect: (fromId: string, toId: string) => void;
-  selectAll: () => void;
-  clearSelection: () => void;
-  rotateSelected: (degrees: number) => void;
-  setOutputFormat: (format: OutputFormat) => void;
-  setQuality: (quality: number) => void;
-  downloadAsZip: () => Promise<void>;
+  images:             ImageFile[];
+  selectedIds:        Set<string>;
+  isDownloading:      boolean;
+  outputFormat:       OutputFormat;
+  quality:            number;
+  savedAdjustments:   SavedAdjustment[];
+  recentAdjustments:  ColorAdjustment[];
+  addImages:          (files: File[]) => void;
+  removeImage:        (id: string) => void;
+  removeAllImages:    () => void;
+  reorderImages:      (startIndex: number, endIndex: number) => void;
+  toggleSelect:       (id: string) => void;
+  rangeSelect:        (fromId: string, toId: string) => void;
+  selectAll:          () => void;
+  clearSelection:     () => void;
+  rotateSelected:     (degrees: number) => void;
+  flipSelected:       () => void;
+  setOutputFormat:    (format: OutputFormat) => void;
+  setQuality:         (quality: number) => void;
+  downloadAsZip:      () => Promise<void>;
+  applyEditToSelected:(edit: { colorAdjustment?: ColorAdjustment; cropData?: CropData }) => void;
+  saveAdjustment:     (name: string, adj: ColorAdjustment) => void;
 }

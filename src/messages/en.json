@@ -34,7 +34,51 @@
     "downloading": "Saving...",
     "format": "Format",
     "quality": "Quality",
-    "original": "Original"
+    "original": "Original",
+    "flipHorizontal": "Flip",
+    "edit": "Edit",
+    "removeSelected": "Remove Selected"
+  },
+  "editDrawer": {
+    "title": "Edit",
+    "bulkLabel": "{count} images · apply to all",
+    "singleLabel": "Single image",
+    "done": "Done",
+    "applyToThis": "Apply to this image",
+    "applyToAll": "Apply to {count} images",
+    "cropSection": "Crop",
+    "adjustSection": "Color Adjustments",
+    "rotate90": "Rotate 90°",
+    "flipH": "Flip",
+    "reset": "Reset",
+    "aspectFree": "Free",
+    "savePreset": "Save to Favorites",
+    "saved": "Saved ✓",
+    "recentLabel": "Recent",
+    "favoritesLabel": "Favorites",
+    "resetAll": "Reset All",
+    "params": {
+      "exposure": "Exposure",
+      "brilliance": "Brilliance",
+      "highlights": "Highlights",
+      "shadows": "Shadows",
+      "contrast": "Contrast",
+      "brightness": "Brightness",
+      "blackpoint": "Black Point",
+      "saturation": "Saturation",
+      "vibrance": "Vibrance",
+      "warmth": "Warmth",
+      "tint": "Tint",
+      "sharpness": "Sharpness",
+      "noise": "Noise Reduction",
+      "vignette": "Vignette"
+    },
+    "paramRanges": {
+      "warmthMin": "Cool",
+      "warmthMax": "Warm",
+      "tintMin": "Green",
+      "tintMax": "Magenta"
+    }
   },
   "filePage": {
     "title": "File Conversion",
