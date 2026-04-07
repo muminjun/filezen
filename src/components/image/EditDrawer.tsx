@@ -266,7 +266,10 @@ export function EditDrawer({ isOpen, onClose }: Props) {
               ref={imgRef}
               src={previewImage.previewUrl}
               alt="preview"
-              style={{ filter: cssFilter || undefined }}
+              style={{
+                filter: cssFilter || undefined,
+                transform: cropData.rotation ? `rotate(${cropData.rotation}deg)` : undefined,
+              }}
               className="max-h-[44vh] max-w-full object-contain max-[680px]:max-h-[30vh]"
             />
           </ReactCrop>
