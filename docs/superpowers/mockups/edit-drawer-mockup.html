@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EditDrawer Mockup</title>
+<style>
+* { box-sizing:border-box; margin:0; padding:0; }
+html, body { height:100%; overflow:hidden; }
+body {
+  background:#111; display:flex;
+  font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;
+  color:#fff;
+}
+
+/* ── 갤러리 ── */
+.gallery {
+  flex:1; background:#0a0a0a;
+  display:grid; grid-template-columns:repeat(3,1fr);
+  gap:4px; padding:8px; align-content:start; overflow:hidden;
+  transition:filter .3s;
+}
+.gallery.blurred { filter:brightness(0.4); pointer-events:none; }
+.gi { aspect-ratio:1; border-radius:6px; position:relative; overflow:hidden; }
+.gi.sel { outline:2px solid #0a84ff; }
+.check {
+  position:absolute; top:6px; left:6px;
+  width:20px; height:20px; background:#0a84ff; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:11px; font-weight:700;
+}
+
+/* ══════════════════════════════
+   DESKTOP: 우측 슬라이드인 드로어
+   ══════════════════════════════ */
+.drawer {
+  width: clamp(380px, 45vw, 560px);
+  height:100vh; background:#1c1c1e;
+  border-left:1px solid #2a2a2c;
+  display:flex; flex-direction:column; flex-shrink:0;
+  transition:transform .3s cubic-bezier(.4,0,.2,1);
+  position:relative; z-index:10;
+}
+
+/* 헤더 */
+.drawer-header {
+  display:flex; align-items:center; gap:8px;
+  padding:13px 18px; border-bottom:1px solid #2a2a2c; flex-shrink:0;
+}
+.btn-close {
+  width:28px; height:28px; background:#2c2c2e; border:none; border-radius:50%;
+  color:#aaa; cursor:pointer; font-size:14px;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  transition:background .15s;
+}
+.btn-close:hover { background:#3a3a3c; color:#fff; }
+.header-center { flex:1; text-align:center; }
+.header-title { font-size:15px; font-weight:600; }
+.header-sub { font-size:11px; color:#f5a623; margin-top:1px; }
+.btn-done {
+  background:none; border:none; color:#0a84ff;
+  font-size:15px; font-weight:600; cursor:pointer; flex-shrink:0;
+  padding:4px 0;
+}
+
+/* 썸네일 스트립 */
+.thumb-strip {
+  display:flex; align-items:center; gap:6px;
+  padding:8px 18px; border-bottom:1px solid #2a2a2c;
+  background:#161618; flex-shrink:0;
+}
+.thumb-label { font-size:11px; color:#555; }
+.thumb {
+  width:32px; height:32px; border-radius:6px;
+  border:2px solid transparent; overflow:hidden; flex-shrink:0;
+}
+.thumb.active { border-color:#0a84ff; }
+
+/* ── 미리보기 ── */
+.preview-area {
+  flex-shrink:0; position:relative; background:#000;
+  height:44%; overflow:hidden; user-select:none;
+}
+.preview-img-bg {
+  width:100%; height:100%; position:absolute; inset:0;
+  background:linear-gradient(160deg,#1a3a1a 0%,#0d1f0d 40%,#2a4a2a 100%);
+  transition:filter .1s;
+}
+.shade { position:absolute; background:rgba(0,0,0,0.6); }
+.crop-box {
+  position:absolute; border:1px solid rgba(255,255,255,0.85);
+  cursor:move; pointer-events:auto;
+}
+.crop-grid {
+  position:absolute; inset:0;
+  display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(3,1fr);
+  pointer-events:none;
+}
+.crop-grid div { border:.5px solid rgba(255,255,255,0.15); }
+.ch { position:absolute; width:20px; height:20px; pointer-events:auto; }
+.ch::before,.ch::after { content:''; position:absolute; background:#fff; }
+.ch.tl{top:-2px;left:-2px;cursor:nw-resize}
+.ch.tl::before{top:0;left:0;width:3px;height:18px} .ch.tl::after{top:0;left:0;width:18px;height:3px}
+.ch.tr{top:-2px;right:-2px;cursor:ne-resize}
+.ch.tr::before{top:0;right:0;width:3px;height:18px} .ch.tr::after{top:0;right:0;width:18px;height:3px}
+.ch.bl{bottom:-2px;left:-2px;cursor:sw-resize}
+.ch.bl::before{bottom:0;left:0;width:3px;height:18px} .ch.bl::after{bottom:0;left:0;width:18px;height:3px}
+.ch.br{bottom:-2px;right:-2px;cursor:se-resize}
+.ch.br::before{bottom:0;right:0;width:3px;height:18px} .ch.br::after{bottom:0;right:0;width:18px;height:3px}
+.eh { position:absolute; background:rgba(255,255,255,0.75); border-radius:2px; pointer-events:auto; }
+.eh.t,.eh.b{width:30px;height:3px;left:50%;transform:translateX(-50%);cursor:n-resize}
+.eh.l,.eh.r{width:3px;height:30px;top:50%;transform:translateY(-50%);cursor:e-resize}
+.eh.t{top:-1px} .eh.b{bottom:-1px} .eh.l{left:-1px} .eh.r{right:-1px}
+
+/* ── 컨트롤 ── */
+.controls {
+  flex:1; overflow-y:auto;
+  scrollbar-width:thin; scrollbar-color:#3a3a3c transparent;
+}
+
+/* 비율 */
+.ratio-section { padding:14px 18px; background:#1c1c1e; }
+.ratio-row {
+  display:flex; align-items:flex-end; gap:8px;
+  overflow-x:auto; scrollbar-width:none; padding-bottom:2px;
+}
+.ratio-row::-webkit-scrollbar { display:none; }
+.ratio-btn {
+  display:flex; flex-direction:column; align-items:center; gap:5px;
+  background:none; border:none; cursor:pointer; opacity:.38;
+  padding:8px 10px; border-radius:10px; flex-shrink:0;
+  transition:opacity .15s, background .15s;
+}
+.ratio-btn.active { opacity:1; background:#2c2c2e; }
+.ratio-box { border:1.5px solid #777; border-radius:2px; }
+.ratio-btn.active .ratio-box { border-color:#0a84ff; }
+.ratio-name { font-size:10px; color:#777; }
+.ratio-btn.active .ratio-name { color:#0a84ff; }
+
+/* 구분선 */
+.section-divider {
+  display:flex; align-items:center; gap:8px;
+  padding:0 18px; height:32px;
+  background:#161618; border-top:1px solid #2a2a2c; border-bottom:1px solid #2a2a2c;
+}
+.section-divider span { font-size:10px; text-transform:uppercase; letter-spacing:.1em; color:#555; white-space:nowrap; }
+.section-divider::before,.section-divider::after { content:''; flex:1; height:1px; background:#2a2a2c; }
+
+/* 슬라이더 */
+.adj-selected-row { padding:14px 18px 8px; background:#1c1c1e; }
+.adj-param-header { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px; }
+.adj-param-name { font-size:14px; font-weight:600; }
+.adj-param-value { font-size:26px; font-weight:200; color:#0a84ff; font-variant-numeric:tabular-nums; }
+.ios-slider-wrap { position:relative; height:32px; display:flex; align-items:center; margin-bottom:6px; }
+.ios-slider-track { position:absolute; left:0; right:0; height:4px; background:#3a3a3c; border-radius:2px; overflow:hidden; }
+.ios-slider-fill { position:absolute; height:100%; background:#0a84ff; border-radius:2px; }
+.center-tick { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:2px; height:14px; background:#555; pointer-events:none; }
+input.ios-range {
+  position:relative; z-index:2; width:100%;
+  -webkit-appearance:none; appearance:none;
+  background:transparent; cursor:pointer; height:32px; margin:0;
+}
+input.ios-range::-webkit-slider-thumb {
+  -webkit-appearance:none; width:22px; height:22px;
+  background:#fff; border-radius:50%; box-shadow:0 1px 4px rgba(0,0,0,.5); cursor:grab;
+}
+input.ios-range::-webkit-slider-thumb:active { cursor:grabbing; }
+.adj-range-labels { display:flex; justify-content:space-between; font-size:10px; color:#444; margin-top:2px; }
+
+/* 아이콘 스트립 */
+.icon-strip {
+  overflow-x:auto; scrollbar-width:none; display:flex;
+  padding:6px 8px 4px; background:#1c1c1e;
+  border-top:1px solid #252527; border-bottom:1px solid #252527;
+}
+.icon-strip::-webkit-scrollbar { display:none; }
+.param-btn {
+  display:flex; flex-direction:column; align-items:center; gap:3px;
+  padding:5px 7px; border-radius:10px; background:none; border:none;
+  cursor:pointer; flex-shrink:0; transition:background .15s;
+}
+.param-btn.active { background:#2c2c2e; }
+.param-icon {
+  width:40px; height:40px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:15px; position:relative; transition:transform .15s;
+}
+.param-btn.active .param-icon { transform:scale(1.08); }
+.touched-dot { position:absolute; top:2px; right:2px; width:7px; height:7px; border-radius:50%; background:#0a84ff; display:none; }
+.param-n { font-size:9px; white-space:nowrap; color:#666; max-width:46px; text-align:center; }
+.param-btn.active .param-n { color:#0a84ff; font-weight:600; }
+
+/* 프리셋 */
+.preset-section { padding:14px 18px 18px; background:#1c1c1e; }
+.save-preset-btn {
+  width:100%; padding:9px; background:none; border:1px solid #0a84ff33;
+  border-radius:10px; color:#0a84ff; font-size:12px; cursor:pointer; margin-bottom:12px;
+}
+.save-preset-btn:hover { background:#0a84ff18; }
+.grp-label { font-size:10px; text-transform:uppercase; letter-spacing:.1em; color:#555; margin-bottom:6px; }
+.chips { display:flex; flex-wrap:wrap; gap:6px; }
+.chip { padding:4px 10px; border-radius:10px; border:1px solid #3a3a3c; background:#2c2c2e; font-size:11px; color:#bbb; cursor:pointer; }
+.chip:hover { border-color:#0a84ff; color:#0a84ff; }
+
+/* 푸터 */
+.drawer-footer {
+  display:flex; gap:10px; padding:12px 18px;
+  border-top:1px solid #2a2a2c; flex-shrink:0; background:#1c1c1e;
+}
+.footer-btn { flex:1; padding:13px; border:none; border-radius:10px; font-size:13px; font-weight:600; cursor:pointer; }
+.footer-btn.sec { background:#2c2c2e; color:#ddd; }
+.footer-btn.pri { background:#0a84ff; color:#fff; }
+
+/* ══════════════════════════════
+   DISCARD MODAL
+   ══════════════════════════════ */
+.modal-backdrop {
+  display:none; position:fixed; inset:0; z-index:100;
+  background:rgba(0,0,0,.6); backdrop-filter:blur(4px);
+  align-items:center; justify-content:center;
+}
+.modal-backdrop.show { display:flex; }
+.modal {
+  background:#2c2c2e; border-radius:14px;
+  padding:22px 20px 16px; width:270px; text-align:center;
+  animation:modalIn .2s ease;
+}
+@keyframes modalIn { from{transform:scale(.9);opacity:0} to{transform:scale(1);opacity:1} }
+.modal-title { font-size:17px; font-weight:600; margin-bottom:6px; }
+.modal-desc { font-size:13px; color:#aaa; margin-bottom:20px; line-height:1.4; }
+.modal-btn {
+  width:100%; padding:12px; border:none; border-radius:10px;
+  font-size:16px; font-weight:500; cursor:pointer; margin-bottom:8px;
+}
+.modal-btn.danger { background:none; color:#ff453a; font-weight:600; }
+.modal-btn.danger:hover { background:#ff453a18; }
+.modal-btn.cancel { background:#3a3a3c; color:#fff; }
+.modal-btn.cancel:hover { background:#484848; }
+
+/* ══════════════════════════════
+   MOBILE: 하단 시트
+   ══════════════════════════════ */
+@media (max-width: 680px) {
+  body { flex-direction:column; }
+
+  .gallery {
+    flex:none; height:100vh; width:100%;
+    grid-template-columns:repeat(3,1fr);
+    transition:none;
+  }
+  .gallery.blurred { filter:brightness(.35); }
+
+  .drawer {
+    position:fixed; bottom:0; left:0; right:0;
+    width:100%; height:78vh;
+    border-left:none; border-top:1px solid #2a2a2c;
+    border-radius:16px 16px 0 0;
+    transform:translateY(100%);
+    transition:transform .35s cubic-bezier(.4,0,.2,1);
+    z-index:20;
+  }
+  .drawer.open { transform:translateY(0); }
+
+  /* 상단 드래그 핸들 */
+  .drawer-header::before {
+    content:''; display:block;
+    position:absolute; top:8px; left:50%; transform:translateX(-50%);
+    width:36px; height:4px; background:#444; border-radius:2px;
+  }
+  .drawer-header { position:relative; padding-top:20px; }
+
+  .preview-area { height:38%; }
+
+  /* 모바일 크롭 핸들 — 더 크게 */
+  .ch { width:28px; height:28px; }
+  .ch::before { width:4px !important; height:24px !important; }
+  .ch::after  { width:24px !important; height:4px !important; }
+  .eh.t,.eh.b { width:40px; height:4px; }
+  .eh.l,.eh.r { width:4px; height:40px; }
+
+  .param-icon { width:44px; height:44px; }
+  .param-n { font-size:10px; }
+
+  .footer-btn { padding:15px; font-size:14px; }
+}
+
+/* 데스크탑 오픈 토글 (데모용) */
+#openBtn {
+  display:none;
+}
+@media (max-width:680px) {
+  #openBtn {
+    display:block; position:fixed; bottom:24px; right:24px; z-index:30;
+    padding:12px 20px; background:#0a84ff; border:none; border-radius:50px;
+    color:#fff; font-size:14px; font-weight:600; cursor:pointer;
+    box-shadow:0 4px 16px rgba(0,132,255,.4);
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- 갤러리 -->
+<div class="gallery" id="gallery">
+  <div class="gi sel" style="background:linear-gradient(135deg,#1a3a1a,#0d2a0d)"><div class="check">✓</div></div>
+  <div class="gi sel" style="background:linear-gradient(135deg,#3a2a1a,#2a1a0a)"><div class="check">✓</div></div>
+  <div class="gi sel" style="background:linear-gradient(135deg,#1a2a3a,#0a1a2a)"><div class="check">✓</div></div>
+  <div class="gi" style="background:linear-gradient(135deg,#2a1a3a,#1a0a2a)"></div>
+  <div class="gi" style="background:linear-gradient(135deg,#3a3a1a,#2a2a0a)"></div>
+  <div class="gi" style="background:linear-gradient(135deg,#1a3a3a,#0a2a2a)"></div>
+</div>
+
+<!-- 모바일 열기 버튼 -->
+<button id="openBtn" onclick="openDrawer()">✏️ 편집 열기</button>
+
+<!-- 드로어 -->
+<div class="drawer" id="drawer">
+
+  <!-- 헤더 -->
+  <div class="drawer-header">
+    <button class="btn-close" onclick="tryClose()">✕</button>
+    <div class="header-center">
+      <div class="header-title">편집</div>
+      <div class="header-sub">3장 · 동일 적용</div>
+    </div>
+    <button class="btn-done" onclick="applyAndClose()">완료</button>
+  </div>
+
+  <!-- 썸네일 스트립 -->
+  <div class="thumb-strip">
+    <span class="thumb-label">대상</span>
+    <div class="thumb active" style="background:linear-gradient(135deg,#1a3a1a,#0d2a0d)"></div>
+    <div class="thumb" style="background:linear-gradient(135deg,#3a2a1a,#2a1a0a)"></div>
+    <div class="thumb" style="background:linear-gradient(135deg,#1a2a3a,#0a1a2a)"></div>
+  </div>
+
+  <!-- 미리보기 -->
+  <div class="preview-area" id="previewArea">
+    <div class="preview-img-bg" id="previewBg"></div>
+    <div style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:8px;height:50%;background:#3d2b1f;border-radius:4px;pointer-events:none;"></div>
+    <div style="position:absolute;bottom:38%;left:35%;width:70px;height:50px;background:rgba(255,200,200,0.13);border-radius:50%;pointer-events:none;"></div>
+    <div style="position:absolute;bottom:46%;left:42%;width:90px;height:60px;background:rgba(255,190,190,0.1);border-radius:50%;pointer-events:none;"></div>
+
+    <div style="position:absolute;inset:0;pointer-events:none;">
+      <div class="shade" id="shadeTop"></div>
+      <div class="shade" id="shadeBottom"></div>
+      <div class="shade" id="shadeLeft"></div>
+      <div class="shade" id="shadeRight"></div>
+      <div class="crop-box" id="cropBox">
+        <div class="crop-grid"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+        <div class="ch tl" data-handle="tl"></div>
+        <div class="ch tr" data-handle="tr"></div>
+        <div class="ch bl" data-handle="bl"></div>
+        <div class="ch br" data-handle="br"></div>
+        <div class="eh t" data-handle="t"></div>
+        <div class="eh b" data-handle="b"></div>
+        <div class="eh l" data-handle="l"></div>
+        <div class="eh r" data-handle="r"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 단일 스크롤 컨트롤 -->
+  <div class="controls">
+
+    <!-- 비율 (6개만) -->
+    <div class="ratio-section">
+      <div class="ratio-row">
+        <button class="ratio-btn active" data-ratio="free" onclick="applyRatio(this)">
+          <div class="ratio-box" style="width:22px;height:22px;"></div>
+          <span class="ratio-name">자유</span>
+        </button>
+        <button class="ratio-btn" data-ratio="1:1" data-w="1" data-h="1" onclick="applyRatio(this)">
+          <div class="ratio-box" style="width:22px;height:22px;"></div>
+          <span class="ratio-name">1:1</span>
+        </button>
+        <button class="ratio-btn" data-ratio="3:4" data-w="3" data-h="4" onclick="applyRatio(this)">
+          <div class="ratio-box" style="width:19px;height:25px;"></div>
+          <span class="ratio-name">3:4</span>
+        </button>
+        <button class="ratio-btn" data-ratio="4:3" data-w="4" data-h="3" onclick="applyRatio(this)">
+          <div class="ratio-box" style="width:25px;height:19px;"></div>
+          <span class="ratio-name">4:3</span>
+        </button>
+        <button class="ratio-btn" data-ratio="16:9" data-w="16" data-h="9" onclick="applyRatio(this)">
+          <div class="ratio-box" style="width:29px;height:16px;"></div>
+          <span class="ratio-name">16:9</span>
+        </button>
+        <button class="ratio-btn" data-ratio="9:16" data-w="9" data-h="16" onclick="applyRatio(this)">
+          <div class="ratio-box" style="width:16px;height:29px;"></div>
+          <span class="ratio-name">9:16</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 구분선 -->
+    <div class="section-divider"><span>색상 조정</span></div>
+
+    <!-- 슬라이더 -->
+    <div class="adj-selected-row">
+      <div class="adj-param-header">
+        <span class="adj-param-name" id="adjParamName">노출</span>
+        <span class="adj-param-value" id="adjParamValue">0</span>
+      </div>
+      <div class="ios-slider-wrap">
+        <div class="ios-slider-track"><div class="ios-slider-fill" id="sliderFill"></div></div>
+        <div class="center-tick" id="centerTick"></div>
+        <input class="ios-range" type="range" id="mainSlider" min="-100" max="100" value="0"
+          oninput="onSliderChange(+this.value)">
+      </div>
+      <div class="adj-range-labels">
+        <span id="rangeMin">-100</span>
+        <span id="rangeMax">+100</span>
+      </div>
+    </div>
+
+    <!-- 아이콘 스트립 -->
+    <div class="icon-strip">
+      <button class="param-btn active" data-key="exposure" data-min="-100" data-max="100" onclick="selectParam(this)">
+        <div class="param-icon" style="background:#2c2c2e;color:#fff;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="5"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <span class="touched-dot"></span>
+        </div><span class="param-n">노출</span>
+      </button>
+      <button class="param-btn" data-key="brilliance" data-min="-100" data-max="100" onclick="selectParam(this)">
+        <div class="param-icon" style="background:#3a2a1a;color:#ffaa44;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
+          <span class="touched-dot"></span>
+        </div><span class="param-n">브릴리언스</span>
+      </button>
+      <button class="param-btn" data-key="highlights" data-min="-100" data-max="0" onclick="selectParam(this)">
+        <div class="param-icon" style="background:#3a3a1a;color:#ffee55;">
+          <svg width="17" height="17" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="#ffee55" stroke-width="1.5"/><path d="M12 3a9 9 0 0 1 0 18V3z" fill="#ffee55"/></svg>
+          <span class="touched-dot"></span>
+        </div><span class="param-n">하이라이트</span>
+      </button>
+      <button class="param-btn" data-key="shadows" data-min="0" data-max="100" onclick="selectParam(this)">
+        <div class="param-icon" style="background:#1a1a3a;color:#6688ff;">
+          <svg width="17" height="17" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="#6688ff" stroke-width="1.5"/><path d="M12 21a9 9 0 0 1 0-18v18z" fill="#6688ff"/></svg>
+          <span class="touched-dot"></span>
+        </div><span class="param-n">어두운 영역</span>
+      </button>
+      <button class="param-btn" data-key="contrast" data-min="-100" data-max="100" onclick="selectParam(this)">
+        <div class="param-icon" style="background:#2a2a2a;color:#ccc;">
+          <svg width="17" height="17" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="#ccc" stroke-width="1.5"/><path d="M12 3a9 9 0 0 1 0 18V3z" fill="#ccc"/></svg>
+          <span class="touched-dot"></span>
+        </div><span class="param-n">대비</span>
+      </button>
+      <button class="param-btn" data-key="brightness" data-min="-100" data-max="100" onclick="selectParam(this)">
+        <div class="param-icon" style="background:#3a3518;color:#ffee88;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12" stroke-linecap="round"/></svg>
+          <span class="touched-dot"></span>
+        </div><span class="param-n">밝기</span>
+      </button>
+      <button class="param-btn" data-key="blackpoint" data-min="0" data-max="100" onclick="selectParam(this)">
+        <div class="param-icon" style="background:#181818;color:#888;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="#888"><circle cx="12" cy="12" r="8"/></svg>
+          <span class="touched-dot"></span>
+        </div><span class="param-n">검정점</span>
+      </button>
+      <button class="param-btn" data-key="saturation" data-min="-100" data-max="100" onclick="selectParam(this)">
+        <div class="param-icon" style="background:#2a1a3a;">
+          <svg width="17" height="17" viewBox="0 0 24 24"><circle cx="8" cy="13" r="5" fill="#6644ff" opacity=".75"/><circle cx="16" cy="13" r="5" fill="#ff44aa" opacity=".75"/><circle cx="12" cy="7" r="5" fill="#ffaa00" opacity=".75"/></svg>
+          <span class="touched-dot"></span>
+        </div><span class="param-n">채도</span>
+      </button>
+      <button class="param-btn" data-key="vibrance" data-min="-100" data-max="100" onclick="selectParam(this)">
+        <div class="param-icon" style="background:#1a3a2a;color:#44ffaa;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#44ffaa" stroke-width="1.8"><polygon points="12,3 14.5,9 21,9.5 16,14 17.5,21 12,17.5 6.5,21 8,14 3,9.5 9.5,9"/></svg>
+          <span class="touched-dot"></span>
+        </div><span class="param-n">활기</span>
+      </button>
+      <button class="param-btn" data-key="warmth" data-min="-100" data-max="100" onclick="selectParam(this)">
+        <div class="param-icon" style="background:#3a2010;color:#ff7733;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#ff7733" stroke-width="1.8"><path d="M8 14s0-8 4-8 4 8 4 8" stroke-linecap="round"/><path d="M12 22a4 4 0 0 0 4-4V14H8v4a4 4 0 0 0 4 4z" fill="#ff773344" stroke-linecap="round"/></svg>
+          <span class="touched-dot"></span>
+        </div><span class="param-n">따뜻함</span>
+      </button>
+      <button class="param-btn" data-key="tint" data-min="-100" data-max="100" onclick="selectParam(this)">
+        <div class="param-icon" style="background:#102a1a;color:#44bb88;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#44bb88" stroke-width="1.8"><path d="M12 3c0 0-7 6-7 11a7 7 0 0 0 14 0c0-5-7-11-7-11z"/></svg>
+          <span class="touched-dot"></span>
+        </div><span class="param-n">색조</span>
+      </button>
+      <button class="param-btn" data-key="sharpness" data-min="0" data-max="100" onclick="selectParam(this)">
+        <div class="param-icon" style="background:#1a2a3a;color:#88ccff;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#88ccff" stroke-width="2"><path d="M4 15l4-8 4 6 3-4 5 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="touched-dot"></span>
+        </div><span class="param-n">선명도</span>
+      </button>
+      <button class="param-btn" data-key="definition" data-min="0" data-max="100" onclick="selectParam(this)">
+        <div class="param-icon" style="background:#1a3a3a;color:#44ddcc;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#44ddcc" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 12h8M8 15h5" stroke-linecap="round"/></svg>
+          <span class="touched-dot"></span>
+        </div><span class="param-n">디테일</span>
+      </button>
+      <button class="param-btn" data-key="noise" data-min="0" data-max="100" onclick="selectParam(this)">
+        <div class="param-icon" style="background:#2a2a1a;color:#aaaa66;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="#aaaa66"><circle cx="5" cy="5" r="1.2" opacity=".4"/><circle cx="11" cy="4" r="1.2" opacity=".7"/><circle cx="18" cy="6" r="1.2" opacity=".5"/><circle cx="3" cy="12" r="1.2" opacity=".6"/><circle cx="9" cy="11" r="1.2"/><circle cx="16" cy="13" r="1.2" opacity=".8"/><circle cx="20" cy="18" r="1.2" opacity=".4"/><circle cx="7" cy="19" r="1.2" opacity=".7"/><circle cx="14" cy="20" r="1.2" opacity=".5"/></svg>
+          <span class="touched-dot"></span>
+        </div><span class="param-n">노이즈 감소</span>
+      </button>
+      <button class="param-btn" data-key="vignette" data-min="0" data-max="100" onclick="selectParam(this)">
+        <div class="param-icon" style="background:#111;">
+          <svg width="17" height="17" viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="10" ry="10" fill="url(#vig)"/><defs><radialGradient id="vig" cx="50%" cy="50%" r="50%"><stop offset="25%" stop-color="transparent"/><stop offset="100%" stop-color="#aaa" stop-opacity=".9"/></radialGradient></defs></svg>
+          <span class="touched-dot"></span>
+        </div><span class="param-n">비네팅</span>
+      </button>
+    </div>
+
+    <!-- 즐겨찾기 -->
+    <div class="preset-section">
+      <button class="save-preset-btn">즐겨찾기에 저장</button>
+      <div class="grp-label">최근 사용</div>
+      <div class="chips">
+        <div class="chip">최근 1</div>
+        <div class="chip">최근 2</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 푸터 -->
+  <div class="drawer-footer">
+    <button class="footer-btn sec">이 이미지에만 적용</button>
+    <button class="footer-btn pri">3장 모두에 적용</button>
+  </div>
+</div>
+
+<!-- 변경 사항 폐기 모달 -->
+<div class="modal-backdrop" id="discardModal">
+  <div class="modal">
+    <div class="modal-title">변경 사항이 있습니다</div>
+    <div class="modal-desc">편집을 종료하면 변경된 내용이 모두 사라집니다.</div>
+    <button class="modal-btn danger" onclick="discardAndClose()">변경 사항 폐기</button>
+    <button class="modal-btn cancel" onclick="closeModal()">계속 편집</button>
+  </div>
+</div>
+
+<script>
+// ── 상태 ──
+let crop = {x:8,y:12,w:84,h:76};
+let aspectRatio = null;
+let adjValues = {};
+let currentParam = {key:'exposure',min:-100,max:100};
+const MIN_SIZE = 10;
+function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v));}
+const pa = document.getElementById('previewArea');
+
+function hasChanges() {
+  if (Object.values(adjValues).some(v=>v!==0)) return true;
+  if (crop.x!==8||crop.y!==12||crop.w!==84||crop.h!==76) return true;
+  if (aspectRatio!==null) return true;
+  return false;
+}
+
+// ── 크롭 ──
+function updateCropUI(){
+  const {x,y,w,h}=crop;
+  const cb=document.getElementById('cropBox');
+  cb.style.left=x+'%';cb.style.top=y+'%';
+  cb.style.width=w+'%';cb.style.height=h+'%';
+  document.getElementById('shadeTop').style.cssText   =`top:0;left:0;right:0;height:${y}%`;
+  document.getElementById('shadeBottom').style.cssText=`bottom:0;left:0;right:0;height:${100-y-h}%`;
+  document.getElementById('shadeLeft').style.cssText  =`top:${y}%;left:0;width:${x}%;height:${h}%`;
+  document.getElementById('shadeRight').style.cssText =`top:${y}%;right:0;width:${100-x-w}%;height:${h}%`;
+}
+
+let drag=null;
+const cropBox=document.getElementById('cropBox');
+
+function getXY(e){
+  const r=pa.getBoundingClientRect();
+  const src=e.touches?e.touches[0]:e;
+  return {px:(src.clientX-r.left)/r.width*100, py:(src.clientY-r.top)/r.height*100};
+}
+function startDrag(e,type){
+  e.preventDefault();
+  const {px,py}=getXY(e);
+  drag={type,startX:px,startY:py,sc:{...crop}};
+}
+
+cropBox.addEventListener('mousedown', e=>{
+  if(!e.target.dataset.handle) startDrag(e,'move');
+});
+cropBox.addEventListener('touchstart', e=>{
+  if(!e.target.dataset.handle) startDrag(e,'move');
+},{passive:false});
+
+document.querySelectorAll('[data-handle]').forEach(el=>{
+  el.addEventListener('mousedown', e=>{e.stopPropagation();startDrag(e,el.dataset.handle);});
+  el.addEventListener('touchstart',e=>{e.stopPropagation();startDrag(e,el.dataset.handle);},{passive:false});
+});
+
+function onMove(px,py){
+  if(!drag)return;
+  const dx=px-drag.startX, dy=py-drag.startY;
+  const {sc,type:t}=drag;
+  let {x,y,w,h}=sc;
+  if(t==='move'){
+    x=clamp(sc.x+dx,0,100-sc.w); y=clamp(sc.y+dy,0,100-sc.h);
+  } else {
+    if(t==='tl'||t==='l'||t==='bl'){const nx=clamp(sc.x+dx,0,sc.x+sc.w-MIN_SIZE);w=sc.w-(nx-sc.x);x=nx;}
+    if(t==='tr'||t==='r'||t==='br'){w=clamp(sc.w+dx,MIN_SIZE,100-sc.x);}
+    if(t==='tl'||t==='t'||t==='tr'){const ny=clamp(sc.y+dy,0,sc.y+sc.h-MIN_SIZE);h=sc.h-(ny-sc.y);y=ny;}
+    if(t==='bl'||t==='b'||t==='br'){h=clamp(sc.h+dy,MIN_SIZE,100-sc.y);}
+    if(aspectRatio){
+      const ar=aspectRatio[0]/aspectRatio[1];
+      if(t==='t'||t==='b'){w=h*ar;}
+      else{const nh=w/ar;if(t==='tl'||t==='tr'){y=sc.y+sc.h-nh;}h=nh;}
+    }
+    x=clamp(x,0,100);y=clamp(y,0,100);
+    w=clamp(w,MIN_SIZE,100-x);h=clamp(h,MIN_SIZE,100-y);
+  }
+  crop={x,y,w,h};updateCropUI();
+}
+
+document.addEventListener('mousemove',e=>{if(drag){const r=pa.getBoundingClientRect();onMove((e.clientX-r.left)/r.width*100,(e.clientY-r.top)/r.height*100);}});
+document.addEventListener('touchmove',e=>{if(drag){e.preventDefault();const r=pa.getBoundingClientRect();const t=e.touches[0];onMove((t.clientX-r.left)/r.width*100,(t.clientY-r.top)/r.height*100);}},{passive:false});
+document.addEventListener('mouseup',()=>drag=null);
+document.addEventListener('touchend',()=>drag=null);
+
+function applyRatio(btn){
+  document.querySelectorAll('.ratio-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(btn.dataset.ratio==='free'){aspectRatio=null;return;}
+  const rw=+btn.dataset.w,rh=+btn.dataset.h;
+  aspectRatio=[rw,rh];
+  const par=pa.clientWidth/pa.clientHeight,car=rw/rh;
+  let nw,nh;
+  if(car>par){nw=88;nh=nw/car*(pa.clientWidth/pa.clientHeight);}
+  else{nh=88;nw=nh*car*(pa.clientHeight/pa.clientWidth);}
+  nw=Math.min(nw,90);nh=Math.min(nh,90);
+  crop={x:(100-nw)/2,y:(100-nh)/2,w:nw,h:nh};
+  updateCropUI();
+}
+
+// ── 색상 조정 ──
+function selectParam(btn){
+  document.querySelectorAll('.param-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  currentParam={key:btn.dataset.key,min:+btn.dataset.min,max:+btn.dataset.max};
+  const val=adjValues[currentParam.key]??0;
+  const sl=document.getElementById('mainSlider');
+  sl.min=currentParam.min;sl.max=currentParam.max;sl.value=val;
+  document.getElementById('adjParamName').textContent=btn.querySelector('.param-n').textContent.trim();
+  document.getElementById('rangeMin').textContent=currentParam.min<0?currentParam.min:'0';
+  document.getElementById('rangeMax').textContent='+'+currentParam.max;
+  document.getElementById('centerTick').style.display=currentParam.min<0?'block':'none';
+  updateSliderDisplay(val);
+}
+
+function onSliderChange(v){
+  adjValues[currentParam.key]=v;
+  updateSliderDisplay(v);
+  const dot=document.querySelector('.param-btn.active .touched-dot');
+  if(dot)dot.style.display=v!==0?'block':'none';
+  updatePreviewFilter();
+}
+
+function updateSliderDisplay(v){
+  document.getElementById('adjParamValue').textContent=v>0?'+'+v:v;
+  const {min,max}=currentParam,range=max-min;
+  const fill=document.getElementById('sliderFill');
+  if(min<0){
+    const center=(-min)/range*100,pos=(v-min)/range*100;
+    const lo=Math.min(center,pos),hi=Math.max(center,pos);
+    fill.style.left=lo+'%';fill.style.width=(hi-lo)+'%';
+  }else{fill.style.left='0';fill.style.width=((v-min)/range*100)+'%';}
+}
+
+function updatePreviewFilter(){
+  const g=(k)=>adjValues[k]??0;
+  const b=1+(g('exposure')+g('brightness'))/100;
+  const c=1+g('contrast')/100;
+  const s=1+(g('saturation')+g('vibrance')*.4)/100;
+  const hr=g('warmth')*.3;
+  document.getElementById('previewBg').style.filter=
+    `brightness(${Math.max(.05,b).toFixed(2)}) contrast(${Math.max(.1,c).toFixed(2)}) saturate(${Math.max(0,s).toFixed(2)})${hr?` hue-rotate(${hr.toFixed(1)}deg)`:''}`;
+}
+
+// ── 모달 / 닫기 ──
+function tryClose(){
+  if(hasChanges()){
+    document.getElementById('discardModal').classList.add('show');
+  } else {
+    closeDrawer();
+  }
+}
+function closeModal(){
+  document.getElementById('discardModal').classList.remove('show');
+}
+function discardAndClose(){
+  resetAll();
+  closeModal();
+  closeDrawer();
+}
+function applyAndClose(){
+  closeDrawer();
+}
+function closeDrawer(){
+  document.getElementById('gallery').classList.remove('blurred');
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('openBtn').style.display='';
+}
+function openDrawer(){
+  document.getElementById('gallery').classList.add('blurred');
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('openBtn').style.display='none';
+}
+
+// 초기화
+function resetAll(){
+  crop={x:8,y:12,w:84,h:76};aspectRatio=null;
+  document.querySelectorAll('.ratio-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector('[data-ratio="free"]').classList.add('active');
+  updateCropUI();
+  adjValues={};
+  document.querySelectorAll('.touched-dot').forEach(d=>d.style.display='none');
+  document.getElementById('mainSlider').value=0;
+  updateSliderDisplay(0);
+  updatePreviewFilter();
+}
+
+// 모달 배경 클릭으로 닫기
+document.getElementById('discardModal').addEventListener('click',e=>{
+  if(e.target===e.currentTarget)closeModal();
+});
+
+// 모바일: 드로어 초기 오픈
+if(window.innerWidth<=680){
+  // 모바일은 버튼으로 열도록
+} else {
+  // 데스크탑은 처음부터 보임
+  document.getElementById('gallery').classList.add('blurred');
+}
+
+updateCropUI();
+updateSliderDisplay(0);
+</script>
+</body>
+</html>
