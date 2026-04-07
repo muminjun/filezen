@@ -24,7 +24,7 @@ export function CropSection({ cropData, onChange, onRotate }: Props) {
   const t = useTranslations('editDrawer');
 
   return (
-    <div className="flex items-end gap-3 bg-[#1c1c1e] px-5 py-3">
+    <div className="flex items-end justify-between bg-[#1c1c1e] px-5 py-3">
       {ASPECT_RATIOS.map(({ label, value, w, h }) => {
         const isActive = cropData.aspectRatio === value;
         return (
