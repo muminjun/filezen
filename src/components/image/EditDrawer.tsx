@@ -277,7 +277,11 @@ export function EditDrawer({ isOpen, onClose }: Props) {
           className="flex-1 overflow-y-auto"
           style={{ scrollbarWidth: 'thin', scrollbarColor: '#3a3a3c transparent' }}
         >
-          <CropSection cropData={cropData} onChange={handleCropSectionChange} />
+          <CropSection
+            cropData={cropData}
+            onChange={handleCropSectionChange}
+            onRotate={() => setCropData((prev) => ({ ...prev, rotation: (prev.rotation + 90) % 360 }))}
+          />
 
           {/* Section divider */}
           <div className="flex items-center gap-2 border-y border-[#2a2a2c] bg-[#161618] px-5 py-2">
