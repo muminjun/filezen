@@ -13,6 +13,7 @@ export const DEFAULT_ADJUSTMENT: ColorAdjustment = {
   warmth:     0,
   tint:       0,
   sharpness:  0,
+  definition: 0,
   noise:      0,
   vignette:   0,
 };

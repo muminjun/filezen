@@ -57,6 +57,10 @@
     "recentLabel": "Recent",
     "favoritesLabel": "Favorites",
     "resetAll": "Reset All",
+    "discardTitle": "Discard Changes?",
+    "discardMessage": "Your edits will not be saved.",
+    "discardConfirm": "Discard Changes",
+    "discardCancel": "Keep Editing",
     "params": {
       "exposure": "Exposure",
       "brilliance": "Brilliance",
@@ -70,6 +74,7 @@
       "warmth": "Warmth",
       "tint": "Tint",
       "sharpness": "Sharpness",
+      "definition": "Definition",
       "noise": "Noise Reduction",
       "vignette": "Vignette"
     },

@@ -57,6 +57,10 @@
     "recentLabel": "최근 사용",
     "favoritesLabel": "즐겨찾기",
     "resetAll": "전체 초기화",
+    "discardTitle": "변경 사항을 폐기할까요?",
+    "discardMessage": "편집 내용이 저장되지 않습니다.",
+    "discardConfirm": "변경 사항 폐기",
+    "discardCancel": "계속 편집",
     "params": {
       "exposure": "노출",
       "brilliance": "생동감",
@@ -70,6 +74,7 @@
       "warmth": "따뜻함",
       "tint": "색조",
       "sharpness": "선명도",
+      "definition": "디테일",
       "noise": "노이즈 감소",
       "vignette": "비네팅"
     },

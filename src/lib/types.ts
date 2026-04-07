@@ -11,6 +11,7 @@ export interface ColorAdjustment {
   warmth:     number; // -100 ~ 100
   tint:       number; // -100 ~ 100
   sharpness:  number; //    0 ~ 100
+  definition: number; //    0 ~ 100
   noise:      number; //    0 ~ 100
   vignette:   number; //    0 ~ 100
 }

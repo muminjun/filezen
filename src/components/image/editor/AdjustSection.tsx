@@ -3,7 +3,7 @@
 import { useState, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
-import { buildCssFilter, DEFAULT_ADJUSTMENT } from '@/lib/colorAdjustment';
+import { DEFAULT_ADJUSTMENT } from '@/lib/colorAdjustment';
 import type { ColorAdjustment, SavedAdjustment } from '@/lib/types';
 
 type ParamKey = keyof ColorAdjustment;
@@ -30,6 +30,7 @@ const PARAM_CONFIGS: ParamConfig[] = [
   { key: 'warmth',     min: -100, max: 100, icon: '⬥',  iconBg: '#3a2010', iconColor: '#ff7733' },
   { key: 'tint',       min: -100, max: 100, icon: '⬦',  iconBg: '#102a1a', iconColor: '#44bb88' },
   { key: 'sharpness',  min: 0,    max: 100, icon: '◇',  iconBg: '#1a2a3a', iconColor: '#88ccff' },
+  { key: 'definition', min: 0,    max: 100, icon: '⬡',  iconBg: '#1a2a2a', iconColor: '#66ccaa' },
   { key: 'noise',      min: 0,    max: 100, icon: '≋',  iconBg: '#2a2a1a', iconColor: '#aaaa66' },
   { key: 'vignette',   min: 0,    max: 100, icon: '◎',  iconBg: '#111',    iconColor: '#999'    },
 ];
@@ -37,7 +38,6 @@ const PARAM_CONFIGS: ParamConfig[] = [
 interface Props {
   adjustment:        ColorAdjustment;
   onChange:          (adj: ColorAdjustment) => void;
-  previewUrl:        string;
   savedAdjustments:  SavedAdjustment[];
   recentAdjustments: ColorAdjustment[];
   onSavePreset:      (name: string) => void;
@@ -46,7 +46,6 @@ interface Props {
 export function AdjustSection({
   adjustment,
   onChange,
-  previewUrl,
   savedAdjustments,
   recentAdjustments,
   onSavePreset,
@@ -89,23 +88,8 @@ export function AdjustSection({
     return { background: pos > 0 ? `linear-gradient(to right,#0a84ff ${pos}%,#3a3a3c ${pos}%)` : '#3a3a3c' };
   }, []);
 
-  const cssFilter = buildCssFilter(adjustment);
-
   return (
     <div className="flex flex-col">
-      {/* 이미지 미리보기 */}
-      <div className="flex items-center justify-center bg-black px-5 py-5">
-        <div
-          className="h-[195px] w-[260px] rounded"
-          style={{
-            backgroundImage:    `url(${previewUrl})`,
-            backgroundSize:     'cover',
-            backgroundPosition: 'center',
-            filter:             cssFilter || undefined,
-          }}
-        />
-      </div>
-
       {/* 선택된 파라미터 + 큰 슬라이더 */}
       <div className="bg-[#1c1c1e] px-5 py-3">
         <div className="mb-2.5 flex items-baseline justify-between">
