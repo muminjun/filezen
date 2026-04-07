@@ -53,9 +53,6 @@ export function CropSection({ cropData, onChange, onRotate }: Props) {
         );
       })}
 
-      {/* 구분선 */}
-      <div className="h-8 w-px flex-shrink-0 bg-[#2a2a2c]" />
-
       {/* 90° 회전 버튼 */}
       <button
         onClick={onRotate}
