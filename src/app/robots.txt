@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://filezen.app/sitemap.xml

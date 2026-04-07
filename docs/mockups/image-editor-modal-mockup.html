@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>이미지 편집기 — End Drawer</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #111;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+  color: #e0e0e0;
+  overflow-x: hidden;
+}
+
+/* ═══════════════════════════════════
+   APP SHELL (갤러리 메인 화면)
+═══════════════════════════════════ */
+.app-shell {
+  width: 100vw;
+  min-height: 100vh;
+  background: #141414;
+  display: flex;
+  flex-direction: column;
+  transition: filter .3s ease;
+}
+.app-shell.dimmed {
+  filter: brightness(0.45);
+  pointer-events: none;
+}
+
+/* top bar */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 24px;
+  background: #1c1c1e;
+  border-bottom: 1px solid #2a2a2c;
+  flex-shrink: 0;
+}
+.topbar-logo { font-size: 17px; font-weight: 700; color: #fff; }
+.topbar-logo span { color: #0a84ff; }
+.topbar-actions { display: flex; gap: 8px; }
+.tb-btn {
+  padding: 7px 14px; border-radius: 8px; border: none;
+  font-size: 12px; font-weight: 600; cursor: pointer;
+}
+.tb-btn.ghost { background: #2c2c2e; color: #ddd; }
+.tb-btn.primary { background: #0a84ff; color: #fff; }
+
+/* gallery grid */
+.gallery {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 3px;
+  padding: 16px;
+}
+.gitem {
+  aspect-ratio: 1;
+  border-radius: 6px;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  transition: opacity .15s;
+}
+.gitem:hover { opacity: .85; }
+.gitem .gimg { width:100%;height:100%;display:block; }
+.gitem .check {
+  position:absolute;top:6px;right:6px;
+  width:20px;height:20px;border-radius:50%;
+  background:#0a84ff;display:none;
+  align-items:center;justify-content:center;
+  font-size:11px;color:#fff;font-weight:700;
+}
+.gitem.sel .check { display:flex; }
+.gitem.sel::after {
+  content:'';position:absolute;inset:0;
+  border:2.5px solid #0a84ff;border-radius:6px;pointer-events:none;
+}
+
+/* fake image colours */
+.g1{background:linear-gradient(135deg,#5a7a6a,#3d5a4a)}
+.g2{background:linear-gradient(135deg,#4a6a8a,#2d4a6a)}
+.g3{background:linear-gradient(135deg,#8a5a5a,#6a3a3a)}
+.g4{background:linear-gradient(135deg,#5a7a7a,#3d5a5a)}
+.g5{background:linear-gradient(135deg,#6a7a5a,#4a5a3a)}
+.g6{background:linear-gradient(135deg,#7a6a4a,#5a4a2a)}
+.g7{background:linear-gradient(135deg,#4a5a8a,#2a3a6a)}
+.g8{background:linear-gradient(135deg,#8a4a6a,#6a2a4a)}
+.g9{background:linear-gradient(135deg,#5a8a6a,#3a6a4a)}
+.g10{background:linear-gradient(135deg,#7a5a8a,#5a3a6a)}
+
+/* bottom action bar */
+.action-bar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 20px;
+  background: #1c1c1e;
+  border-top: 1px solid #2a2a2c;
+  flex-shrink: 0;
+}
+.sel-count { font-size: 12px; color: #888; margin-right: 6px; min-width: 80px; }
+.ab-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border-radius: 8px; border: none;
+  font-size: 12px; font-weight: 500; cursor: pointer;
+  background: #2c2c2e; color: #ddd;
+  transition: background .15s;
+}
+.ab-btn:hover { background: #3a3a3c; }
+.ab-btn.edit-btn {
+  background: #2c2c2e; color: #0a84ff;
+  border: 1px solid #0a84ff33;
+}
+.ab-btn.edit-btn:hover { background: #0a84ff18; }
+.ab-btn.dl-btn { margin-left: auto; background: #0a84ff; color: #fff; }
+.ab-btn.dl-btn:hover { background: #0070e0; }
+
+/* ═══════════════════════════════════
+   BACKDROP
+═══════════════════════════════════ */
+.backdrop {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.5);
+  opacity: 0; pointer-events: none;
+  transition: opacity .3s ease;
+  z-index: 100;
+}
+.backdrop.open { opacity: 1; pointer-events: all; }
+
+/* ═══════════════════════════════════
+   END DRAWER
+═══════════════════════════════════ */
+.drawer {
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  width: 380px;
+  background: #1c1c1e;
+  border-left: 1px solid #2a2a2c;
+  box-shadow: -20px 0 60px rgba(0,0,0,.7);
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform .3s cubic-bezier(.4,0,.2,1);
+  z-index: 200;
+  overflow: hidden;
+}
+.drawer.open { transform: translateX(0); }
+
+/* drawer header */
+.dwr-hdr {
+  display: flex; align-items: center;
+  padding: 14px 20px 12px;
+  border-bottom: 1px solid #2a2a2c;
+  flex-shrink: 0;
+  background: #1c1c1e;
+}
+.dwr-close {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: #2c2c2e; border: none;
+  color: #aaa; font-size: 16px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+}
+.dwr-close:hover { background: #3a3a3c; }
+.dwr-title-wrap { flex: 1; text-align: center; }
+.dwr-title  { font-size: 15px; font-weight: 600; color: #fff; }
+.dwr-bulk   { font-size: 11px; color: #f5a623; margin-top: 2px; }
+.dwr-done {
+  font-size: 15px; color: #0a84ff; font-weight: 600;
+  background: none; border: none; cursor: pointer; padding: 0 4px;
+}
+
+/* bulk thumbnails */
+.bulk-strip {
+  display: flex; align-items: center; gap: 7px;
+  padding: 9px 20px;
+  background: #1a1a1c;
+  border-bottom: 1px solid #2a2a2c;
+  flex-shrink: 0;
+}
+.bulk-strip .lbl { font-size: 11px; color: #555; margin-right: 3px; }
+.thumb { width: 30px; height: 30px; border-radius: 6px; border: 2px solid transparent; overflow: hidden; cursor: pointer; flex-shrink: 0; }
+.thumb.on { border-color: #0a84ff; }
+.tc1{width:100%;height:100%;background:linear-gradient(135deg,#5a7a6a,#3d5a4a)}
+.tc2{width:100%;height:100%;background:linear-gradient(135deg,#4a6a8a,#2d4a6a)}
+.tc3{width:100%;height:100%;background:linear-gradient(135deg,#8a5a5a,#6a3a3a)}
+.tc4{width:100%;height:100%;background:linear-gradient(135deg,#5a7a7a,#3d5a5a)}
+.tc5{width:100%;height:100%;background:linear-gradient(135deg,#6a7a5a,#4a5a3a)}
+
+/* scrollable content inside drawer */
+.dwr-body {
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #3a3a3c transparent;
+}
+.dwr-body::-webkit-scrollbar { width: 4px; }
+.dwr-body::-webkit-scrollbar-thumb { background: #3a3a3c; border-radius: 2px; }
+
+/* ── IMAGE ── */
+.canvas-wrap {
+  background: #000;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+}
+.img-frame {
+  position: relative;
+  width: 260px; height: 195px;
+  border-radius: 2px;
+}
+.img-bg {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg,#2a4a3a 0%,#1a2a4a 50%,#3a2a2a 100%);
+  border-radius: 2px;
+  transition: filter .15s ease;
+}
+.grid-ov { position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr 1fr;pointer-events:none; }
+.gc { border:.5px solid rgba(255,255,255,.18); }
+.ce { position:absolute;background:rgba(255,255,255,.8); }
+.ce.t{top:0;left:0;right:0;height:1px} .ce.b{bottom:0;left:0;right:0;height:1px}
+.ce.l{left:0;top:0;bottom:0;width:1px} .ce.r{right:0;top:0;bottom:0;width:1px}
+.ch { position:absolute;width:18px;height:18px;border-color:#fff;border-style:solid; }
+.ch.tl{top:-1px;left:-1px;border-width:3px 0 0 3px}
+.ch.tr{top:-1px;right:-1px;border-width:3px 3px 0 0}
+.ch.bl{bottom:-1px;left:-1px;border-width:0 0 3px 3px}
+.ch.br{bottom:-1px;right:-1px;border-width:0 3px 3px 0}
+
+/* ── RULER ── */
+.ruler {
+  padding: 4px 20px 8px;
+  background: #000;
+}
+.ruler-hint { text-align:center;font-size:11px;color:#0a84ff;margin-bottom:4px; }
+.ruler-hint span { color:#3a3a3c;margin-left:5px; }
+.ruler-wrap { position:relative;height:28px;display:flex;align-items:center; }
+.ruler-cline { position:absolute;left:50%;top:0;bottom:0;width:2px;background:#0a84ff;transform:translateX(-50%);z-index:2; }
+.ticks { display:flex;align-items:flex-end;width:100%;justify-content:space-between;padding:0 4px; }
+.tk { display:flex;flex-direction:column;align-items:center;gap:3px; }
+.tl { width:1px;background:#383838; }
+.tl.maj{height:12px;background:#555} .tl.min{height:7px}
+.tt { font-size:9px;color:#444;white-space:nowrap; }
+.tk.c .tl{background:#0a84ff;height:16px} .tk.c .tt{color:#0a84ff}
+
+/* ── CROP ROW ── */
+.crop-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 20px 12px;
+  background: #000;
+  border-top: 1px solid #1a1a1c;
+}
+.crop-btns { display:flex;gap:6px; }
+.cbtn { display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer; }
+.cicon {
+  width:34px;height:34px;border-radius:50%;background:#2c2c2e;
+  display:flex;align-items:center;justify-content:center;font-size:15px;
+  transition:background .15s;
+}
+.cbtn:active .cicon { background:#3a3a3c; }
+.clabel { font-size:9px;color:#666; }
+.asp-strip { display:flex;gap:5px;align-items:flex-end; }
+.abtn { display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;opacity:.4;transition:opacity .15s; }
+.abtn.on { opacity:1; }
+.ri { border:1.5px solid #777;border-radius:2px; }
+.abtn.on .ri { border-color:#0a84ff; }
+.rl { font-size:9px;color:#777; }
+.abtn.on .rl { color:#0a84ff; }
+.ri-free{width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-size:11px;color:#777;border:none!important}
+.ri-11{width:16px;height:16px} .ri-43{width:20px;height:15px} .ri-34{width:15px;height:20px}
+.ri-169{width:24px;height:14px} .ri-916{width:14px;height:24px}
+
+/* ── SECTION DIV ── */
+.sec-div {
+  display:flex;align-items:center;gap:8px;
+  padding:8px 20px 0;background:#1c1c1e;
+}
+.sec-div span { font-size:10px;color:#444;text-transform:uppercase;letter-spacing:.07em;white-space:nowrap; }
+.sec-div::before,.sec-div::after { content:'';flex:1;height:1px;background:#2a2a2c; }
+
+/* ── PARAM DISPLAY ── */
+.param-display {
+  background: #1c1c1e;
+  padding: 12px 20px 12px;
+}
+.param-name-row { display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px; }
+.param-name-txt { font-size:14px;font-weight:600;color:#fff; }
+.param-val-txt  { font-size:22px;font-weight:300;color:#0a84ff;font-variant-numeric:tabular-nums; }
+.big-slider-wrap { position:relative;height:26px;display:flex;align-items:center; }
+.big-center-line { position:absolute;left:50%;top:50%;width:2px;height:10px;background:#3a3a3c;transform:translate(-50%,-50%);pointer-events:none;z-index:1; }
+.big-slider {
+  width:100%;-webkit-appearance:none;appearance:none;
+  height:4px;border-radius:2px;background:#3a3a3c;outline:none;cursor:pointer;position:relative;z-index:2;
+}
+.big-slider::-webkit-slider-thumb {
+  -webkit-appearance:none;width:24px;height:24px;border-radius:50%;
+  background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.6);cursor:pointer;
+}
+.range-labels { display:flex;justify-content:space-between;margin-top:5px; }
+.range-labels span { font-size:9px;color:#444; }
+
+/* ── ADJ ICON STRIP ── */
+.adj-strip-outer { background:#1c1c1e;border-top:1px solid #2a2a2c; }
+.adj-strip {
+  display:flex;overflow-x:auto;scrollbar-width:none;
+  padding:8px 10px 6px;gap:0;
+}
+.adj-strip::-webkit-scrollbar { display:none; }
+.adj-btn {
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:6px 8px;cursor:pointer;border:none;background:none;
+  flex-shrink:0;border-radius:10px;transition:background .1s;
+}
+.adj-btn.sel { background:#2c2c2e; }
+.adj-ic {
+  width:34px;height:34px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;position:relative;transition:transform .15s;
+}
+.adj-btn.sel .adj-ic { transform:scale(1.1); }
+.adj-dot { display:none;position:absolute;top:1px;right:1px;width:6px;height:6px;border-radius:50%;background:#0a84ff; }
+.adj-btn.touched .adj-dot { display:block; }
+.adj-lbl { font-size:9px;color:#666;white-space:nowrap; }
+.adj-btn.sel .adj-lbl { color:#0a84ff;font-weight:600; }
+
+.ic-exposure  {background:#2c2c2e;color:#fff}
+.ic-brilliance{background:#3a2a1a;color:#ffaa44}
+.ic-highlights{background:#3a3a1a;color:#ffdd44}
+.ic-shadows   {background:#1a1a3a;color:#6688ff}
+.ic-contrast  {background:#2a2a2a;color:#ccc}
+.ic-brightness{background:#3a3518;color:#ffee88}
+.ic-blackpoint{background:#181818;color:#888}
+.ic-saturation{background:#2a1a3a;color:#bb66ff}
+.ic-vibrance  {background:#1a3a2a;color:#44ffaa}
+.ic-warmth    {background:#3a2010;color:#ff7733}
+.ic-tint      {background:#102a1a;color:#44bb88}
+.ic-sharpness {background:#1a2a3a;color:#88ccff}
+.ic-noise     {background:#2a2a1a;color:#aaaa66}
+.ic-vignette  {background:#111;color:#999}
+
+/* ── SAVE / RECENT / FAV ── */
+.save-area {
+  background:#1c1c1e;border-top:1px solid #2a2a2c;
+  padding:10px 20px 14px;
+}
+.fav-btn {
+  width:100%;padding:8px;background:none;border:1px solid #0a84ff33;
+  border-radius:9px;color:#0a84ff;font-size:12px;cursor:pointer;margin-bottom:10px;transition:background .15s;
+}
+.fav-btn:hover{background:#0a84ff18}
+.sec-t { font-size:10px;color:#555;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px; }
+.chips { display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px; }
+.chip { padding:4px 10px;border-radius:10px;background:#2c2c2e;font-size:11px;color:#bbb;cursor:pointer;border:1px solid #3a3a3c;transition:border-color .15s,color .15s; }
+.chip:hover{border-color:#0a84ff;color:#0a84ff}
+.chip.reset{color:#ff453a;border-color:#ff453a33}
+.chip.reset:hover{border-color:#ff453a;background:#ff453a18}
+
+/* ── DRAWER FOOTER ── */
+.dwr-footer {
+  display:flex;gap:10px;
+  padding:12px 20px 16px;
+  background:#1c1c1e;
+  border-top:1px solid #2a2a2c;
+  flex-shrink:0;
+}
+.apply-btn {
+  flex:1;padding:11px;border-radius:10px;border:none;
+  font-size:13px;font-weight:600;cursor:pointer;transition:opacity .15s;
+}
+.apply-btn.single{background:#2c2c2e;color:#ddd}
+.apply-btn.bulk  {background:#0a84ff;color:#fff}
+.apply-btn:active{opacity:.75}
+
+/* ═══════════════════════════════════
+   PAGE LABEL
+═══════════════════════════════════ */
+.page-label {
+  position: fixed;
+  bottom: 20px; left: 50%;
+  transform: translateX(-50%);
+  background: #2c2c2e;
+  border-radius: 20px;
+  padding: 8px 18px;
+  font-size: 12px; color: #aaa;
+  pointer-events: none;
+  z-index: 300;
+  white-space: nowrap;
+  border: 1px solid #3a3a3c;
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     MAIN APP
+══════════════════════════════════════ -->
+<div class="app-shell" id="app">
+
+  <div class="topbar">
+    <span class="topbar-logo">file<span>zen</span></span>
+    <div class="topbar-actions">
+      <button class="tb-btn ghost">전체 선택</button>
+      <button class="tb-btn primary" onclick="openDrawer()">⬆ 업로드</button>
+    </div>
+  </div>
+
+  <div class="gallery" id="gallery">
+    <div class="gitem g1 sel" onclick="toggleSel(this)"><div class="check">✓</div></div>
+    <div class="gitem g2 sel" onclick="toggleSel(this)"><div class="check">✓</div></div>
+    <div class="gitem g3 sel" onclick="toggleSel(this)"><div class="check">✓</div></div>
+    <div class="gitem g4 sel" onclick="toggleSel(this)"><div class="check">✓</div></div>
+    <div class="gitem g5 sel" onclick="toggleSel(this)"><div class="check">✓</div></div>
+    <div class="gitem g6"     onclick="toggleSel(this)"><div class="check">✓</div></div>
+    <div class="gitem g7"     onclick="toggleSel(this)"><div class="check">✓</div></div>
+    <div class="gitem g8"     onclick="toggleSel(this)"><div class="check">✓</div></div>
+    <div class="gitem g9"     onclick="toggleSel(this)"><div class="check">✓</div></div>
+    <div class="gitem g10"    onclick="toggleSel(this)"><div class="check">✓</div></div>
+  </div>
+
+  <div class="action-bar">
+    <span class="sel-count" id="sel-count">5장 선택됨</span>
+    <button class="ab-btn">↺ 90°</button>
+    <button class="ab-btn">⇄ 반전</button>
+    <button class="ab-btn edit-btn" onclick="openDrawer()">✏️ 편집</button>
+    <button class="ab-btn dl-btn">⬇ ZIP 다운로드</button>
+  </div>
+
+</div>
+
+<!-- BACKDROP -->
+<div class="backdrop" id="backdrop" onclick="closeDrawer()"></div>
+
+<!-- ══════════════════════════════════════
+     END DRAWER
+══════════════════════════════════════ -->
+<div class="drawer" id="drawer">
+
+  <!-- header -->
+  <div class="dwr-hdr">
+    <button class="dwr-close" onclick="closeDrawer()">✕</button>
+    <div class="dwr-title-wrap">
+      <div class="dwr-title">편집</div>
+      <div class="dwr-bulk" id="dwr-bulk-label">5장에 동일 적용</div>
+    </div>
+    <button class="dwr-done" onclick="closeDrawer()">완료</button>
+  </div>
+
+  <!-- bulk thumbnails -->
+  <div class="bulk-strip">
+    <span class="lbl">대상</span>
+    <div class="thumb on"><div class="tc1"></div></div>
+    <div class="thumb"><div class="tc2"></div></div>
+    <div class="thumb"><div class="tc3"></div></div>
+    <div class="thumb"><div class="tc4"></div></div>
+    <div class="thumb"><div class="tc5"></div></div>
+  </div>
+
+  <!-- scrollable body -->
+  <div class="dwr-body">
+
+    <!-- image -->
+    <div class="canvas-wrap">
+      <div class="img-frame">
+        <div class="img-bg" id="img-bg"></div>
+        <div class="grid-ov">
+          <div class="gc"></div><div class="gc"></div><div class="gc"></div>
+          <div class="gc"></div><div class="gc"></div><div class="gc"></div>
+          <div class="gc"></div><div class="gc"></div><div class="gc"></div>
+        </div>
+        <div class="ce t"></div><div class="ce b"></div>
+        <div class="ce l"></div><div class="ce r"></div>
+        <div class="ch tl"></div><div class="ch tr"></div>
+        <div class="ch bl"></div><div class="ch br"></div>
+      </div>
+    </div>
+
+    <!-- ruler -->
+    <div class="ruler">
+      <div class="ruler-hint">0° <span>드래그로 수평 맞추기</span></div>
+      <div class="ruler-wrap">
+        <div class="ruler-cline"></div>
+        <div class="ticks">
+          <div class="tk"><div class="tl maj"></div><div class="tt">-45°</div></div>
+          <div class="tk"><div class="tl min"></div><div class="tt"></div></div>
+          <div class="tk"><div class="tl maj"></div><div class="tt">-30°</div></div>
+          <div class="tk"><div class="tl min"></div><div class="tt"></div></div>
+          <div class="tk"><div class="tl maj"></div><div class="tt">-15°</div></div>
+          <div class="tk"><div class="tl min"></div><div class="tt"></div></div>
+          <div class="tk c"><div class="tl maj"></div><div class="tt">0°</div></div>
+          <div class="tk"><div class="tl min"></div><div class="tt"></div></div>
+          <div class="tk"><div class="tl maj"></div><div class="tt">15°</div></div>
+          <div class="tk"><div class="tl min"></div><div class="tt"></div></div>
+          <div class="tk"><div class="tl maj"></div><div class="tt">30°</div></div>
+          <div class="tk"><div class="tl min"></div><div class="tt"></div></div>
+          <div class="tk"><div class="tl maj"></div><div class="tt">45°</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- crop row -->
+    <div class="crop-row">
+      <div class="crop-btns">
+        <div class="cbtn"><div class="cicon">↺</div><span class="clabel">90° 회전</span></div>
+        <div class="cbtn"><div class="cicon">⇄</div><span class="clabel">좌우반전</span></div>
+        <div class="cbtn"><div class="cicon" style="font-size:10px;color:#aaa">리셋</div><span class="clabel">초기화</span></div>
+      </div>
+      <div class="asp-strip">
+        <div class="abtn"><div class="ri ri-free">⤡</div><span class="rl">자유</span></div>
+        <div class="abtn"><div class="ri ri-11"></div><span class="rl">1:1</span></div>
+        <div class="abtn on"><div class="ri ri-43"></div><span class="rl">4:3</span></div>
+        <div class="abtn"><div class="ri ri-34"></div><span class="rl">3:4</span></div>
+        <div class="abtn"><div class="ri ri-169"></div><span class="rl">16:9</span></div>
+        <div class="abtn"><div class="ri ri-916"></div><span class="rl">9:16</span></div>
+      </div>
+    </div>
+
+    <!-- section divider -->
+    <div class="sec-div"><span>색상 조정</span></div>
+
+    <!-- param display -->
+    <div class="param-display">
+      <div class="param-name-row">
+        <span class="param-name-txt" id="param-name">노출</span>
+        <span class="param-val-txt"  id="param-val">0</span>
+      </div>
+      <div class="big-slider-wrap">
+        <div class="big-center-line" id="big-center"></div>
+        <input type="range" class="big-slider" id="big-slider" min="-100" max="100" value="0">
+      </div>
+      <div class="range-labels">
+        <span id="range-min">-100</span>
+        <span id="range-max">+100</span>
+      </div>
+    </div>
+
+    <!-- adj icon strip -->
+    <div class="adj-strip-outer">
+      <div class="adj-strip">
+        <button class="adj-btn sel" data-param="exposure"   data-min="-100" data-max="100"  data-label="노출"><div class="adj-ic ic-exposure">☀️<span class="adj-dot"></span></div><span class="adj-lbl">노출</span></button>
+        <button class="adj-btn" data-param="brilliance"  data-min="-100" data-max="100"  data-label="생동감"><div class="adj-ic ic-brilliance">✦<span class="adj-dot"></span></div><span class="adj-lbl">생동감</span></button>
+        <button class="adj-btn" data-param="highlights"  data-min="-100" data-max="0"    data-label="하이라이트"><div class="adj-ic ic-highlights">◑<span class="adj-dot"></span></div><span class="adj-lbl">하이라이트</span></button>
+        <button class="adj-btn" data-param="shadows"     data-min="0"    data-max="100"  data-label="어두운 영역"><div class="adj-ic ic-shadows">◐<span class="adj-dot"></span></div><span class="adj-lbl">어두운 영역</span></button>
+        <button class="adj-btn" data-param="contrast"    data-min="-100" data-max="100"  data-label="대비"><div class="adj-ic ic-contrast">◈<span class="adj-dot"></span></div><span class="adj-lbl">대비</span></button>
+        <button class="adj-btn" data-param="brightness"  data-min="-100" data-max="100"  data-label="밝기"><div class="adj-ic ic-brightness">○<span class="adj-dot"></span></div><span class="adj-lbl">밝기</span></button>
+        <button class="adj-btn" data-param="blackpoint"  data-min="0"    data-max="100"  data-label="검정점"><div class="adj-ic ic-blackpoint">●<span class="adj-dot"></span></div><span class="adj-lbl">검정점</span></button>
+        <button class="adj-btn" data-param="saturation"  data-min="-100" data-max="100"  data-label="채도"><div class="adj-ic ic-saturation">❋<span class="adj-dot"></span></div><span class="adj-lbl">채도</span></button>
+        <button class="adj-btn" data-param="vibrance"    data-min="-100" data-max="100"  data-label="활기"><div class="adj-ic ic-vibrance">⬡<span class="adj-dot"></span></div><span class="adj-lbl">활기</span></button>
+        <button class="adj-btn" data-param="warmth"      data-min="-100" data-max="100"  data-label="따뜻함"><div class="adj-ic ic-warmth">⬥<span class="adj-dot"></span></div><span class="adj-lbl">따뜻함</span></button>
+        <button class="adj-btn" data-param="tint"        data-min="-100" data-max="100"  data-label="색조"><div class="adj-ic ic-tint">⬦<span class="adj-dot"></span></div><span class="adj-lbl">색조</span></button>
+        <button class="adj-btn" data-param="sharpness"   data-min="0"    data-max="100"  data-label="선명도"><div class="adj-ic ic-sharpness">◇<span class="adj-dot"></span></div><span class="adj-lbl">선명도</span></button>
+        <button class="adj-btn" data-param="noise"       data-min="0"    data-max="100"  data-label="노이즈 감소"><div class="adj-ic ic-noise">≋<span class="adj-dot"></span></div><span class="adj-lbl">노이즈 감소</span></button>
+        <button class="adj-btn" data-param="vignette"    data-min="0"    data-max="100"  data-label="비네팅"><div class="adj-ic ic-vignette">◎<span class="adj-dot"></span></div><span class="adj-lbl">비네팅</span></button>
+      </div>
+    </div>
+
+    <!-- save / recent / fav -->
+    <div class="save-area">
+      <button class="fav-btn" id="fav-btn">⭐ 현재 조정값을 즐겨찾기에 저장</button>
+      <div class="sec-t">최근 사용</div>
+      <div class="chips">
+        <span class="chip">인물 보정</span>
+        <span class="chip">풍경 선명</span>
+        <span class="chip reset" id="reset-btn">전체 초기화</span>
+      </div>
+      <div class="sec-t">즐겨찾기</div>
+      <div class="chips" id="fav-chips">
+        <span class="chip">여름톤</span>
+        <span class="chip">영화 느낌</span>
+      </div>
+    </div>
+
+  </div>
+  <!-- /dwr-body -->
+
+  <!-- drawer footer -->
+  <div class="dwr-footer">
+    <button class="apply-btn single">이 이미지에만 적용</button>
+    <button class="apply-btn bulk">선택된 5장 모두에 적용</button>
+  </div>
+
+</div>
+
+<div class="page-label">✏️ 편집 버튼을 클릭하면 Drawer가 열립니다</div>
+
+<script>
+// ── drawer open/close ──
+function openDrawer() {
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('backdrop').classList.add('open');
+  document.getElementById('app').classList.add('dimmed');
+}
+function closeDrawer() {
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('backdrop').classList.remove('open');
+  document.getElementById('app').classList.remove('dimmed');
+}
+
+// ── gallery select ──
+function toggleSel(el) {
+  el.classList.toggle('sel');
+  const count = document.querySelectorAll('.gitem.sel').length;
+  document.getElementById('sel-count').textContent = count ? `${count}장 선택됨` : '선택 없음';
+  document.getElementById('dwr-bulk-label').textContent = count > 1 ? `${count}장에 동일 적용` : '단일 이미지';
+}
+
+// ── adj values ──
+const values = {};
+document.querySelectorAll('.adj-btn').forEach(b => { values[b.dataset.param] = 0; });
+let curParam = 'exposure', curMin = -100, curMax = 100;
+
+document.querySelectorAll('.adj-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.adj-btn').forEach(b => b.classList.remove('sel'));
+    btn.classList.add('sel');
+    curParam = btn.dataset.param;
+    curMin   = parseInt(btn.dataset.min);
+    curMax   = parseInt(btn.dataset.max);
+    const slider = document.getElementById('big-slider');
+    slider.min = curMin; slider.max = curMax;
+    slider.value = values[curParam] ?? 0;
+    document.getElementById('big-center').style.display = curMin < 0 ? 'block' : 'none';
+    document.getElementById('param-name').textContent = btn.dataset.label;
+    const v = values[curParam] ?? 0;
+    document.getElementById('param-val').textContent = v > 0 ? '+' + v : v;
+    document.getElementById('range-min').textContent  = curMin;
+    document.getElementById('range-max').textContent  = curMax > 0 ? '+' + curMax : curMax;
+    fillSlider(slider);
+    btn.scrollIntoView({ behavior:'smooth', block:'nearest', inline:'center' });
+  });
+});
+
+document.getElementById('big-slider').addEventListener('input', function() {
+  const v = parseInt(this.value);
+  values[curParam] = v;
+  document.getElementById('param-val').textContent = v > 0 ? '+' + v : v;
+  fillSlider(this);
+  const btn = document.querySelector(`.adj-btn[data-param="${curParam}"]`);
+  if (btn) btn.classList.toggle('touched', v !== 0);
+  applyPreview();
+});
+
+function fillSlider(s) {
+  const min=parseInt(s.min), max=parseInt(s.max), v=parseInt(s.value), range=max-min;
+  if (min < 0) {
+    const c=(-min)/range*100, p=(v-min)/range*100, lo=Math.min(c,p), hi=Math.max(c,p);
+    s.style.background = v===0 ? '#3a3a3c'
+      : `linear-gradient(to right,#3a3a3c ${lo}%,#0a84ff ${lo}%,#0a84ff ${hi}%,#3a3a3c ${hi}%)`;
+  } else {
+    const p=(v-min)/range*100;
+    s.style.background = p>0 ? `linear-gradient(to right,#0a84ff ${p}%,#3a3a3c ${p}%)` : '#3a3a3c';
+  }
+}
+
+function applyPreview() {
+  const bri = 1+((values.exposure||0)+(values.brightness||0))/100;
+  const con = 1+(values.contrast||0)/100;
+  const sat = 1+((values.saturation||0)+(values.vibrance||0)*.4)/100;
+  const hue = (values.warmth||0)*.3;
+  const css = [`brightness(${Math.max(.05,bri).toFixed(2)})`,`contrast(${Math.max(.1,con).toFixed(2)})`,`saturate(${Math.max(0,sat).toFixed(2)})`,hue?`hue-rotate(${hue.toFixed(1)}deg)`:''
+  ].filter(Boolean).join(' ');
+  document.getElementById('img-bg').style.filter = css;
+}
+
+document.querySelectorAll('.abtn').forEach(b => {
+  b.addEventListener('click', () => { document.querySelectorAll('.abtn').forEach(x=>x.classList.remove('on')); b.classList.add('on'); });
+});
+
+document.getElementById('reset-btn').addEventListener('click', () => {
+  Object.keys(values).forEach(k => { values[k]=0; });
+  document.querySelectorAll('.adj-btn').forEach(b=>b.classList.remove('touched'));
+  const s=document.getElementById('big-slider'); s.value=0; fillSlider(s);
+  document.getElementById('param-val').textContent='0';
+  document.getElementById('img-bg').style.filter='none';
+});
+
+document.getElementById('fav-btn').addEventListener('click', function() {
+  const name=prompt('즐겨찾기 이름:','나만의 보정');
+  if(!name)return;
+  const chip=document.createElement('span'); chip.className='chip'; chip.textContent=name;
+  document.getElementById('fav-chips').appendChild(chip);
+  this.textContent='✅ 저장됨';
+  setTimeout(()=>{this.textContent='⭐ 현재 조정값을 즐겨찾기에 저장';},1500);
+});
+
+// init
+document.getElementById('big-center').style.display='block';
+fillSlider(document.getElementById('big-slider'));
+</script>
+</body>
+</html>

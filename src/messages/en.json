@@ -18,7 +18,9 @@
     "deselectAll": "Deselect All",
     "selectedCount": "{count} selected",
     "totalCount": "{count} total",
-    "removeImage": "Remove"
+    "removeImage": "Remove",
+    "removeAll": "Clear All",
+    "removeSelected": "Remove Selected"
   },
   "actionBar": {
     "noneSelected": "Select images to rotate",
@@ -29,7 +31,59 @@
     "customAngle": "Custom angle",
     "apply": "Apply",
     "downloadZip": "Save as ZIP",
-    "downloading": "Saving..."
+    "downloading": "Saving...",
+    "format": "Format",
+    "quality": "Quality",
+    "original": "Original",
+    "flipHorizontal": "Flip",
+    "edit": "Edit",
+    "removeSelected": "Remove Selected"
+  },
+  "editDrawer": {
+    "title": "Edit",
+    "bulkLabel": "{count} images · apply to all",
+    "singleLabel": "Single image",
+    "done": "Done",
+    "applyToThis": "Apply to this image",
+    "applyToAll": "Apply to {count} images",
+    "cropSection": "Crop",
+    "adjustSection": "Color Adjustments",
+    "rotate90": "Rotate 90°",
+    "flipH": "Flip",
+    "reset": "Reset",
+    "aspectFree": "Free",
+    "savePreset": "Save to Favorites",
+    "saved": "Saved ✓",
+    "recentLabel": "Recent",
+    "favoritesLabel": "Favorites",
+    "resetAll": "Reset All",
+    "discardTitle": "Discard Changes?",
+    "discardMessage": "Your edits will not be saved.",
+    "discardConfirm": "Discard Changes",
+    "discardCancel": "Keep Editing",
+    "params": {
+      "exposure": "Exposure",
+      "brilliance": "Brilliance",
+      "highlights": "Highlights",
+      "shadows": "Shadows",
+      "contrast": "Contrast",
+      "brightness": "Brightness",
+      "blackpoint": "Black Point",
+      "saturation": "Saturation",
+      "vibrance": "Vibrance",
+      "warmth": "Warmth",
+      "tint": "Tint",
+      "sharpness": "Sharpness",
+      "definition": "Definition",
+      "noise": "Noise Reduction",
+      "vignette": "Vignette"
+    },
+    "paramRanges": {
+      "warmthMin": "Cool",
+      "warmthMax": "Warm",
+      "tintMin": "Green",
+      "tintMax": "Magenta"
+    }
   },
   "filePage": {
     "title": "File Conversion",
@@ -38,5 +92,10 @@
   "language": {
     "ko": "한글",
     "en": "English"
+  },
+  "seo": {
+    "title": "FileZen - Online Image Rotation & Conversion Tool",
+    "description": "Rotate, convert, and compress images instantly in your browser. No uploads needed. Privacy-focused and lightning-fast with FileZen.",
+    "keywords": "rotate image, convert image, online image editor, PNG converter, JPG converter, FileZen"
   }
 }
