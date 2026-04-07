@@ -24,7 +24,7 @@ export function CropSection({ cropData, onChange, onRotate }: Props) {
   const t = useTranslations('editDrawer');
 
   return (
-    <div className="flex items-end gap-3 bg-[#1c1c1e] px-5 py-3">
+    <div className="flex items-end gap-5 bg-[#1c1c1e] px-5 py-3">
       {/* 90° 회전 버튼 — 왼쪽 고정 */}
       <button
         onClick={onRotate}
