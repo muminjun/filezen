@@ -35,7 +35,7 @@ export function UnlockTool() {
       setDetection(protected_ ? 'protected' : 'notProtected');
     } catch {
       setDetection('idle');
-      setError('Failed to read PDF. The file may be corrupted.');
+      setError(t('corruptError'));
     }
   }, []);
 
@@ -54,7 +54,7 @@ export function UnlockTool() {
         typeof err === 'object' &&
         'name' in err &&
         (err as { name: string }).name === 'PasswordException';
-      setError(isPasswordErr ? t('wrongPassword') : 'An unexpected error occurred.');
+      setError(isPasswordErr ? t('wrongPassword') : t('unexpectedError'));
     } finally {
       setIsUnlocking(false);
     }
@@ -100,7 +100,7 @@ export function UnlockTool() {
           {detection === 'detecting' && (
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <span className="animate-spin h-4 w-4 border-2 border-primary border-t-transparent rounded-full inline-block flex-shrink-0" />
-              Checking PDF...
+              {t('checking')}
             </div>
           )}
 
@@ -127,7 +127,7 @@ export function UnlockTool() {
               <div className="flex items-start gap-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2.5 dark:bg-amber-950/30 dark:border-amber-800">
                 <ShieldCheck size={16} className="flex-shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" />
                 <span className="text-sm text-amber-700 dark:text-amber-400">
-                  이 PDF는 비밀번호로 보호되어 있습니다.
+                  {t('protectedNotice')}
                 </span>
               </div>
 

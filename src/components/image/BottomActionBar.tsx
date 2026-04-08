@@ -40,7 +40,6 @@ export function BottomActionBar({ onEditClick }: Props) {
     setOutputFormat,
     quality,
     setQuality,
-    removeImage,
   } = useAppContext();
   const [customAngle, setCustomAngle] = useState('');
   const [isExportingPdf, setIsExportingPdf] = useState(false);

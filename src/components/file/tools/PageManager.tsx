@@ -18,6 +18,7 @@ export function PageManager() {
   const [draggedIdx, setDraggedIdx] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const prevPagesRef = useRef<PdfPage[]>([]);
 
@@ -44,10 +45,11 @@ export function PageManager() {
     const f = files[0];
     setIsLoading(true);
     setSelectedIndices(new Set());
+    setError(null);
     try {
       const result = await generateThumbnails(f);
       if (!result.success) {
-        alert('This PDF is password-protected. Use the Unlock tool first.');
+        setError(t('passwordProtected'));
         return;
       }
       setFile(f);
@@ -55,7 +57,7 @@ export function PageManager() {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [t]);
 
   const toggleSelect = (idx: number) => {
     setSelectedIndices((prev) => {
@@ -118,6 +120,10 @@ export function PageManager() {
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
       <FileUploadStrip onFiles={handleFiles} disabled={isLoading} multiple={false} />
+
+      {error && (
+        <p className="px-4 py-2 text-sm text-red-500">{error}</p>
+      )}
 
       {pages.length > 0 && (
         <div className="flex flex-shrink-0 items-center gap-3 border-b border-border px-4 py-2 overflow-x-auto no-scrollbar">

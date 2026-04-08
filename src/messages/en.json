@@ -122,7 +122,8 @@
       "save": "Save PDF",
       "saving": "Saving...",
       "pageCount": "{count} pages",
-      "selectedCount": "{count} selected"
+      "selectedCount": "{count} selected",
+      "passwordProtected": "This PDF is password-protected. Please use the Unlock tool first."
     },
     "merge": {
       "empty": "Upload 2 or more PDFs to merge",
@@ -140,7 +141,8 @@
       "split": "Split & Download",
       "splitting": "Splitting...",
       "selectPages": "Click pages to select",
-      "pageCount": "{count} pages"
+      "pageCount": "{count} pages",
+      "passwordProtected": "This PDF is password-protected. Please use the Unlock tool first."
     },
     "convert": {
       "emptyPdf": "Upload a PDF to convert to images",
@@ -175,6 +177,7 @@
       "compress": "Compress & Download",
       "compressing": "Compressing...",
       "savings": "Saved {percent}%",
+      "noSavings": "No size reduction",
       "warning": "Text will be rasterized (no copy/search)"
     },
     "unlock": {
@@ -191,7 +194,11 @@
       "unlockSuccess": "PDF unlocked successfully!",
       "download": "Download Unlocked PDF",
       "rasterWarning": "Note: The unlocked PDF will contain rasterized page images. Text will not be selectable or searchable.",
-      "privacyNote": "All processing happens in your browser. Files are never uploaded."
+      "privacyNote": "All processing happens in your browser. Files are never uploaded.",
+      "corruptError": "Failed to read PDF. The file may be corrupted.",
+      "unexpectedError": "An unexpected error occurred.",
+      "checking": "Checking PDF...",
+      "protectedNotice": "This PDF is password-protected."
     }
   }
 }

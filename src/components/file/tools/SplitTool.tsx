@@ -20,6 +20,7 @@ export function SplitTool() {
   const [rangeStr, setRangeStr] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSplitting, setIsSplitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const prevPagesRef = useRef<PdfPage[]>([]);
 
@@ -46,10 +47,11 @@ export function SplitTool() {
     const f = files[0];
     setIsLoading(true);
     setSelectedIndices(new Set());
+    setError(null);
     try {
       const result = await generateThumbnails(f);
       if (!result.success) {
-        alert('This PDF is password-protected. Use the Unlock tool first.');
+        setError(t('passwordProtected'));
         return;
       }
       setFile(f);
@@ -57,7 +59,7 @@ export function SplitTool() {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [t]);
 
   const togglePage = (idx: number) => {
     setSelectedIndices((prev) => {
@@ -122,6 +124,10 @@ export function SplitTool() {
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
       <FileUploadStrip onFiles={handleFiles} disabled={isLoading || isSplitting} multiple={false} />
+
+      {error && (
+        <p className="px-4 py-2 text-sm text-red-500">{error}</p>
+      )}
 
       {file && (
         <>

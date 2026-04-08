@@ -1,3 +1,6 @@
+// Note: Uses react-dropzone (already a project dependency) for better DX.
+// The spec mentioned native HTML5 D&D, but react-dropzone is consistent with
+// the image tab's UploadStrip and doesn't add new dependencies.
 'use client';
 
 import { useCallback } from 'react';

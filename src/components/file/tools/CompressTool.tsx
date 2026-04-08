@@ -122,7 +122,7 @@ export function CompressTool() {
                 </span>
               ) : (
                 <span className="text-xs text-muted-foreground flex-shrink-0">
-                  {savings <= 0 ? '~0% savings' : ''}
+                  {t('noSavings')}
                 </span>
               )}
             </div>

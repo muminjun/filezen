@@ -82,19 +82,16 @@ export async function imagesToPdf(
 
     let imageBytes: ArrayBuffer;
     let embedAsJpeg = false;
-    let embedAsPng = false;
 
     if (mime === 'image/jpeg' || mime === 'image/jpg') {
       imageBytes = await file.arrayBuffer();
       embedAsJpeg = true;
     } else if (mime === 'image/png') {
       imageBytes = await file.arrayBuffer();
-      embedAsPng = true;
     } else {
       // webp, gif, bmp, etc. → rasterise to PNG via canvas
       const pngBlob = await imageToPngBlob(file);
       imageBytes = await pngBlob.arrayBuffer();
-      embedAsPng = true;
     }
 
     const embedded = embedAsJpeg
