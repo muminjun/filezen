@@ -160,7 +160,9 @@
       "sizeLetter": "Letter",
       "sizeFit": "이미지 크기에 맞춤",
       "createPdf": "PDF 생성",
-      "creating": "생성 중..."
+      "creating": "생성 중...",
+      "exportAsPdf": "PDF로 내보내기",
+      "exportingPdf": "내보내는 중..."
     },
     "compress": {
       "empty": "압축할 PDF를 업로드하세요",

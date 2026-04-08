@@ -160,7 +160,9 @@
       "sizeLetter": "Letter",
       "sizeFit": "Fit to image",
       "createPdf": "Create PDF",
-      "creating": "Creating..."
+      "creating": "Creating...",
+      "exportAsPdf": "Export as PDF",
+      "exportingPdf": "Exporting..."
     },
     "compress": {
       "empty": "Upload a PDF to compress",
