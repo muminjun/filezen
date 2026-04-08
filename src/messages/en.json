@@ -173,7 +173,9 @@
       "originalSize": "Original",
       "compressedSize": "Compressed",
       "compress": "Compress & Download",
-      "compressing": "Compressing..."
+      "compressing": "Compressing...",
+      "savings": "Saved {percent}%",
+      "warning": "Text will be rasterized (no copy/search)"
     },
     "unlock": {
       "empty": "Upload a password-protected PDF",

@@ -173,7 +173,9 @@
       "originalSize": "원본",
       "compressedSize": "압축 후",
       "compress": "압축 & 다운로드",
-      "compressing": "압축 중..."
+      "compressing": "압축 중...",
+      "savings": "{percent}% 절감",
+      "warning": "텍스트가 이미지로 변환됩니다 (복사/검색 불가)"
     },
     "unlock": {
       "empty": "비밀번호가 설정된 PDF를 업로드하세요",
