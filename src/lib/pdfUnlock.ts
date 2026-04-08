@@ -1,22 +1,5 @@
 import { PDFDocument } from 'pdf-lib';
-
-/** Lazily load pdfjs-dist and configure worker (browser only) */
-async function getPdfjsLib() {
-  const pdfjsLib = await import('pdfjs-dist');
-  if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
-    pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
-  }
-  return pdfjsLib;
-}
-
-function isPasswordError(err: unknown): boolean {
-  return (
-    err !== null &&
-    typeof err === 'object' &&
-    'name' in err &&
-    (err as { name: string }).name === 'PasswordException'
-  );
-}
+import { getPdfjsLib, isPasswordError } from './pdfjsLoader';
 
 /**
  * Check if a PDF requires a password (without knowing the password).

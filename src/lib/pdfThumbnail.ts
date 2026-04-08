@@ -1,14 +1,6 @@
 import type { PdfPage } from './types';
 import { PDF_THUMBNAIL_SCALE } from './constants';
-
-/** Lazily load pdfjs-dist and configure worker (browser only) */
-async function getPdfjsLib() {
-  const pdfjsLib = await import('pdfjs-dist');
-  if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
-    pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
-  }
-  return pdfjsLib;
-}
+import { getPdfjsLib, isPasswordError } from './pdfjsLoader';
 
 export type ThumbnailResult =
   | { success: true; pages: PdfPage[]; pageCount: number }
@@ -121,11 +113,3 @@ function canvasToBlob(
   });
 }
 
-function isPasswordError(err: unknown): boolean {
-  return (
-    err !== null &&
-    typeof err === 'object' &&
-    'name' in err &&
-    (err as { name: string }).name === 'PasswordException'
-  );
-}
