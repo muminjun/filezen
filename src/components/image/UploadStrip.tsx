@@ -34,7 +34,7 @@ export function UploadStrip() {
     <div
       {...getRootProps()}
       className={cn(
-        'group relative flex h-20 flex-shrink-0 cursor-pointer items-center gap-4 border-b-2 border-dashed border-border px-6 transition-all duration-200 ease-in-out',
+        'group relative flex h-14 sm:h-20 flex-shrink-0 cursor-pointer items-center gap-3 sm:gap-4 border-b-2 border-dashed border-border px-4 sm:px-6 transition-all duration-200 ease-in-out',
         isDragActive
           ? 'bg-primary/10 border-primary shadow-inner'
           : 'bg-card hover:bg-muted/60 hover:border-primary/50'

@@ -97,19 +97,23 @@ export const ImageCard = memo(function ImageCard({
         <Maximize2 size={14} />
       </button>
 
-      {isVisible ? (
-        <img
-          src={image.previewUrl}
-          alt={image.file.name}
-          draggable={false}
-          style={{
-            transform: `rotate(${image.rotation}deg)${needsScale ? ' scale(0.71)' : ''}${flipScale}`,
-          }}
-          className="w-full h-auto object-contain transition-transform duration-300 ease-out"
-        />
-      ) : (
-        <div className="w-full aspect-video animate-pulse bg-muted" />
-      )}
+      <div className="relative aspect-[4/3] w-full overflow-hidden bg-black flex items-center justify-center">
+        {isVisible ? (
+          <img
+            src={image.previewUrl}
+            alt={image.file.name}
+            draggable={false}
+            style={{
+              transform: `rotate(${image.rotation}deg)${needsScale ? ' scale(0.71)' : ''}${flipScale}`,
+              maxWidth: '100%',
+              maxHeight: '100%',
+            }}
+            className="object-contain transition-transform duration-300 ease-out"
+          />
+        ) : (
+          <div className="absolute inset-0 animate-pulse bg-muted" />
+        )}
+      </div>
     </div>
   );
 });

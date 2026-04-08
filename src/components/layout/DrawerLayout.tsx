@@ -23,9 +23,9 @@ export function DrawerLayout({ imageTab, fileTab }: DrawerLayoutProps) {
 
   return (
     <div className="flex h-screen w-full overflow-hidden bg-background">
-      {/* Drawer */}
-      <aside className="flex w-14 flex-shrink-0 flex-col items-center border-r border-border bg-card py-4 gap-2">
-        <Link 
+      {/* ── Desktop sidebar ── */}
+      <aside className="hidden sm:flex w-14 flex-shrink-0 flex-col items-center border-r border-border bg-card py-4 gap-2">
+        <Link
           href={`/${locale}`}
           className="mb-4 flex h-8 w-8 cursor-pointer items-center justify-center rounded-md bg-primary/10 text-primary transition-transform hover:scale-105 active:scale-95"
         >
@@ -50,14 +50,48 @@ export function DrawerLayout({ imageTab, fileTab }: DrawerLayoutProps) {
         </div>
       </aside>
 
-      {/* Main content */}
-      <main className="relative flex flex-1 flex-col overflow-hidden">
-        {/* Top Header/Action Area */}
-        <div className="absolute top-4 right-6 z-50">
+      {/* ── Main content ── */}
+      <main className="relative flex flex-1 flex-col overflow-hidden min-w-0">
+        {/* Top-right controls (desktop only — language switcher) */}
+        <div className="hidden sm:flex absolute top-4 right-6 z-50 items-center gap-2">
           <LanguageSwitcher />
         </div>
-        
-        {activeTab === 'image' ? imageTab : fileTab}
+
+        {/* Mobile top bar */}
+        <div className="sm:hidden flex flex-shrink-0 items-center justify-between border-b border-border bg-card px-4 py-2.5">
+          <Link
+            href={`/${locale}`}
+            className="flex items-center gap-2"
+          >
+            <img src="/logo.svg" alt="FileZen" className="h-6 w-6" />
+            <span className="text-sm font-bold tracking-tight">FileZen</span>
+          </Link>
+          <div className="flex items-center gap-2">
+            <LanguageSwitcher />
+            <ThemeToggle />
+          </div>
+        </div>
+
+        {/* Page content */}
+        <div className="flex flex-1 flex-col overflow-hidden">
+          {activeTab === 'image' ? imageTab : fileTab}
+        </div>
+
+        {/* ── Mobile bottom nav ── */}
+        <nav className="sm:hidden flex flex-shrink-0 items-center justify-around border-t border-border bg-card px-2 pb-safe">
+          <MobileNavItem
+            icon={<ImageIcon size={22} />}
+            label={t('images')}
+            active={activeTab === 'image'}
+            onClick={() => setActiveTab('image')}
+          />
+          <MobileNavItem
+            icon={<FolderIcon size={22} />}
+            label={t('files')}
+            active={activeTab === 'file'}
+            onClick={() => setActiveTab('file')}
+          />
+        </nav>
       </main>
     </div>
   );
@@ -83,6 +117,21 @@ function DrawerItem({ icon, label, active, onClick }: DrawerItemProps) {
       )}
     >
       {icon}
+    </button>
+  );
+}
+
+function MobileNavItem({ icon, label, active, onClick }: DrawerItemProps) {
+  return (
+    <button
+      onClick={onClick}
+      className={cn(
+        'flex flex-1 flex-col items-center gap-1 py-2 text-[10px] font-medium transition-colors',
+        active ? 'text-primary' : 'text-muted-foreground'
+      )}
+    >
+      {icon}
+      {label}
     </button>
   );
 }

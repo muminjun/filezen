@@ -244,7 +244,17 @@ export function EditDrawer({ isOpen, onClose }: Props) {
                 className="h-8 w-8 flex-shrink-0 overflow-hidden rounded-md border-2 border-transparent first:border-[#0a84ff]"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={img.previewUrl} alt="" className="h-full w-full object-cover" />
+                <img
+                  src={img.previewUrl}
+                  alt=""
+                  className="h-full w-full object-cover"
+                  style={{
+                    transform: [
+                      img.rotation ? `rotate(${img.rotation}deg)` : '',
+                      img.flipped ? 'scaleX(-1)' : '',
+                    ].filter(Boolean).join(' ') || undefined,
+                  }}
+                />
               </div>
             ))}
             {selectedImages.length > 6 && (
@@ -268,7 +278,14 @@ export function EditDrawer({ isOpen, onClose }: Props) {
               alt="preview"
               style={{
                 filter: cssFilter || undefined,
-                transform: cropData.rotation ? `rotate(${cropData.rotation}deg)` : undefined,
+                transform: (() => {
+                  const totalRot = ((previewImage.rotation + (cropData.rotation ?? 0)) % 360 + 360) % 360;
+                  const parts = [
+                    totalRot ? `rotate(${totalRot}deg)` : '',
+                    previewImage.flipped ? 'scaleX(-1)' : '',
+                  ].filter(Boolean);
+                  return parts.length ? parts.join(' ') : undefined;
+                })(),
               }}
               className="max-h-[44vh] max-w-full object-contain max-[680px]:max-h-[30vh]"
             />
