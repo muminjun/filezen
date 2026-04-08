@@ -190,6 +190,7 @@
       "notProtectedDownload": "Download as-is",
       "unlockSuccess": "PDF unlocked successfully!",
       "download": "Download Unlocked PDF",
+      "rasterWarning": "Note: The unlocked PDF will contain rasterized page images. Text will not be selectable or searchable.",
       "privacyNote": "All processing happens in your browser. Files are never uploaded."
     }
   }

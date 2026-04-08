@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
-import { Download, Eye, EyeOff, ShieldCheck, ShieldOff, Info } from 'lucide-react';
+import { Download, Eye, EyeOff, ShieldCheck, ShieldOff, Info, AlertTriangle } from 'lucide-react';
 import { cn, downloadBytes } from '@/lib/utils';
 import { isPdfPasswordProtected, unlockPdf } from '@/lib/pdfUnlock';
 import { FileUploadStrip } from '../FileUploadStrip';
@@ -168,6 +168,12 @@ export function UnlockTool() {
                 {error && (
                   <span className="text-xs text-red-500">{error}</span>
                 )}
+              </div>
+
+              {/* Rasterization warning */}
+              <div className="flex items-start gap-2 rounded-md bg-amber-50 border border-amber-200 px-3 py-2 dark:bg-amber-950/30 dark:border-amber-800">
+                <AlertTriangle size={14} className="flex-shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" />
+                <span className="text-xs text-amber-700 dark:text-amber-400">{t('rasterWarning')}</span>
               </div>
 
               {/* Unlock button */}

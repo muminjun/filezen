@@ -190,6 +190,7 @@
       "notProtectedDownload": "그대로 다운로드",
       "unlockSuccess": "PDF 잠금이 해제되었습니다!",
       "download": "잠금 해제된 PDF 다운로드",
+      "rasterWarning": "참고: 잠금 해제된 PDF는 래스터화된 이미지로 구성됩니다. 텍스트 선택/검색이 불가능합니다.",
       "privacyNote": "모든 처리는 브라우저 내에서만 이루어집니다. 파일이 서버로 전송되지 않습니다."
     }
   }
