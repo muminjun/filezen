@@ -21,6 +21,8 @@ const nextConfig = {
       type: 'webassembly/async',
     });
 
+    config.resolve.alias.canvas = false;
+
     return config;
   },
 };
