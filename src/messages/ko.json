@@ -179,11 +179,18 @@
     },
     "unlock": {
       "empty": "비밀번호가 설정된 PDF를 업로드하세요",
+      "passwordLabel": "비밀번호",
       "passwordPlaceholder": "PDF 비밀번호 입력",
+      "showPassword": "비밀번호 표시",
+      "hidePassword": "비밀번호 숨기기",
       "unlock": "잠금 해제 & 다운로드",
       "unlocking": "해제 중...",
       "wrongPassword": "비밀번호가 틀렸습니다. 다시 시도해주세요.",
-      "notProtected": "이 PDF는 비밀번호가 설정되어 있지 않습니다."
+      "notProtected": "이 PDF는 비밀번호가 설정되어 있지 않습니다.",
+      "notProtectedDownload": "그대로 다운로드",
+      "unlockSuccess": "PDF 잠금이 해제되었습니다!",
+      "download": "잠금 해제된 PDF 다운로드",
+      "privacyNote": "모든 처리는 브라우저 내에서만 이루어집니다. 파일이 서버로 전송되지 않습니다."
     }
   }
 }

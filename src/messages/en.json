@@ -179,11 +179,18 @@
     },
     "unlock": {
       "empty": "Upload a password-protected PDF",
+      "passwordLabel": "Password",
       "passwordPlaceholder": "Enter PDF password",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
       "unlock": "Unlock & Download",
       "unlocking": "Unlocking...",
       "wrongPassword": "Wrong password. Please try again.",
-      "notProtected": "This PDF is not password-protected."
+      "notProtected": "This PDF is not password-protected.",
+      "notProtectedDownload": "Download as-is",
+      "unlockSuccess": "PDF unlocked successfully!",
+      "download": "Download Unlocked PDF",
+      "privacyNote": "All processing happens in your browser. Files are never uploaded."
     }
   }
 }
