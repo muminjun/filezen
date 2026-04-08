@@ -20,8 +20,12 @@ export async function generateThumbnails(
   try {
     const loadingTask = pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer) });
     const pdf = await loadingTask.promise;
-    const pages = await renderAllPages(pdf, scale);
-    return { success: true, pages, pageCount: pdf.numPages };
+    try {
+      const pages = await renderAllPages(pdf, scale);
+      return { success: true, pages, pageCount: pdf.numPages };
+    } finally {
+      await pdf.destroy();
+    }
   } catch (err: unknown) {
     if (isPasswordError(err)) {
       return { success: false, requiresPassword: true };
@@ -46,8 +50,12 @@ export async function generateThumbnailsWithPassword(
     password,
   });
   const pdf = await loadingTask.promise;
-  const pages = await renderAllPages(pdf, scale);
-  return { pages, pageCount: pdf.numPages };
+  try {
+    const pages = await renderAllPages(pdf, scale);
+    return { pages, pageCount: pdf.numPages };
+  } finally {
+    await pdf.destroy();
+  }
 }
 
 /**
@@ -65,16 +73,20 @@ export async function renderPdfToBlobs(
   const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer) }).promise;
   const blobs: Blob[] = [];
 
-  for (let i = 1; i <= pdf.numPages; i++) {
-    const page = await pdf.getPage(i);
-    const viewport = page.getViewport({ scale });
-    const canvas = document.createElement('canvas');
-    canvas.width = viewport.width;
-    canvas.height = viewport.height;
-    const ctx = canvas.getContext('2d')!;
-    await page.render({ canvas, canvasContext: ctx, viewport }).promise;
-    const blob = await canvasToBlob(canvas, mimeType, quality);
-    blobs.push(blob);
+  try {
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const viewport = page.getViewport({ scale });
+      const canvas = document.createElement('canvas');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      const ctx = canvas.getContext('2d')!;
+      await page.render({ canvas, canvasContext: ctx, viewport }).promise;
+      const blob = await canvasToBlob(canvas, mimeType, quality);
+      blobs.push(blob);
+    }
+  } finally {
+    await pdf.destroy();
   }
 
   return blobs;

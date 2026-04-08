@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { cn, downloadBytes, downloadBlob } from '@/lib/utils';
 import { generateThumbnails } from '@/lib/pdfThumbnail';
@@ -20,6 +20,27 @@ export function SplitTool() {
   const [rangeStr, setRangeStr] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSplitting, setIsSplitting] = useState(false);
+
+  const prevPagesRef = useRef<PdfPage[]>([]);
+
+  // Revoke blob URLs that are no longer used when pages change
+  useEffect(() => {
+    const prev = prevPagesRef.current;
+    prevPagesRef.current = pages;
+    const currentUrls = new Set(pages.map((p) => p.thumbnail));
+    prev.forEach((p) => {
+      if (!currentUrls.has(p.thumbnail)) {
+        URL.revokeObjectURL(p.thumbnail);
+      }
+    });
+  }, [pages]);
+
+  // Revoke all remaining blob URLs on unmount
+  useEffect(() => {
+    return () => {
+      prevPagesRef.current.forEach((p) => URL.revokeObjectURL(p.thumbnail));
+    };
+  }, []);
 
   const handleFiles = useCallback(async (files: File[]) => {
     const f = files[0];
