@@ -22,7 +22,7 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${geistMono.variable} h-full antialiased`}
-      style={{ fontFamily: "'SUIT', -apple-system, BlinkMacSystemFont, sans-serif" }}
+      style={{ fontFamily: "'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif" }}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
