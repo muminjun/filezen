@@ -1,11 +1,4 @@
-@import url('https://cdn.jsdelivr.net/gh/xz205/SUIT/packages/suit/fonts/static/woff2/SUIT-Regular.woff2');
-
-@font-face {
-  font-family: 'SUIT';
-  src: url('https://cdn.jsdelivr.net/gh/xz205/SUIT/packages/suit/fonts/woff2/SUIT-Regular.woff2') format('woff2'),
-       url('https://cdn.jsdelivr.net/gh/xz205/SUIT/packages/suit/fonts/woff/SUIT-Regular.woff') format('woff');
-  font-weight: 400;
-}
+@import url('https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css');
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";

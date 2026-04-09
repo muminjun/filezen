@@ -2,8 +2,10 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { RotateCw, Download, FlipHorizontal, Pencil } from 'lucide-react';
+import { RotateCw, Download, FlipHorizontal, Pencil, FileText } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { downloadBytes } from '@/lib/utils';
+import { imagesToPdf } from '@/lib/pdfConvert';
 import { useAppContext } from '@/context/AppContext';
 import {
   Select,
@@ -26,7 +28,9 @@ interface Props {
 
 export function BottomActionBar({ onEditClick }: Props) {
   const t = useTranslations('actionBar');
+  const tFile = useTranslations('file.convert');
   const {
+    images,
     selectedIds,
     rotateSelected,
     flipSelected,
@@ -36,9 +40,22 @@ export function BottomActionBar({ onEditClick }: Props) {
     setOutputFormat,
     quality,
     setQuality,
-    removeImage,
   } = useAppContext();
   const [customAngle, setCustomAngle] = useState('');
+  const [isExportingPdf, setIsExportingPdf] = useState(false);
+
+  const handleExportAsPdf = async () => {
+    const selected = images.filter((img) => selectedIds.has(img.id));
+    if (selected.length === 0) return;
+    setIsExportingPdf(true);
+    try {
+      const files = selected.map((img) => img.file);
+      const bytes = await imagesToPdf(files, 'a4');
+      downloadBytes(bytes, 'images.pdf');
+    } finally {
+      setIsExportingPdf(false);
+    }
+  };
 
   const hasSelection = selectedIds.size > 0;
 
@@ -125,6 +142,22 @@ export function BottomActionBar({ onEditClick }: Props) {
         >
           <Download size={12} className="flex-shrink-0" />
           ZIP
+        </button>
+
+        {/* Export as PDF */}
+        <button
+          onClick={handleExportAsPdf}
+          disabled={!hasSelection || isExportingPdf}
+          title={tFile('exportAsPdf')}
+          className={cn(
+            'flex items-center gap-1 rounded-lg px-3 py-1.5 text-[11px] font-semibold transition-all active:scale-95',
+            hasSelection && !isExportingPdf
+              ? 'bg-muted text-foreground hover:bg-muted/80'
+              : 'bg-muted text-muted-foreground opacity-50 cursor-not-allowed'
+          )}
+        >
+          <FileText size={12} className="flex-shrink-0" />
+          PDF
         </button>
       </div>
 
@@ -257,7 +290,20 @@ export function BottomActionBar({ onEditClick }: Props) {
           )}
         </div>
 
-        <div className="ml-auto flex flex-shrink-0 items-center pl-2">
+        <div className="ml-auto flex flex-shrink-0 items-center gap-2 pl-2">
+          <button
+            onClick={handleExportAsPdf}
+            disabled={!hasSelection || isExportingPdf}
+            className={cn(
+              'flex items-center gap-2 rounded-md px-3 py-1.5 text-xs font-medium transition-all active:scale-95 cursor-pointer whitespace-nowrap',
+              hasSelection && !isExportingPdf
+                ? 'bg-muted text-foreground hover:bg-muted/80'
+                : 'cursor-not-allowed bg-muted text-muted-foreground opacity-50'
+            )}
+          >
+            <FileText size={14} className="flex-shrink-0" />
+            {isExportingPdf ? tFile('exportingPdf') : tFile('exportAsPdf')}
+          </button>
           <button
             onClick={downloadAsZip}
             disabled={!hasSelection || isDownloading}

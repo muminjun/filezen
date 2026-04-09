@@ -1,17 +1,27 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
-import { FolderOpen } from 'lucide-react';
+import { useFileContext } from '@/context/FileContext';
+import { FileToolSelector } from './FileToolSelector';
+import { PageManager } from './tools/PageManager';
+import { MergeTool } from './tools/MergeTool';
+import { SplitTool } from './tools/SplitTool';
+import { ConvertTool } from './tools/ConvertTool';
+import { CompressTool } from './tools/CompressTool';
+import { UnlockTool } from './tools/UnlockTool';
 
 export function FilePage() {
-  const t = useTranslations('filePage');
+  const { activeTool } = useFileContext();
 
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-4 text-center">
-      <FolderOpen size={48} className="text-muted-foreground/40" />
-      <div>
-        <h2 className="text-lg font-semibold">{t('title')}</h2>
-        <p className="mt-1 text-sm text-muted-foreground">{t('comingSoon')}</p>
+    <div className="flex h-full flex-col overflow-hidden">
+      <FileToolSelector />
+      <div className="flex flex-1 flex-col overflow-hidden">
+        {activeTool === 'page-manager' && <PageManager />}
+        {activeTool === 'merge'        && <MergeTool />}
+        {activeTool === 'split'        && <SplitTool />}
+        {activeTool === 'convert'      && <ConvertTool />}
+        {activeTool === 'compress'     && <CompressTool />}
+        {activeTool === 'unlock'       && <UnlockTool />}
       </div>
     </div>
   );

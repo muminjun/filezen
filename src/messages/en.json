@@ -97,5 +97,108 @@
     "title": "FileZen - Online Image Rotation & Conversion Tool",
     "description": "Rotate, convert, and compress images instantly in your browser. No uploads needed. Privacy-focused and lightning-fast with FileZen.",
     "keywords": "rotate image, convert image, online image editor, PNG converter, JPG converter, FileZen"
+  },
+  "file": {
+    "upload": {
+      "dragDrop": "Drag a PDF here or click to upload",
+      "dropHere": "Drop here",
+      "formats": "PDF · Up to 50 files · 200MB each",
+      "processing": "Loading PDF..."
+    },
+    "tools": {
+      "pageManager": "Page Manager",
+      "merge": "Merge",
+      "split": "Split",
+      "convert": "Convert",
+      "compress": "Compress",
+      "unlock": "Unlock"
+    },
+    "pageManager": {
+      "empty": "Upload a PDF to manage its pages",
+      "selectAll": "Select All",
+      "deselectAll": "Deselect All",
+      "deleteSelected": "Delete Selected",
+      "rotateSelected": "Rotate 90°",
+      "save": "Save PDF",
+      "saving": "Saving...",
+      "pageCount": "{count} pages",
+      "selectedCount": "{count} selected",
+      "passwordProtected": "This PDF is password-protected. Please use the Unlock tool first."
+    },
+    "merge": {
+      "empty": "Upload 2 or more PDFs to merge",
+      "fileCount": "{count} files",
+      "merge": "Merge & Download",
+      "merging": "Merging...",
+      "remove": "Remove"
+    },
+    "split": {
+      "empty": "Upload a PDF to split",
+      "modeAll": "Each page as separate PDF",
+      "modeSelection": "Extract selected pages",
+      "modeRange": "By range",
+      "rangePlaceholder": "e.g. 1-3, 5, 7-10",
+      "split": "Split & Download",
+      "splitting": "Splitting...",
+      "selectPages": "Click pages to select",
+      "pageCount": "{count} pages",
+      "passwordProtected": "This PDF is password-protected. Please use the Unlock tool first."
+    },
+    "convert": {
+      "emptyPdf": "Upload a PDF to convert to images",
+      "emptyImages": "Upload images to convert to PDF",
+      "tabPdfToImage": "PDF → Images",
+      "tabImageToPdf": "Images → PDF",
+      "format": "Format",
+      "resolution": "Resolution",
+      "res72": "72 DPI (Screen)",
+      "res150": "150 DPI (Standard)",
+      "res300": "300 DPI (Print)",
+      "convert": "Convert & Download ZIP",
+      "converting": "Converting...",
+      "sendToImageTab": "Send to Image Tab",
+      "pageSize": "Page Size",
+      "sizeA4": "A4",
+      "sizeLetter": "Letter",
+      "sizeFit": "Fit to image",
+      "createPdf": "Create PDF",
+      "creating": "Creating...",
+      "exportAsPdf": "Export as PDF",
+      "exportingPdf": "Exporting..."
+    },
+    "compress": {
+      "empty": "Upload a PDF to compress",
+      "level": "Compression Level",
+      "levelLow": "Low — metadata only (lossless)",
+      "levelMedium": "Medium — rasterize at 75% JPEG",
+      "levelHigh": "High — rasterize at 50% JPEG (loses text layer)",
+      "originalSize": "Original",
+      "compressedSize": "Compressed",
+      "compress": "Compress & Download",
+      "compressing": "Compressing...",
+      "savings": "Saved {percent}%",
+      "noSavings": "No size reduction",
+      "warning": "Text will be rasterized (no copy/search)"
+    },
+    "unlock": {
+      "empty": "Upload a password-protected PDF",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Enter PDF password",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "unlock": "Unlock & Download",
+      "unlocking": "Unlocking...",
+      "wrongPassword": "Wrong password. Please try again.",
+      "notProtected": "This PDF is not password-protected.",
+      "notProtectedDownload": "Download as-is",
+      "unlockSuccess": "PDF unlocked successfully!",
+      "download": "Download Unlocked PDF",
+      "rasterWarning": "Note: The unlocked PDF will contain rasterized page images. Text will not be selectable or searchable.",
+      "privacyNote": "All processing happens in your browser. Files are never uploaded.",
+      "corruptError": "Failed to read PDF. The file may be corrupted.",
+      "unexpectedError": "An unexpected error occurred.",
+      "checking": "Checking PDF...",
+      "protectedNotice": "This PDF is password-protected."
+    }
   }
 }
