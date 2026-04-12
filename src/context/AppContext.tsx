@@ -11,7 +11,7 @@ import { rotateImageBlob } from '../lib/imageRotation';
 import { MAX_CONCURRENT_PROCESSING, HEIC_MIME_TYPES } from '../lib/constants';
 import { buildCssFilter, isDefaultAdjustment } from '../lib/colorAdjustment';
 import { useSavedAdjustments } from '../hooks/useSavedAdjustments';
-import type { ImageFile, AppContextType, ColorAdjustment, CropData, OutputFormat } from '../lib/types';
+import type { ImageFile, AppContextType, ColorAdjustment, CropData, OutputFormat, ResizeData, WatermarkConfig } from '../lib/types';
 
 async function heicToJpegBlob(file: File): Promise<Blob> {
   // 1. Server-side conversion via API route (sharp handles HEVC-encoded iPhone HEIC)
@@ -254,6 +254,47 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   }, [images, selectedIds, outputFormat, quality]);
 
+  const applyResizeToSelected = useCallback((resize: ResizeData | undefined) => {
+    setImages((prev) =>
+      prev.map((img) =>
+        selectedIds.has(img.id) ? { ...img, resizeData: resize } : img
+      )
+    );
+  }, [selectedIds]);
+
+  const applyWatermarkToSelected = useCallback((watermark: WatermarkConfig | undefined) => {
+    setImages((prev) =>
+      prev.map((img) =>
+        selectedIds.has(img.id) ? { ...img, watermark } : img
+      )
+    );
+  }, [selectedIds]);
+
+  const toggleStripExifOnSelected = useCallback(() => {
+    setImages((prev) =>
+      prev.map((img) =>
+        selectedIds.has(img.id) ? { ...img, stripExif: !img.stripExif } : img
+      )
+    );
+  }, [selectedIds]);
+
+  const replaceImageBlob = useCallback((id: string, newBlob: Blob, newFileName: string) => {
+    setImages((prev) =>
+      prev.map((img) => {
+        if (img.id !== id) return img;
+        const newFile = new File([newBlob], newFileName, { type: newBlob.type });
+        const newPreviewUrl = URL.createObjectURL(newBlob);
+        // Revoke old preview URL
+        URL.revokeObjectURL(img.previewUrl);
+        return {
+          ...img,
+          file: newFile,
+          previewUrl: newPreviewUrl,
+        };
+      })
+    );
+  }, []);
+
   return (
     <AppContext.Provider
       value={{
@@ -279,6 +320,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
         downloadAsZip,
         applyEditToSelected,
         saveAdjustment,
+        applyResizeToSelected,
+        applyWatermarkToSelected,
+        toggleStripExifOnSelected,
+        replaceImageBlob,
       }}
     >
       {children}

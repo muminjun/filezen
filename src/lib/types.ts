@@ -16,6 +16,27 @@ export interface ColorAdjustment {
   vignette:   number; //    0 ~ 100
 }
 
+export interface ResizeData {
+  width: number;    // px 또는 % 값
+  height: number;
+  unit: 'px' | '%';
+  lockAspect: boolean;
+}
+
+export type WatermarkPosition =
+  | 'top-left'    | 'top-center'    | 'top-right'
+  | 'middle-left' | 'middle-center' | 'middle-right'
+  | 'bottom-left' | 'bottom-center' | 'bottom-right';
+
+export interface WatermarkConfig {
+  text: string;
+  fontSize: number;   // 12–120
+  color: string;      // CSS hex e.g. '#ffffff'
+  opacity: number;    // 0.0–1.0
+  position: WatermarkPosition;
+  repeat: boolean;
+}
+
 export interface CropData {
   x:           number;       // 0.0 ~ 1.0 (비율)
   y:           number;
@@ -40,33 +61,40 @@ export interface ImageFile {
   flipped:          boolean;
   colorAdjustment?: ColorAdjustment;
   cropData?:        CropData;
+  stripExif?:       boolean;
+  resizeData?:      ResizeData;
+  watermark?:       WatermarkConfig;
 }
 
 export type OutputFormat = 'original' | 'png' | 'jpeg' | 'webp';
 
 export interface AppContextType {
-  images:             ImageFile[];
-  selectedIds:        Set<string>;
-  isDownloading:      boolean;
-  outputFormat:       OutputFormat;
-  quality:            number;
-  savedAdjustments:   SavedAdjustment[];
-  recentAdjustments:  ColorAdjustment[];
-  addImages:          (files: File[]) => Promise<void>;
-  removeImage:        (id: string) => void;
-  removeAllImages:    () => void;
-  reorderImages:      (startIndex: number, endIndex: number) => void;
-  toggleSelect:       (id: string) => void;
-  rangeSelect:        (fromId: string, toId: string) => void;
-  selectAll:          () => void;
-  clearSelection:     () => void;
-  rotateSelected:     (degrees: number) => void;
-  flipSelected:       () => void;
-  setOutputFormat:    (format: OutputFormat) => void;
-  setQuality:         (quality: number) => void;
-  downloadAsZip:      () => Promise<void>;
-  applyEditToSelected:(edit: { colorAdjustment?: ColorAdjustment; cropData?: CropData }) => void;
-  saveAdjustment:     (name: string, adj: ColorAdjustment) => void;
+  images:                   ImageFile[];
+  selectedIds:              Set<string>;
+  isDownloading:            boolean;
+  outputFormat:             OutputFormat;
+  quality:                  number;
+  savedAdjustments:         SavedAdjustment[];
+  recentAdjustments:        ColorAdjustment[];
+  addImages:                (files: File[]) => Promise<void>;
+  removeImage:              (id: string) => void;
+  removeAllImages:          () => void;
+  reorderImages:            (startIndex: number, endIndex: number) => void;
+  toggleSelect:             (id: string) => void;
+  rangeSelect:              (fromId: string, toId: string) => void;
+  selectAll:                () => void;
+  clearSelection:           () => void;
+  rotateSelected:           (degrees: number) => void;
+  flipSelected:             () => void;
+  setOutputFormat:          (format: OutputFormat) => void;
+  setQuality:               (quality: number) => void;
+  downloadAsZip:            () => Promise<void>;
+  applyEditToSelected:      (edit: { colorAdjustment?: ColorAdjustment; cropData?: CropData }) => void;
+  saveAdjustment:           (name: string, adj: ColorAdjustment) => void;
+  applyResizeToSelected:    (resize: ResizeData | undefined) => void;
+  applyWatermarkToSelected: (watermark: WatermarkConfig | undefined) => void;
+  toggleStripExifOnSelected: () => void;
+  replaceImageBlob:         (id: string, newBlob: Blob, newFileName: string) => void;
 }
 
 // ─── File / PDF Toolkit types ────────────────────────────────────────────────
