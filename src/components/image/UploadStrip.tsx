@@ -26,6 +26,8 @@ export function UploadStrip() {
       'image/jpeg': ['.jpg', '.jpeg'],
       'image/webp': ['.webp'],
       'image/gif': ['.gif'],
+      'image/heic': ['.heic'],
+      'image/heif': ['.heif'],
     },
     maxFiles: MAX_FILES,
   });

@@ -52,7 +52,7 @@ export interface AppContextType {
   quality:            number;
   savedAdjustments:   SavedAdjustment[];
   recentAdjustments:  ColorAdjustment[];
-  addImages:          (files: File[]) => void;
+  addImages:          (files: File[]) => Promise<void>;
   removeImage:        (id: string) => void;
   removeAllImages:    () => void;
   reorderImages:      (startIndex: number, endIndex: number) => void;

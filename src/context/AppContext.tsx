@@ -8,10 +8,53 @@ import React, {
   ReactNode,
 } from 'react';
 import { rotateImageBlob } from '../lib/imageRotation';
-import { MAX_CONCURRENT_PROCESSING } from '../lib/constants';
+import { MAX_CONCURRENT_PROCESSING, HEIC_MIME_TYPES } from '../lib/constants';
 import { buildCssFilter, isDefaultAdjustment } from '../lib/colorAdjustment';
 import { useSavedAdjustments } from '../hooks/useSavedAdjustments';
 import type { ImageFile, AppContextType, ColorAdjustment, CropData, OutputFormat } from '../lib/types';
+
+async function heicToJpegBlob(file: File): Promise<Blob> {
+  // 1. Server-side conversion via API route (sharp handles HEVC-encoded iPhone HEIC)
+  const formData = new FormData();
+  formData.append('file', file);
+  const res = await fetch('/api/heic-convert', { method: 'POST', body: formData });
+  if (res.ok) return res.blob();
+
+  // 2. Native browser decoding (Safari natively supports HEIC)
+  const nativeOk = await createImageBitmap(file).then(bm => { bm.close(); return true; }).catch(() => false);
+  if (nativeOk) {
+    const tempUrl = URL.createObjectURL(file);
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        URL.revokeObjectURL(tempUrl);
+        const canvas = document.createElement('canvas');
+        canvas.width  = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) { reject(new Error('Canvas context unavailable')); return; }
+        ctx.drawImage(img, 0, 0);
+        canvas.toBlob(
+          blob => blob ? resolve(blob) : reject(new Error('canvas.toBlob returned null')),
+          'image/jpeg', 0.92,
+        );
+      };
+      img.onerror = () => { URL.revokeObjectURL(tempUrl); reject(new Error('Image load failed')); };
+      img.src = tempUrl;
+    });
+  }
+
+  // 3. Last resort: heic2any (works for AV1-based HEIF)
+  const heic2any = (await import('heic2any')).default;
+  const result = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.92 });
+  return Array.isArray(result) ? result[0] : result;
+}
+
+async function convertHeicToJpeg(file: File): Promise<{ previewUrl: string; convertedFile: File }> {
+  const blob = await heicToJpegBlob(file);
+  const convertedFile = new File([blob], file.name.replace(/\.(heic|heif)$/i, '.jpg'), { type: 'image/jpeg' });
+  return { previewUrl: URL.createObjectURL(blob), convertedFile };
+}
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
@@ -43,15 +86,20 @@ export function AppProvider({ children }: { children: ReactNode }) {
     addRecentAdjustment,
   } = useSavedAdjustments();
 
-  const addImages = useCallback((files: File[]) => {
-    const next: ImageFile[] = files.map((file) => ({
-      id: generateId(),
-      file,
-      previewUrl: URL.createObjectURL(file),
-      rotation: 0,
-      flipped: false,
-    }));
-    setImages((prev) => [...prev, ...next]);
+  const addImages = useCallback(async (files: File[]) => {
+    const results = await Promise.allSettled(
+      files.map(async (file): Promise<ImageFile> => {
+        if (HEIC_MIME_TYPES.includes(file.type) || /\.(heic|heif)$/i.test(file.name)) {
+          const { previewUrl, convertedFile } = await convertHeicToJpeg(file);
+          return { id: generateId(), file: convertedFile, previewUrl, rotation: 0, flipped: false };
+        }
+        return { id: generateId(), file, previewUrl: URL.createObjectURL(file), rotation: 0, flipped: false };
+      })
+    );
+    const next = results
+      .filter((r): r is PromiseFulfilledResult<ImageFile> => r.status === 'fulfilled')
+      .map(r => r.value);
+    if (next.length > 0) setImages((prev) => [...prev, ...next]);
   }, []);
 
   const removeImage = useCallback((id: string) => {
