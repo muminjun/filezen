@@ -10,7 +10,7 @@
   "upload": {
     "dragDrop": "Drag images here or click to upload",
     "dropHere": "Drop here",
-    "formats": "PNG, JPG, WebP, GIF · Up to 500 files · 50MB each"
+    "formats": "PNG, JPG, WebP, GIF, HEIC/HEIF · Up to 500 files · 50MB each"
   },
   "gallery": {
     "noImages": "Upload images to get started",
@@ -32,6 +32,7 @@
     "apply": "Apply",
     "downloadZip": "Save as ZIP",
     "downloading": "Saving...",
+    "downloadingHint": "Processing images. Please wait.",
     "format": "Format",
     "quality": "Quality",
     "original": "Original",
