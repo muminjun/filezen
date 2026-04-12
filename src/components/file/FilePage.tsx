@@ -14,7 +14,6 @@ export function FilePage() {
 
   return (
     <div className="flex h-full flex-col overflow-hidden">
-      <FileToolSelector />
       <div className="flex flex-1 flex-col overflow-hidden">
         {activeTool === 'page-manager' && <PageManager />}
         {activeTool === 'merge'        && <MergeTool />}
@@ -23,6 +22,7 @@ export function FilePage() {
         {activeTool === 'compress'     && <CompressTool />}
         {activeTool === 'unlock'       && <UnlockTool />}
       </div>
+      <FileToolSelector />
     </div>
   );
 }
