@@ -37,14 +37,6 @@
           }
         ]
       }
-    ],
-    "file_modified": [
-      {
-        "path": "design/components/**/*.md",
-        "event": "created_or_modified",
-        "action": "notify",
-        "message": "🎨 Design updated: {filename}\nReady to generate code? Run: ./scripts/design-to-code.sh {filepath}"
-      }
     ]
   },
   "automation": {
