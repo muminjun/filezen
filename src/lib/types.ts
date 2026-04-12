@@ -68,3 +68,25 @@ export interface AppContextType {
   applyEditToSelected:(edit: { colorAdjustment?: ColorAdjustment; cropData?: CropData }) => void;
   saveAdjustment:     (name: string, adj: ColorAdjustment) => void;
 }
+
+// ─── File / PDF Toolkit types ────────────────────────────────────────────────
+
+export type FileToolMode =
+  | 'page-manager'
+  | 'merge'
+  | 'split'
+  | 'convert'
+  | 'compress'
+  | 'unlock';
+
+/** A single PDF page with rendered thumbnail */
+export interface PdfPage {
+  pageIndex: number;  // 0-based original page index
+  thumbnail: string;  // blob URL (must be revoked on cleanup)
+  rotation: number;   // additional rotation applied: 0 | 90 | 180 | 270
+}
+
+export interface FileContextType {
+  activeTool: FileToolMode;
+  setActiveTool: (tool: FileToolMode) => void;
+}
