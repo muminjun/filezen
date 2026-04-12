@@ -95,8 +95,8 @@ export async function rotateImageBlob(
       const absSin = Math.abs(Math.sin(rad));
 
       const canvas = document.createElement('canvas');
-      canvas.width  = srcW * absCos + srcH * absSin;
-      canvas.height = srcW * absSin + srcH * absCos;
+      canvas.width  = Math.ceil(srcW * absCos + srcH * absSin);
+      canvas.height = Math.ceil(srcW * absSin + srcH * absCos);
 
       const ctx = canvas.getContext('2d');
       if (!ctx) return reject(new Error('Canvas context unavailable'));
@@ -124,6 +124,9 @@ export async function rotateImageBlob(
         if (!rctx) return reject(new Error('Resize canvas context unavailable'));
         rctx.drawImage(canvas, 0, 0, targetW, targetH);
         outputCanvas = rc;
+        // 원본 canvas GPU 버퍼 즉시 해제
+        canvas.width = 0;
+        canvas.height = 0;
       }
 
       // ── 워터마크 ─────────────────────────────────────────────────────
@@ -140,7 +143,7 @@ export async function rotateImageBlob(
         quality,
       );
     };
-    img.onerror = reject;
+    img.onerror = () => reject(new Error(`Failed to load image: ${originalUrl}`));
     img.src = originalUrl;
   });
 }
