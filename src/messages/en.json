@@ -84,7 +84,10 @@
       "warmthMax": "Warm",
       "tintMin": "Green",
       "tintMax": "Magenta"
-    }
+    },
+    "exifSection": "Privacy",
+    "exifStrip": "Remove EXIF Metadata",
+    "exifStripHint": "Strips GPS location, camera model, and author info from all selected images on export."
   },
   "filePage": {
     "title": "File Conversion",
