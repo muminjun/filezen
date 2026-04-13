@@ -217,7 +217,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
               img.flipped ||
               outputFormat !== 'original' ||
               cssFilter !== undefined ||
-              img.cropData !== undefined;
+              img.cropData !== undefined ||
+              img.stripExif === true ||
+              img.resizeData !== undefined ||
+              img.watermark !== undefined;
 
             const blob = needsProcessing
               ? await rotateImageBlob(
@@ -228,6 +231,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
                   quality / 100,
                   cssFilter,
                   img.cropData,
+                  img.resizeData,
+                  img.watermark,
                 )
               : img.file;
 
