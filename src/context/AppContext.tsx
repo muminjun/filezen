@@ -292,9 +292,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
         // Revoke old preview URL
         URL.revokeObjectURL(img.previewUrl);
         return {
-          ...img,
+          id: img.id,
           file: newFile,
           previewUrl: newPreviewUrl,
+          rotation: 0,
+          flipped: false,
         };
       })
     );
