@@ -87,7 +87,16 @@
     },
     "exifSection": "Privacy",
     "exifStrip": "Remove EXIF Metadata",
-    "exifStripHint": "Strips GPS location, camera model, and author info from all selected images on export."
+    "exifStripHint": "Strips GPS location, camera model, and author info from all selected images on export.",
+    "resizeSection": "Resize",
+    "resizeWidth": "Width",
+    "resizeHeight": "Height",
+    "resizePx": "px",
+    "resizePercent": "%",
+    "resizeLockAspect": "Lock aspect ratio",
+    "resizeApply": "Apply Resize",
+    "resizeClear": "Clear",
+    "resizeHint": "Applied on export. Original file is not modified."
   },
   "filePage": {
     "title": "File Conversion",
