@@ -122,3 +122,7 @@ export interface FileContextType {
   activeTool: FileToolMode;
   setActiveTool: (tool: FileToolMode) => void;
 }
+
+// ─── Convert Toolkit types ──────────────────────────────────────────────────
+
+export type ConvertToolMode = 'icon' | 'social' | 'palette';
