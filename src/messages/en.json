@@ -38,7 +38,11 @@
     "original": "Original",
     "flipHorizontal": "Flip",
     "edit": "Edit",
-    "removeSelected": "Remove Selected"
+    "removeSelected": "Remove Selected",
+    "bgRemove": "Remove BG",
+    "bgRemoving": "Processing...",
+    "bgRemoveHint": "AI removes background. First run downloads ~40MB model.",
+    "bgRemoveDone": "Background removed"
   },
   "editDrawer": {
     "title": "Edit",

@@ -38,7 +38,11 @@
     "original": "원본 유지",
     "flipHorizontal": "좌우반전",
     "edit": "편집",
-    "removeSelected": "선택 삭제"
+    "removeSelected": "선택 삭제",
+    "bgRemove": "배경 제거",
+    "bgRemoving": "처리 중...",
+    "bgRemoveHint": "AI가 배경을 제거합니다. 최초 실행 시 ~40MB 모델을 다운로드합니다.",
+    "bgRemoveDone": "배경 제거 완료"
   },
   "editDrawer": {
     "title": "편집",
