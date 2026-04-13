@@ -90,9 +90,10 @@ export async function getFFmpeg(onProgress?: (ratio: number) => void): Promise<F
   const { FFmpeg } = await import('@ffmpeg/ffmpeg');
   ffmpeg = new FFmpeg();
   if (onProgress) ffmpeg.on('progress', ({ progress }) => onProgress(progress));
+  const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd';
   await ffmpeg.load({
-    coreURL: await toBlobURL(`${FFMPEG_CDN}/ffmpeg-core.js`, 'text/javascript'),
-    wasmURL: await toBlobURL(`${FFMPEG_CDN}/ffmpeg-core.wasm`, 'application/wasm'),
+    coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
+    wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
   });
   return ffmpeg;
 }
