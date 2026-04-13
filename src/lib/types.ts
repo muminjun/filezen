@@ -77,7 +77,11 @@ export type FileToolMode =
   | 'split'
   | 'convert'
   | 'compress'
-  | 'unlock';
+  | 'unlock'
+  | 'protect'
+  | 'pdf-watermark'
+  | 'sign'
+  | 'extract';
 
 /** A single PDF page with rendered thumbnail */
 export interface PdfPage {

@@ -112,7 +112,11 @@
       "split": "PDF 분리",
       "convert": "변환",
       "compress": "압축",
-      "unlock": "비밀번호 해제"
+      "unlock": "비밀번호 해제",
+      "protect": "보호",
+      "pdfWatermark": "워터마크",
+      "sign": "서명",
+      "extract": "이미지 추출"
     },
     "pageManager": {
       "empty": "PDF를 업로드하여 페이지를 관리하세요",

@@ -112,7 +112,11 @@
       "split": "Split",
       "convert": "Convert",
       "compress": "Compress",
-      "unlock": "Unlock"
+      "unlock": "Unlock",
+      "protect": "Protect",
+      "pdfWatermark": "Watermark",
+      "sign": "Sign",
+      "extract": "To Images"
     },
     "pageManager": {
       "empty": "Upload a PDF to manage its pages",
