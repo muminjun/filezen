@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useTranslations } from 'next-intl';
-import { LayoutGrid, Merge, Scissors, RefreshCw, Archive, Unlock } from 'lucide-react';
+import { LayoutGrid, Merge, Scissors, RefreshCw, Archive, Unlock, Lock, Droplets, PenLine, Images } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useFileContext } from '@/context/FileContext';
 import type { FileToolMode } from '@/lib/types';
@@ -14,6 +14,10 @@ const TOOLS: Array<{ mode: FileToolMode; icon: React.ReactNode; key: string }> =
   { mode: 'convert',      icon: <RefreshCw size={14} />,  key: 'convert' },
   { mode: 'compress',     icon: <Archive size={14} />,    key: 'compress' },
   { mode: 'unlock',       icon: <Unlock size={14} />,     key: 'unlock' },
+  { mode: 'protect',       icon: <Lock size={14} />,     key: 'protect' },
+  { mode: 'pdf-watermark', icon: <Droplets size={14} />, key: 'pdfWatermark' },
+  { mode: 'sign',          icon: <PenLine size={14} />,  key: 'sign' },
+  { mode: 'extract',       icon: <Images size={14} />,   key: 'extract' },
 ];
 
 export function FileToolSelector() {
