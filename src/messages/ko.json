@@ -5,7 +5,8 @@
   },
   "drawer": {
     "images": "이미지",
-    "files": "파일"
+    "files": "파일",
+    "convert": "변환"
   },
   "upload": {
     "dragDrop": "이미지를 드래그하거나 클릭해서 업로드",
@@ -298,6 +299,50 @@
       "extracting": "추출 중... {current}/{total}",
       "success": "{count}장 추출 완료",
       "empty": "PDF를 업로드하세요"
+    }
+  },
+  "convert": {
+    "tools": {
+      "icon": "아이콘 생성기",
+      "social": "소셜 프리셋",
+      "palette": "색상 팔레트"
+    },
+    "upload": {
+      "dragDrop": "이미지를 드래그하거나 클릭해서 업로드",
+      "dropHere": "여기에 놓으세요",
+      "formats": "PNG, JPG, WebP · 파일당 50MB"
+    },
+    "icon": {
+      "empty": "아이콘으로 만들 이미지를 업로드하세요",
+      "bgLabel": "배경색",
+      "bgTransparent": "투명",
+      "bgSolid": "단색",
+      "outputLabel": "출력 파일 선택",
+      "download": "아이콘 세트 ZIP 다운로드",
+      "downloading": "생성 중...",
+      "selectAll": "전체 선택",
+      "deselectAll": "전체 해제"
+    },
+    "social": {
+      "empty": "변환할 이미지를 업로드하세요",
+      "platformLabel": "플랫폼",
+      "cropMode": "크롭 방식",
+      "centerCrop": "Center Crop",
+      "letterBox": "Letter Box",
+      "download": "ZIP 다운로드",
+      "downloading": "처리 중...",
+      "selectAll": "전체 선택",
+      "deselectAll": "전체 해제"
+    },
+    "palette": {
+      "empty": "색상을 추출할 이미지를 업로드하세요",
+      "countLabel": "추출 색상 수",
+      "extract": "색상 추출",
+      "extracting": "추출 중...",
+      "copied": "복사됨!",
+      "copyJson": "JSON 복사",
+      "copyCss": "CSS 변수 복사",
+      "format": "표시 형식"
     }
   }
 }
