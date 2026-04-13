@@ -96,7 +96,17 @@
     "resizeLockAspect": "비율 잠금",
     "resizeApply": "리사이즈 적용",
     "resizeClear": "초기화",
-    "resizeHint": "저장 시 적용됩니다. 원본 파일은 변경되지 않습니다."
+    "resizeHint": "저장 시 적용됩니다. 원본 파일은 변경되지 않습니다.",
+    "watermarkSection": "워터마크",
+    "watermarkText": "텍스트",
+    "watermarkTextPlaceholder": "예: © 2026 MyBrand",
+    "watermarkFontSize": "크기",
+    "watermarkColor": "색상",
+    "watermarkOpacity": "불투명도",
+    "watermarkPosition": "위치",
+    "watermarkRepeat": "반복 패턴",
+    "watermarkApply": "워터마크 적용",
+    "watermarkClear": "제거"
   },
   "filePage": {
     "title": "파일 변환",

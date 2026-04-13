@@ -96,7 +96,17 @@
     "resizeLockAspect": "Lock aspect ratio",
     "resizeApply": "Apply Resize",
     "resizeClear": "Clear",
-    "resizeHint": "Applied on export. Original file is not modified."
+    "resizeHint": "Applied on export. Original file is not modified.",
+    "watermarkSection": "Watermark",
+    "watermarkText": "Text",
+    "watermarkTextPlaceholder": "e.g. © 2026 MyBrand",
+    "watermarkFontSize": "Size",
+    "watermarkColor": "Color",
+    "watermarkOpacity": "Opacity",
+    "watermarkPosition": "Position",
+    "watermarkRepeat": "Repeat pattern",
+    "watermarkApply": "Apply Watermark",
+    "watermarkClear": "Remove"
   },
   "filePage": {
     "title": "File Conversion",
