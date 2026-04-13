@@ -38,7 +38,11 @@
     "original": "원본 유지",
     "flipHorizontal": "좌우반전",
     "edit": "편집",
-    "removeSelected": "선택 삭제"
+    "removeSelected": "선택 삭제",
+    "bgRemove": "배경 제거",
+    "bgRemoving": "처리 중...",
+    "bgRemoveHint": "AI가 배경을 제거합니다. 최초 실행 시 ~40MB 모델을 다운로드합니다.",
+    "bgRemoveDone": "배경 제거 완료"
   },
   "editDrawer": {
     "title": "편집",
@@ -84,7 +88,29 @@
       "warmthMax": "따뜻하게",
       "tintMin": "녹색",
       "tintMax": "자홍색"
-    }
+    },
+    "exifSection": "개인정보",
+    "exifStrip": "EXIF 메타데이터 제거",
+    "exifStripHint": "저장 시 선택한 이미지의 GPS 위치, 카메라 기종, 작성자 정보를 제거합니다.",
+    "resizeSection": "리사이즈",
+    "resizeWidth": "가로",
+    "resizeHeight": "세로",
+    "resizePx": "px",
+    "resizePercent": "%",
+    "resizeLockAspect": "비율 잠금",
+    "resizeApply": "리사이즈 적용",
+    "resizeClear": "초기화",
+    "resizeHint": "저장 시 적용됩니다. 원본 파일은 변경되지 않습니다.",
+    "watermarkSection": "워터마크",
+    "watermarkText": "텍스트",
+    "watermarkTextPlaceholder": "예: © 2026 MyBrand",
+    "watermarkFontSize": "크기",
+    "watermarkColor": "색상",
+    "watermarkOpacity": "불투명도",
+    "watermarkPosition": "위치",
+    "watermarkRepeat": "반복 패턴",
+    "watermarkApply": "워터마크 적용",
+    "watermarkClear": "제거"
   },
   "filePage": {
     "title": "파일 변환",

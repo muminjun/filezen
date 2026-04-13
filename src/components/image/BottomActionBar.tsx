@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { RotateCw, Download, FlipHorizontal, Pencil, FileText } from 'lucide-react';
+import { RotateCw, Download, FlipHorizontal, Pencil, FileText, Wand2 } from 'lucide-react';
+import { BgRemoveTool } from './tools/BgRemoveTool';
 import { cn } from '@/lib/utils';
 import { downloadBytes } from '@/lib/utils';
 import { imagesToPdf } from '@/lib/pdfConvert';
@@ -43,6 +44,7 @@ export function BottomActionBar({ onEditClick }: Props) {
   } = useAppContext();
   const [customAngle, setCustomAngle] = useState('');
   const [isExportingPdf, setIsExportingPdf] = useState(false);
+  const [showBgRemove, setShowBgRemove] = useState(false);
 
   const handleExportAsPdf = async () => {
     const selected = images.filter((img) => selectedIds.has(img.id));
@@ -128,6 +130,21 @@ export function BottomActionBar({ onEditClick }: Props) {
             <Pencil size={14} />
           </button>
         </div>
+
+        {/* BG Remove */}
+        <button
+          onClick={() => setShowBgRemove(true)}
+          disabled={!hasSelection}
+          title={t('bgRemove')}
+          className={cn(
+            'flex items-center justify-center rounded-lg px-2 py-1.5 transition-all active:scale-95',
+            hasSelection
+              ? 'bg-muted text-foreground hover:bg-muted/80'
+              : 'opacity-35 text-muted-foreground cursor-not-allowed',
+          )}
+        >
+          <Wand2 size={14} />
+        </button>
 
         {/* Download */}
         <button
@@ -292,6 +309,19 @@ export function BottomActionBar({ onEditClick }: Props) {
 
         <div className="ml-auto flex flex-shrink-0 items-center gap-2 pl-2">
           <button
+            onClick={() => setShowBgRemove(true)}
+            disabled={!hasSelection}
+            className={cn(
+              'flex items-center gap-2 rounded-md px-3 py-1.5 text-xs font-medium transition-all active:scale-95 cursor-pointer whitespace-nowrap',
+              hasSelection
+                ? 'bg-muted text-foreground hover:bg-muted/80'
+                : 'cursor-not-allowed bg-muted text-muted-foreground opacity-50',
+            )}
+          >
+            <Wand2 size={14} className="flex-shrink-0" />
+            {t('bgRemove')}
+          </button>
+          <button
             onClick={handleExportAsPdf}
             disabled={!hasSelection || isExportingPdf}
             className={cn(
@@ -319,6 +349,8 @@ export function BottomActionBar({ onEditClick }: Props) {
           </button>
         </div>
       </div>
+
+      {showBgRemove && <BgRemoveTool onClose={() => setShowBgRemove(false)} />}
     </>
   );
 }
