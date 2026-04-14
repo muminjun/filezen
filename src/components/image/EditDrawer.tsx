@@ -10,6 +10,9 @@ import { useAppContext } from '@/context/AppContext';
 import { DEFAULT_ADJUSTMENT, buildCssFilter } from '@/lib/colorAdjustment';
 import { CropSection } from './editor/CropSection';
 import { AdjustSection } from './editor/AdjustSection';
+import { ExifSection }      from './editor/ExifSection';
+import { ResizeSection }    from './editor/ResizeSection';
+import { WatermarkSection } from './editor/WatermarkSection';
 import type { ColorAdjustment, CropData } from '@/lib/types';
 
 const DEFAULT_CROP: CropData = {
@@ -40,6 +43,9 @@ export function EditDrawer({ isOpen, onClose }: Props) {
     recentAdjustments,
     applyEditToSelected,
     saveAdjustment,
+    applyResizeToSelected,
+    applyWatermarkToSelected,
+    toggleStripExifOnSelected,
   } = useAppContext();
 
   const selectedImages = images.filter((img) => selectedIds.has(img.id));
@@ -318,6 +324,23 @@ export function EditDrawer({ isOpen, onClose }: Props) {
             savedAdjustments={savedAdjustments}
             recentAdjustments={recentAdjustments}
             onSavePreset={(name) => saveAdjustment(name, adjustment)}
+          />
+
+          <ExifSection
+            enabled={previewImage.stripExif ?? false}
+            onChange={toggleStripExifOnSelected}
+          />
+
+          <ResizeSection
+            resizeData={previewImage.resizeData}
+            previewWidth={imgRef.current?.naturalWidth ?? 1920}
+            previewHeight={imgRef.current?.naturalHeight ?? 1080}
+            onChange={applyResizeToSelected}
+          />
+
+          <WatermarkSection
+            watermark={previewImage.watermark}
+            onChange={applyWatermarkToSelected}
           />
         </div>
 

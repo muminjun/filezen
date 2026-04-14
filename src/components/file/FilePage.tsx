@@ -7,7 +7,11 @@ import { MergeTool } from './tools/MergeTool';
 import { SplitTool } from './tools/SplitTool';
 import { ConvertTool } from './tools/ConvertTool';
 import { CompressTool } from './tools/CompressTool';
-import { UnlockTool } from './tools/UnlockTool';
+import { UnlockTool }       from './tools/UnlockTool';
+import { ProtectTool }      from './tools/ProtectTool';
+import { PdfWatermarkTool } from './tools/PdfWatermarkTool';
+import { SignTool }         from './tools/SignTool';
+import { ExtractTool }      from './tools/ExtractTool';
 
 export function FilePage() {
   const { activeTool } = useFileContext();
@@ -15,12 +19,16 @@ export function FilePage() {
   return (
     <div className="flex h-full flex-col overflow-hidden">
       <div className="flex flex-1 flex-col overflow-hidden">
-        {activeTool === 'page-manager' && <PageManager />}
-        {activeTool === 'merge'        && <MergeTool />}
-        {activeTool === 'split'        && <SplitTool />}
-        {activeTool === 'convert'      && <ConvertTool />}
-        {activeTool === 'compress'     && <CompressTool />}
-        {activeTool === 'unlock'       && <UnlockTool />}
+        {activeTool === 'page-manager'  && <PageManager />}
+        {activeTool === 'merge'         && <MergeTool />}
+        {activeTool === 'split'         && <SplitTool />}
+        {activeTool === 'convert'       && <ConvertTool />}
+        {activeTool === 'compress'      && <CompressTool />}
+        {activeTool === 'unlock'        && <UnlockTool />}
+        {activeTool === 'protect'       && <ProtectTool />}
+        {activeTool === 'pdf-watermark' && <PdfWatermarkTool />}
+        {activeTool === 'sign'          && <SignTool />}
+        {activeTool === 'extract'       && <ExtractTool />}
       </div>
       <FileToolSelector />
     </div>

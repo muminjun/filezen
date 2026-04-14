@@ -2,22 +2,23 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { ImageIcon, FolderIcon, LayoutGridIcon } from 'lucide-react';
+import { ImageIcon, FolderIcon, LayoutGridIcon, Wand2 } from 'lucide-react';
 import Link from 'next/link';
 import { useLocale } from 'next-intl';
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
-type Tab = 'image' | 'file' | 'collage';
+type Tab = 'image' | 'file' | 'collage' | 'convert';
 
 interface DrawerLayoutProps {
   imageTab: React.ReactNode;
   fileTab: React.ReactNode;
   collageTab: React.ReactNode;
+  convertTab: React.ReactNode;
 }
 
-export function DrawerLayout({ imageTab, fileTab, collageTab }: DrawerLayoutProps) {
+export function DrawerLayout({ imageTab, fileTab, collageTab, convertTab }: DrawerLayoutProps) {
   const [activeTab, setActiveTab] = useState<Tab>('image');
   const t = useTranslations('drawer');
   const tc = useTranslations('collage');
@@ -52,6 +53,12 @@ export function DrawerLayout({ imageTab, fileTab, collageTab }: DrawerLayoutProp
           active={activeTab === 'collage'}
           onClick={() => setActiveTab('collage')}
         />
+        <DrawerItem
+          icon={<Wand2 size={20} />}
+          label={t('convert')}
+          active={activeTab === 'convert'}
+          onClick={() => setActiveTab('convert')}
+        />
 
         <div className="mt-auto flex flex-col items-center gap-2">
           <ThemeToggle />
@@ -82,6 +89,7 @@ export function DrawerLayout({ imageTab, fileTab, collageTab }: DrawerLayoutProp
           {activeTab === 'image' && imageTab}
           {activeTab === 'file' && fileTab}
           {activeTab === 'collage' && collageTab}
+          {activeTab === 'convert' && convertTab}
         </div>
 
         {/* ── Mobile bottom nav ── */}
@@ -103,6 +111,12 @@ export function DrawerLayout({ imageTab, fileTab, collageTab }: DrawerLayoutProp
             label={tc('tab')}
             active={activeTab === 'collage'}
             onClick={() => setActiveTab('collage')}
+          />
+          <MobileNavItem
+            icon={<Wand2 size={22} />}
+            label={t('convert')}
+            active={activeTab === 'convert'}
+            onClick={() => setActiveTab('convert')}
           />
         </nav>
       </main>
