@@ -5,13 +5,14 @@ import React, {
   useContext,
   useState,
   useCallback,
+  useRef,
   ReactNode,
 } from 'react';
 import { rotateImageBlob } from '../lib/imageRotation';
 import { MAX_CONCURRENT_PROCESSING, HEIC_MIME_TYPES } from '../lib/constants';
 import { buildCssFilter, isDefaultAdjustment } from '../lib/colorAdjustment';
 import { useSavedAdjustments } from '../hooks/useSavedAdjustments';
-import type { ImageFile, AppContextType, ColorAdjustment, CropData, OutputFormat, ResizeData, WatermarkConfig } from '../lib/types';
+import type { ImageFile, AppContextType, ColorAdjustment, CropData, OutputFormat, ResizeData, WatermarkConfig, ImageEditSnapshot } from '../lib/types';
 
 async function heicToJpegBlob(file: File): Promise<Blob> {
   // 1. Server-side conversion via API route (sharp handles HEVC-encoded iPhone HEIC)
@@ -85,6 +86,74 @@ export function AppProvider({ children }: { children: ReactNode }) {
     saveAdjustment,
     addRecentAdjustment,
   } = useSavedAdjustments();
+
+  const [editHistory, setEditHistory] = useState<ImageEditSnapshot[][]>([]);
+  const historyIndexRef = useRef<number>(-1);
+
+  const pushHistory = useCallback((currentImages: ImageFile[]) => {
+    const snapshot: ImageEditSnapshot[] = currentImages.map((img) => ({
+      id:               img.id,
+      rotation:         img.rotation,
+      flipped:          img.flipped,
+      colorAdjustment:  img.colorAdjustment,
+      cropData:         img.cropData,
+      stripExif:        img.stripExif,
+      resizeData:       img.resizeData,
+      watermark:        img.watermark,
+    }));
+    setEditHistory((prev) => {
+      const trimmed = prev.slice(0, historyIndexRef.current + 1);
+      const next = [...trimmed, snapshot].slice(-20);
+      historyIndexRef.current = next.length - 1;
+      return next;
+    });
+  }, []);
+
+  const undo = useCallback(() => {
+    if (historyIndexRef.current < 0) return;
+    const snapshot = editHistory[historyIndexRef.current];
+    historyIndexRef.current -= 1;
+    setImages((prev) =>
+      prev.map((img) => {
+        const s = snapshot.find((s) => s.id === img.id);
+        if (!s) return img;
+        return {
+          ...img,
+          rotation:        s.rotation,
+          flipped:         s.flipped,
+          colorAdjustment: s.colorAdjustment,
+          cropData:        s.cropData,
+          stripExif:       s.stripExif,
+          resizeData:      s.resizeData,
+          watermark:       s.watermark,
+        };
+      })
+    );
+    setEditHistory((prev) => [...prev]);
+  }, [editHistory]);
+
+  const redo = useCallback(() => {
+    if (historyIndexRef.current >= editHistory.length - 1) return;
+    historyIndexRef.current += 1;
+    const snapshot = editHistory[historyIndexRef.current];
+    setImages((prev) =>
+      prev.map((img) => {
+        const s = snapshot.find((s) => s.id === img.id);
+        if (!s) return img;
+        return {
+          ...img,
+          rotation:        s.rotation,
+          flipped:         s.flipped,
+          colorAdjustment: s.colorAdjustment,
+          cropData:        s.cropData,
+          stripExif:       s.stripExif,
+          resizeData:      s.resizeData,
+          watermark:       s.watermark,
+        };
+      })
+    );
+    setEditHistory((prev) => [...prev]);
+  }, [editHistory]);
 
   const addImages = useCallback(async (files: File[]) => {
     const results = await Promise.allSettled(
@@ -160,6 +229,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const rotateSelected = useCallback((degrees: number) => {
+    pushHistory(images);
     setImages((prev) =>
       prev.map((img) =>
         selectedIds.has(img.id)
@@ -167,18 +237,20 @@ export function AppProvider({ children }: { children: ReactNode }) {
           : img
       )
     );
-  }, [selectedIds]);
+  }, [selectedIds, pushHistory, images]);
 
   const flipSelected = useCallback(() => {
+    pushHistory(images);
     setImages((prev) =>
       prev.map((img) =>
         selectedIds.has(img.id) ? { ...img, flipped: !img.flipped } : img
       )
     );
-  }, [selectedIds]);
+  }, [selectedIds, pushHistory, images]);
 
   const applyEditToSelected = useCallback(
     (edit: { colorAdjustment?: ColorAdjustment; cropData?: CropData }) => {
+      pushHistory(images);
       setImages((prev) =>
         prev.map((img) =>
           selectedIds.has(img.id) ? { ...img, ...edit } : img
@@ -188,7 +260,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         addRecentAdjustment(edit.colorAdjustment);
       }
     },
-    [selectedIds, addRecentAdjustment]
+    [selectedIds, addRecentAdjustment, pushHistory, images]
   );
 
   const downloadAsZip = useCallback(async () => {
@@ -260,28 +332,31 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [images, selectedIds, outputFormat, quality]);
 
   const applyResizeToSelected = useCallback((resize: ResizeData | undefined) => {
+    pushHistory(images);
     setImages((prev) =>
       prev.map((img) =>
         selectedIds.has(img.id) ? { ...img, resizeData: resize } : img
       )
     );
-  }, [selectedIds]);
+  }, [selectedIds, pushHistory, images]);
 
   const applyWatermarkToSelected = useCallback((watermark: WatermarkConfig | undefined) => {
+    pushHistory(images);
     setImages((prev) =>
       prev.map((img) =>
         selectedIds.has(img.id) ? { ...img, watermark } : img
       )
     );
-  }, [selectedIds]);
+  }, [selectedIds, pushHistory, images]);
 
   const toggleStripExifOnSelected = useCallback(() => {
+    pushHistory(images);
     setImages((prev) =>
       prev.map((img) =>
         selectedIds.has(img.id) ? { ...img, stripExif: !img.stripExif } : img
       )
     );
-  }, [selectedIds]);
+  }, [selectedIds, pushHistory, images]);
 
   const replaceImageBlob = useCallback((id: string, newBlob: Blob, newFileName: string) => {
     setImages((prev) =>
@@ -301,6 +376,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
       })
     );
   }, []);
+
+  const canUndo = historyIndexRef.current >= 0;
+  const canRedo = historyIndexRef.current < editHistory.length - 1;
 
   return (
     <AppContext.Provider
@@ -331,6 +409,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
         applyWatermarkToSelected,
         toggleStripExifOnSelected,
         replaceImageBlob,
+        canUndo,
+        canRedo,
+        undo,
+        redo,
       }}
     >
       {children}
