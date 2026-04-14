@@ -5,7 +5,8 @@
   },
   "drawer": {
     "images": "Images",
-    "files": "Files"
+    "files": "Files",
+    "convert": "Convert"
   },
   "upload": {
     "dragDrop": "Drag images here or click to upload",
@@ -298,6 +299,16 @@
       "extracting": "Extracting... {current}/{total}",
       "success": "Extracted {count} images",
       "empty": "Upload a PDF to get started"
+    }
+  },
+  "convert": {
+    "upload": {
+      "dragDrop": "Drag file here or click to upload",
+      "dropHere": "Drop here"
+    },
+    "tools": {
+      "videoToGif": "Video Converter",
+      "ocr": "Text Extraction"
     }
   }
 }
