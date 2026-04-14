@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { useUIContext } from '@/context/UIContext';
+import { useUndoRedo } from '@/hooks/useUndoRedo';
 
 type Tab = 'image' | 'file';
 
@@ -20,6 +21,7 @@ export function DrawerLayout({ imageTab, fileTab }: DrawerLayoutProps) {
   const { activeTab, setActiveTab } = useUIContext();
   const t = useTranslations('drawer');
   const locale = useLocale();
+  useUndoRedo();
 
   return (
     <div className="flex h-screen w-full overflow-hidden bg-background">
