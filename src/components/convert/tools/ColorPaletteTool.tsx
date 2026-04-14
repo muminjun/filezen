@@ -19,8 +19,15 @@ function formatColor(color: PaletteColor, format: ColorFormat): string {
   return `hsl(${color.hsl.h}, ${color.hsl.s}%, ${color.hsl.l}%)`;
 }
 
+const IMAGE_ACCEPT = {
+  'image/jpeg': ['.jpg', '.jpeg'],
+  'image/png': ['.png'],
+  'image/webp': ['.webp'],
+};
+
 export function ColorPaletteTool() {
   const t = useTranslations('convert.palette');
+  const tUpload = useTranslations('convert.upload');
 
   const [file, setFile] = useState<File | null>(null);
   const [count, setCount] = useState(8);
@@ -64,7 +71,7 @@ export function ColorPaletteTool() {
 
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
-      <ConvertUploadStrip onFiles={handleFiles} disabled={isExtracting} />
+      <ConvertUploadStrip onFiles={handleFiles} accept={IMAGE_ACCEPT} formatHint={tUpload('formats')} disabled={isExtracting} />
 
       {file ? (
         <div className="flex flex-1 flex-col overflow-y-auto p-4 gap-4">

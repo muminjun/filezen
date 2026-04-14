@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { ImageIcon, FolderIcon, Zap } from 'lucide-react';
+import { ImageIcon, FolderIcon, Wand2 } from 'lucide-react';
 import Link from 'next/link';
 import { useLocale } from 'next-intl';
 import { cn } from '@/lib/utils';
@@ -46,7 +46,7 @@ export function DrawerLayout({ imageTab, fileTab, convertTab }: DrawerLayoutProp
           onClick={() => setActiveTab('file')}
         />
         <DrawerItem
-          icon={<Zap size={20} />}
+          icon={<Wand2 size={20} />}
           label={t('convert')}
           active={activeTab === 'convert'}
           onClick={() => setActiveTab('convert')}
@@ -77,9 +77,9 @@ export function DrawerLayout({ imageTab, fileTab, convertTab }: DrawerLayoutProp
 
         {/* Page content */}
         <div className="flex flex-1 flex-col overflow-hidden">
-          {activeTab === 'image' && imageTab}
-          {activeTab === 'file' && fileTab}
-          {activeTab === 'convert' && convertTab}
+          {activeTab === 'image'   ? imageTab   :
+           activeTab === 'file'    ? fileTab    :
+                                     convertTab}
         </div>
 
         {/* ── Mobile bottom nav ── */}
@@ -97,7 +97,7 @@ export function DrawerLayout({ imageTab, fileTab, convertTab }: DrawerLayoutProp
             onClick={() => setActiveTab('file')}
           />
           <MobileNavItem
-            icon={<Zap size={22} />}
+            icon={<Wand2 size={22} />}
             label={t('convert')}
             active={activeTab === 'convert'}
             onClick={() => setActiveTab('convert')}

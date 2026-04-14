@@ -11,8 +11,15 @@ import {
 } from '@/lib/iconGenerator';
 import JSZip from 'jszip';
 
+const IMAGE_ACCEPT = {
+  'image/jpeg': ['.jpg', '.jpeg'],
+  'image/png': ['.png'],
+  'image/webp': ['.webp'],
+};
+
 export function IconTool() {
   const t = useTranslations('convert.icon');
+  const tUpload = useTranslations('convert.upload');
 
   const [file, setFile] = useState<File | null>(null);
   const [bgMode, setBgMode] = useState<'transparent' | 'solid'>('transparent');
@@ -57,7 +64,7 @@ export function IconTool() {
 
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
-      <ConvertUploadStrip onFiles={handleFiles} disabled={isGenerating} />
+      <ConvertUploadStrip onFiles={handleFiles} accept={IMAGE_ACCEPT} formatHint={tUpload('formats')} disabled={isGenerating} />
 
       {file ? (
         <div className="flex flex-1 flex-col overflow-y-auto p-4 gap-4">

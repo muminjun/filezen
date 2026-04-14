@@ -305,7 +305,9 @@
     "tools": {
       "icon": "아이콘 생성기",
       "social": "소셜 프리셋",
-      "palette": "색상 팔레트"
+      "palette": "색상 팔레트",
+      "videoToGif": "동영상 변환",
+      "ocr": "텍스트 추출"
     },
     "upload": {
       "dragDrop": "이미지를 드래그하거나 클릭해서 업로드",

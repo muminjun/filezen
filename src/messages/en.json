@@ -305,7 +305,9 @@
     "tools": {
       "icon": "Icon Generator",
       "social": "Social Presets",
-      "palette": "Color Palette"
+      "palette": "Color Palette",
+      "videoToGif": "Video Converter",
+      "ocr": "Text Extraction"
     },
     "upload": {
       "dragDrop": "Drag images here or click to upload",

@@ -17,8 +17,15 @@ interface SelectedPreset {
   preset: SocialPreset;
 }
 
+const IMAGE_ACCEPT = {
+  'image/jpeg': ['.jpg', '.jpeg'],
+  'image/png': ['.png'],
+  'image/webp': ['.webp'],
+};
+
 export function SocialPresetTool() {
   const t = useTranslations('convert.social');
+  const tUpload = useTranslations('convert.upload');
 
   const [files, setFiles] = useState<File[]>([]);
   const [selectedPresets, setSelectedPresets] = useState<SelectedPreset[]>(() =>
@@ -77,7 +84,7 @@ export function SocialPresetTool() {
 
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
-      <ConvertUploadStrip onFiles={handleFiles} disabled={isProcessing} multiple />
+      <ConvertUploadStrip onFiles={handleFiles} accept={IMAGE_ACCEPT} formatHint={tUpload('formats')} disabled={isProcessing} multiple />
 
       {files.length > 0 ? (
         <div className="flex flex-1 flex-col overflow-y-auto p-4 gap-4">
