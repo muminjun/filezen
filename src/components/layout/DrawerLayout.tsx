@@ -2,24 +2,26 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { ImageIcon, FolderIcon, Wand2 } from 'lucide-react';
+import { ImageIcon, FolderIcon, LayoutGridIcon, Wand2 } from 'lucide-react';
 import Link from 'next/link';
 import { useLocale } from 'next-intl';
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
-type Tab = 'image' | 'file' | 'convert';
+type Tab = 'image' | 'file' | 'collage' | 'convert';
 
 interface DrawerLayoutProps {
   imageTab: React.ReactNode;
   fileTab: React.ReactNode;
+  collageTab: React.ReactNode;
   convertTab: React.ReactNode;
 }
 
-export function DrawerLayout({ imageTab, fileTab, convertTab }: DrawerLayoutProps) {
+export function DrawerLayout({ imageTab, fileTab, collageTab, convertTab }: DrawerLayoutProps) {
   const [activeTab, setActiveTab] = useState<Tab>('image');
   const t = useTranslations('drawer');
+  const tc = useTranslations('collage');
   const locale = useLocale();
 
   return (
@@ -44,6 +46,12 @@ export function DrawerLayout({ imageTab, fileTab, convertTab }: DrawerLayoutProp
           label={t('files')}
           active={activeTab === 'file'}
           onClick={() => setActiveTab('file')}
+        />
+        <DrawerItem
+          icon={<LayoutGridIcon size={20} />}
+          label={tc('tab')}
+          active={activeTab === 'collage'}
+          onClick={() => setActiveTab('collage')}
         />
         <DrawerItem
           icon={<Wand2 size={20} />}
@@ -77,9 +85,10 @@ export function DrawerLayout({ imageTab, fileTab, convertTab }: DrawerLayoutProp
 
         {/* Page content */}
         <div className="flex flex-1 flex-col overflow-hidden">
-          {activeTab === 'image'   ? imageTab   :
-           activeTab === 'file'    ? fileTab    :
-                                     convertTab}
+          {activeTab === 'image' && imageTab}
+          {activeTab === 'file' && fileTab}
+          {activeTab === 'collage' && collageTab}
+          {activeTab === 'convert' && convertTab}
         </div>
 
         {/* ── Mobile bottom nav ── */}
@@ -95,6 +104,12 @@ export function DrawerLayout({ imageTab, fileTab, convertTab }: DrawerLayoutProp
             label={t('files')}
             active={activeTab === 'file'}
             onClick={() => setActiveTab('file')}
+          />
+          <MobileNavItem
+            icon={<LayoutGridIcon size={22} />}
+            label={tc('tab')}
+            active={activeTab === 'collage'}
+            onClick={() => setActiveTab('collage')}
           />
           <MobileNavItem
             icon={<Wand2 size={22} />}
