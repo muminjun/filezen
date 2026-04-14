@@ -5,7 +5,8 @@
   },
   "drawer": {
     "images": "Images",
-    "files": "Files"
+    "files": "Files",
+    "convert": "Convert"
   },
   "upload": {
     "dragDrop": "Drag images here or click to upload",

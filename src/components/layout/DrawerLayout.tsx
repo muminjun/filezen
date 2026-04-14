@@ -2,21 +2,22 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { ImageIcon, FolderIcon } from 'lucide-react';
+import { ImageIcon, FolderIcon, Wand2 } from 'lucide-react';
 import Link from 'next/link';
 import { useLocale } from 'next-intl';
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
-type Tab = 'image' | 'file';
+type Tab = 'image' | 'file' | 'convert';
 
 interface DrawerLayoutProps {
   imageTab: React.ReactNode;
   fileTab: React.ReactNode;
+  convertTab: React.ReactNode;
 }
 
-export function DrawerLayout({ imageTab, fileTab }: DrawerLayoutProps) {
+export function DrawerLayout({ imageTab, fileTab, convertTab }: DrawerLayoutProps) {
   const [activeTab, setActiveTab] = useState<Tab>('image');
   const t = useTranslations('drawer');
   const locale = useLocale();
@@ -43,6 +44,12 @@ export function DrawerLayout({ imageTab, fileTab }: DrawerLayoutProps) {
           label={t('files')}
           active={activeTab === 'file'}
           onClick={() => setActiveTab('file')}
+        />
+        <DrawerItem
+          icon={<Wand2 size={20} />}
+          label={t('convert')}
+          active={activeTab === 'convert'}
+          onClick={() => setActiveTab('convert')}
         />
 
         <div className="mt-auto flex flex-col items-center gap-2">
@@ -74,7 +81,9 @@ export function DrawerLayout({ imageTab, fileTab }: DrawerLayoutProps) {
 
         {/* Page content */}
         <div className="flex flex-1 flex-col overflow-hidden">
-          {activeTab === 'image' ? imageTab : fileTab}
+          {activeTab === 'image'   ? imageTab   :
+           activeTab === 'file'    ? fileTab    :
+                                     convertTab}
         </div>
 
         {/* ── Mobile bottom nav ── */}
@@ -90,6 +99,12 @@ export function DrawerLayout({ imageTab, fileTab }: DrawerLayoutProps) {
             label={t('files')}
             active={activeTab === 'file'}
             onClick={() => setActiveTab('file')}
+          />
+          <MobileNavItem
+            icon={<Wand2 size={22} />}
+            label={t('convert')}
+            active={activeTab === 'convert'}
+            onClick={() => setActiveTab('convert')}
           />
         </nav>
       </main>

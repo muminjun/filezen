@@ -5,7 +5,8 @@
   },
   "drawer": {
     "images": "이미지",
-    "files": "파일"
+    "files": "파일",
+    "convert": "변환"
   },
   "upload": {
     "dragDrop": "이미지를 드래그하거나 클릭해서 업로드",
