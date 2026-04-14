@@ -10,7 +10,13 @@
   "upload": {
     "dragDrop": "Drag images here or click to upload",
     "dropHere": "Drop here",
-    "formats": "PNG, JPG, WebP, GIF, HEIC/HEIF · Up to 500 files · 50MB each"
+    "formats": "PNG, JPG, WebP, GIF, HEIC/HEIF · Up to 500 files · 50MB each",
+    "urlButton": "Import from URL",
+    "urlPlaceholder": "Paste image URL here",
+    "urlFetching": "Fetching...",
+    "urlErrorCors": "Cannot fetch image due to CORS policy.",
+    "urlErrorNotImage": "URL does not point to an image.",
+    "urlErrorFailed": "Failed to fetch image."
   },
   "gallery": {
     "noImages": "Upload images to get started",
