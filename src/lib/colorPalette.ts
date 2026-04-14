@@ -75,8 +75,7 @@ export async function extractPalette(
   file: File,
   count: number
 ): Promise<PaletteColor[]> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const ColorThief = ((await import('color-thief-browser')) as any).default;
+  const { default: ColorThief } = await import('color-thief-browser');
   const img = await loadImage(file);
   const colorThief = new ColorThief();
   const rawPalette: number[][] = colorThief.getPalette(img, count);
