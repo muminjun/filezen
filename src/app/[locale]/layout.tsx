@@ -1,5 +1,6 @@
 import { AppProvider } from '@/context/AppContext';
 import { FileProvider } from '@/context/FileContext';
+import { UIProvider } from '@/context/UIContext';
 import { NextIntlClientProvider } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 import type { ReactNode } from 'react';
@@ -58,11 +59,13 @@ export default async function LocaleLayout({
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
-      <AppProvider>
-        <FileProvider>
-          {children}
-        </FileProvider>
-      </AppProvider>
+      <UIProvider>
+        <AppProvider>
+          <FileProvider>
+            {children}
+          </FileProvider>
+        </AppProvider>
+      </UIProvider>
     </NextIntlClientProvider>
   );
 }

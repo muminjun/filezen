@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { ImageIcon, FolderIcon } from 'lucide-react';
 import Link from 'next/link';
@@ -8,6 +7,7 @@ import { useLocale } from 'next-intl';
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { useUIContext } from '@/context/UIContext';
 
 type Tab = 'image' | 'file';
 
@@ -17,7 +17,7 @@ interface DrawerLayoutProps {
 }
 
 export function DrawerLayout({ imageTab, fileTab }: DrawerLayoutProps) {
-  const [activeTab, setActiveTab] = useState<Tab>('image');
+  const { activeTab, setActiveTab } = useUIContext();
   const t = useTranslations('drawer');
   const locale = useLocale();
 
