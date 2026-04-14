@@ -1,25 +1,35 @@
 'use client';
 
-import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { ImageIcon, FolderIcon } from 'lucide-react';
+import { ImageIcon, FolderIcon, LayoutGridIcon, Wand2 } from 'lucide-react';
 import Link from 'next/link';
 import { useLocale } from 'next-intl';
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { useUIContext } from '@/context/UIContext';
+import { useUndoRedo } from '@/hooks/useUndoRedo';
+import { useClipboardPaste } from '@/hooks/useClipboardPaste';
+import { useGlobalDrop } from '@/hooks/useGlobalDrop';
+import { DropOverlay } from '@/components/layout/DropOverlay';
 
-type Tab = 'image' | 'file';
+type Tab = 'image' | 'file' | 'collage' | 'convert';
 
 interface DrawerLayoutProps {
   imageTab: React.ReactNode;
   fileTab: React.ReactNode;
+  collageTab: React.ReactNode;
+  convertTab: React.ReactNode;
 }
 
-export function DrawerLayout({ imageTab, fileTab }: DrawerLayoutProps) {
-  const [activeTab, setActiveTab] = useState<Tab>('image');
+export function DrawerLayout({ imageTab, fileTab, collageTab, convertTab }: DrawerLayoutProps) {
+  const { activeTab, setActiveTab } = useUIContext();
   const t = useTranslations('drawer');
+  const tc = useTranslations('collage');
   const locale = useLocale();
+  useUndoRedo();
+  useClipboardPaste();
+  const { isDragging, fileType } = useGlobalDrop();
 
   return (
     <div className="flex h-screen w-full overflow-hidden bg-background">
@@ -44,6 +54,18 @@ export function DrawerLayout({ imageTab, fileTab }: DrawerLayoutProps) {
           active={activeTab === 'file'}
           onClick={() => setActiveTab('file')}
         />
+        <DrawerItem
+          icon={<LayoutGridIcon size={20} />}
+          label={tc('tab')}
+          active={activeTab === 'collage'}
+          onClick={() => setActiveTab('collage')}
+        />
+        <DrawerItem
+          icon={<Wand2 size={20} />}
+          label={t('convert')}
+          active={activeTab === 'convert'}
+          onClick={() => setActiveTab('convert')}
+        />
 
         <div className="mt-auto flex flex-col items-center gap-2">
           <ThemeToggle />
@@ -52,17 +74,13 @@ export function DrawerLayout({ imageTab, fileTab }: DrawerLayoutProps) {
 
       {/* ── Main content ── */}
       <main className="relative flex flex-1 flex-col overflow-hidden min-w-0">
-        {/* Top-right controls (desktop only — language switcher) */}
         <div className="hidden sm:flex absolute top-4 right-6 z-50 items-center gap-2">
           <LanguageSwitcher />
         </div>
 
         {/* Mobile top bar */}
         <div className="sm:hidden flex flex-shrink-0 items-center justify-between border-b border-border bg-card px-4 py-2.5">
-          <Link
-            href={`/${locale}`}
-            className="flex items-center gap-2"
-          >
+          <Link href={`/${locale}`} className="flex items-center gap-2">
             <img src="/logo.svg" alt="FileZen" className="h-6 w-6" />
             <span className="text-sm font-bold tracking-tight">FileZen</span>
           </Link>
@@ -74,7 +92,10 @@ export function DrawerLayout({ imageTab, fileTab }: DrawerLayoutProps) {
 
         {/* Page content */}
         <div className="flex flex-1 flex-col overflow-hidden">
-          {activeTab === 'image' ? imageTab : fileTab}
+          {activeTab === 'image' && imageTab}
+          {activeTab === 'file' && fileTab}
+          {activeTab === 'collage' && collageTab}
+          {activeTab === 'convert' && convertTab}
         </div>
 
         {/* ── Mobile bottom nav ── */}
@@ -91,8 +112,21 @@ export function DrawerLayout({ imageTab, fileTab }: DrawerLayoutProps) {
             active={activeTab === 'file'}
             onClick={() => setActiveTab('file')}
           />
+          <MobileNavItem
+            icon={<LayoutGridIcon size={22} />}
+            label={tc('tab')}
+            active={activeTab === 'collage'}
+            onClick={() => setActiveTab('collage')}
+          />
+          <MobileNavItem
+            icon={<Wand2 size={22} />}
+            label={t('convert')}
+            active={activeTab === 'convert'}
+            onClick={() => setActiveTab('convert')}
+          />
         </nav>
       </main>
+      <DropOverlay visible={isDragging} fileType={fileType} />
     </div>
   );
 }

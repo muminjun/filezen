@@ -5,12 +5,19 @@
   },
   "drawer": {
     "images": "이미지",
-    "files": "파일"
+    "files": "파일",
+    "convert": "변환"
   },
   "upload": {
     "dragDrop": "이미지를 드래그하거나 클릭해서 업로드",
     "dropHere": "여기에 놓으세요",
-    "formats": "PNG, JPG, WebP, GIF, HEIC/HEIF · 최대 500개 · 파일당 50MB"
+    "formats": "PNG, JPG, WebP, GIF, HEIC/HEIF · 최대 500개 · 파일당 50MB",
+    "urlButton": "URL로 가져오기",
+    "urlPlaceholder": "이미지 URL을 입력하세요",
+    "urlFetching": "가져오는 중...",
+    "urlErrorCors": "CORS 정책으로 이미지를 가져올 수 없습니다.",
+    "urlErrorNotImage": "URL이 이미지를 가리키지 않습니다.",
+    "urlErrorFailed": "이미지를 가져올 수 없습니다."
   },
   "gallery": {
     "noImages": "이미지를 업로드해주세요",
@@ -115,6 +122,34 @@
   "filePage": {
     "title": "파일 변환",
     "comingSoon": "PDF, 동영상 등 파일 변환 기능을 준비 중입니다"
+  },
+  "collage": {
+    "tab": "콜라주",
+    "aspectRatio": "캔버스 비율",
+    "styleGap": "간격",
+    "styleRadius": "모서리",
+    "styleBackground": "배경색",
+    "stylePadding": "여백",
+    "uploadPhoto": "+ 사진 업로드",
+    "fromImageTab": "이미지탭에서 가져오기",
+    "export": "내보내기",
+    "exportFormat": "포맷",
+    "exportScale": "해상도",
+    "exportScale1x": "1x (원본)",
+    "exportScale2x": "2x (권장)",
+    "exportScale3x": "3x (고해상도)",
+    "exporting": "내보내는 중...",
+    "splitH": "가로 분할",
+    "splitV": "세로 분할",
+    "merge": "병합",
+    "replacePhoto": "사진 교체",
+    "removePhoto": "사진 제거",
+    "emptyCell": "클릭하여 사진 추가",
+    "selectFromImageTab": "이미지탭 사진 선택",
+    "selectFromImageTabHint": "이미지 탭에 업로드된 사진을 선택하세요",
+    "confirm": "적용",
+    "cancel": "취소",
+    "noImages": "이미지 탭에 사진이 없습니다"
   },
   "language": {
     "ko": "한글",
@@ -298,6 +333,52 @@
       "extracting": "추출 중... {current}/{total}",
       "success": "{count}장 추출 완료",
       "empty": "PDF를 업로드하세요"
+    }
+  },
+  "convert": {
+    "tools": {
+      "icon": "아이콘 생성기",
+      "social": "소셜 프리셋",
+      "palette": "색상 팔레트",
+      "videoToGif": "동영상 변환",
+      "ocr": "텍스트 추출"
+    },
+    "upload": {
+      "dragDrop": "이미지를 드래그하거나 클릭해서 업로드",
+      "dropHere": "여기에 놓으세요",
+      "formats": "PNG, JPG, WebP · 파일당 50MB"
+    },
+    "icon": {
+      "empty": "아이콘으로 만들 이미지를 업로드하세요",
+      "bgLabel": "배경색",
+      "bgTransparent": "투명",
+      "bgSolid": "단색",
+      "outputLabel": "출력 파일 선택",
+      "download": "아이콘 세트 ZIP 다운로드",
+      "downloading": "생성 중...",
+      "selectAll": "전체 선택",
+      "deselectAll": "전체 해제"
+    },
+    "social": {
+      "empty": "변환할 이미지를 업로드하세요",
+      "platformLabel": "플랫폼",
+      "cropMode": "크롭 방식",
+      "centerCrop": "Center Crop",
+      "letterBox": "Letter Box",
+      "download": "ZIP 다운로드",
+      "downloading": "처리 중...",
+      "selectAll": "전체 선택",
+      "deselectAll": "전체 해제"
+    },
+    "palette": {
+      "empty": "색상을 추출할 이미지를 업로드하세요",
+      "countLabel": "추출 색상 수",
+      "extract": "색상 추출",
+      "extracting": "추출 중...",
+      "copied": "복사됨!",
+      "copyJson": "JSON 복사",
+      "copyCss": "CSS 변수 복사",
+      "format": "표시 형식"
     }
   }
 }

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { RotateCw, Download, FlipHorizontal, Pencil, FileText, Wand2 } from 'lucide-react';
+import { RotateCw, Download, FlipHorizontal, Pencil, FileText, Wand2, Undo2, Redo2 } from 'lucide-react';
 import { BgRemoveTool } from './tools/BgRemoveTool';
 import { cn } from '@/lib/utils';
 import { downloadBytes } from '@/lib/utils';
@@ -41,6 +41,10 @@ export function BottomActionBar({ onEditClick }: Props) {
     setOutputFormat,
     quality,
     setQuality,
+    canUndo,
+    canRedo,
+    undo,
+    redo,
   } = useAppContext();
   const [customAngle, setCustomAngle] = useState('');
   const [isExportingPdf, setIsExportingPdf] = useState(false);
@@ -99,6 +103,36 @@ export function BottomActionBar({ onEditClick }: Props) {
               {deg}°
             </button>
           ))}
+
+          {/* Undo */}
+          <button
+            onClick={undo}
+            disabled={!canUndo}
+            title="실행 취소 (Ctrl+Z)"
+            className={cn(
+              'flex items-center justify-center rounded-lg px-2 py-1.5 transition-all active:scale-95',
+              canUndo
+                ? 'bg-muted text-foreground hover:bg-muted/80'
+                : 'opacity-35 text-muted-foreground cursor-not-allowed'
+            )}
+          >
+            <Undo2 size={14} />
+          </button>
+
+          {/* Redo */}
+          <button
+            onClick={redo}
+            disabled={!canRedo}
+            title="다시 실행 (Ctrl+Shift+Z)"
+            className={cn(
+              'flex items-center justify-center rounded-lg px-2 py-1.5 transition-all active:scale-95',
+              canRedo
+                ? 'bg-muted text-foreground hover:bg-muted/80'
+                : 'opacity-35 text-muted-foreground cursor-not-allowed'
+            )}
+          >
+            <Redo2 size={14} />
+          </button>
 
           {/* Flip */}
           <button
@@ -185,6 +219,35 @@ export function BottomActionBar({ onEditClick }: Props) {
             ? t('selectedCount', { count: selectedIds.size })
             : t('noneSelected')}
         </span>
+
+        <div className="flex flex-shrink-0 items-center gap-1">
+          <button
+            onClick={undo}
+            disabled={!canUndo}
+            title="실행 취소 (Ctrl+Z)"
+            className={cn(
+              'flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium transition-all active:scale-95 cursor-pointer whitespace-nowrap',
+              canUndo
+                ? 'bg-muted hover:bg-muted/80 text-foreground'
+                : 'cursor-not-allowed text-muted-foreground opacity-40'
+            )}
+          >
+            <Undo2 size={12} />
+          </button>
+          <button
+            onClick={redo}
+            disabled={!canRedo}
+            title="다시 실행 (Ctrl+Shift+Z)"
+            className={cn(
+              'flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium transition-all active:scale-95 cursor-pointer whitespace-nowrap',
+              canRedo
+                ? 'bg-muted hover:bg-muted/80 text-foreground'
+                : 'cursor-not-allowed text-muted-foreground opacity-40'
+            )}
+          >
+            <Redo2 size={12} />
+          </button>
+        </div>
 
         <div className="h-5 w-px flex-shrink-0 bg-border" />
 

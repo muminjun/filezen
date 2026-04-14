@@ -8,6 +8,7 @@ import { generateThumbnails } from '@/lib/pdfThumbnail';
 import { buildModifiedPdf } from '@/lib/pdfPageOps';
 import { FileUploadStrip } from '../FileUploadStrip';
 import type { PdfPage } from '@/lib/types';
+import { useUIContext } from '@/context/UIContext';
 
 export function PageManager() {
   const t = useTranslations('file.pageManager');
@@ -21,6 +22,7 @@ export function PageManager() {
   const [error, setError] = useState<string | null>(null);
 
   const prevPagesRef = useRef<PdfPage[]>([]);
+  const { pendingPdfFiles, setPendingPdfFiles } = useUIContext();
 
   // Revoke blob URLs that are no longer used when pages change
   useEffect(() => {
@@ -58,6 +60,13 @@ export function PageManager() {
       setIsLoading(false);
     }
   }, [t]);
+
+  useEffect(() => {
+    if (pendingPdfFiles && pendingPdfFiles.length > 0) {
+      handleFiles(pendingPdfFiles);
+      setPendingPdfFiles(null);
+    }
+  }, [pendingPdfFiles, setPendingPdfFiles, handleFiles]);
 
   const toggleSelect = (idx: number) => {
     setSelectedIndices((prev) => {
