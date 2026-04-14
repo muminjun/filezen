@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { ImageIcon, FolderIcon, LayoutGridIcon, Wand2 } from 'lucide-react';
 import Link from 'next/link';
@@ -8,6 +7,11 @@ import { useLocale } from 'next-intl';
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { useUIContext } from '@/context/UIContext';
+import { useUndoRedo } from '@/hooks/useUndoRedo';
+import { useClipboardPaste } from '@/hooks/useClipboardPaste';
+import { useGlobalDrop } from '@/hooks/useGlobalDrop';
+import { DropOverlay } from '@/components/layout/DropOverlay';
 
 type Tab = 'image' | 'file' | 'collage' | 'convert';
 
@@ -19,10 +23,13 @@ interface DrawerLayoutProps {
 }
 
 export function DrawerLayout({ imageTab, fileTab, collageTab, convertTab }: DrawerLayoutProps) {
-  const [activeTab, setActiveTab] = useState<Tab>('image');
+  const { activeTab, setActiveTab } = useUIContext();
   const t = useTranslations('drawer');
   const tc = useTranslations('collage');
   const locale = useLocale();
+  useUndoRedo();
+  useClipboardPaste();
+  const { isDragging, fileType } = useGlobalDrop();
 
   return (
     <div className="flex h-screen w-full overflow-hidden bg-background">
@@ -119,6 +126,7 @@ export function DrawerLayout({ imageTab, fileTab, collageTab, convertTab }: Draw
           />
         </nav>
       </main>
+      <DropOverlay visible={isDragging} fileType={fileType} />
     </div>
   );
 }

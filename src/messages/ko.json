@@ -11,7 +11,13 @@
   "upload": {
     "dragDrop": "이미지를 드래그하거나 클릭해서 업로드",
     "dropHere": "여기에 놓으세요",
-    "formats": "PNG, JPG, WebP, GIF, HEIC/HEIF · 최대 500개 · 파일당 50MB"
+    "formats": "PNG, JPG, WebP, GIF, HEIC/HEIF · 최대 500개 · 파일당 50MB",
+    "urlButton": "URL로 가져오기",
+    "urlPlaceholder": "이미지 URL을 입력하세요",
+    "urlFetching": "가져오는 중...",
+    "urlErrorCors": "CORS 정책으로 이미지를 가져올 수 없습니다.",
+    "urlErrorNotImage": "URL이 이미지를 가리키지 않습니다.",
+    "urlErrorFailed": "이미지를 가져올 수 없습니다."
   },
   "gallery": {
     "noImages": "이미지를 업로드해주세요",

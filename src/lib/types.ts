@@ -66,6 +66,17 @@ export interface ImageFile {
   watermark?:       WatermarkConfig;
 }
 
+export interface ImageEditSnapshot {
+  id:               string;
+  rotation:         number;
+  flipped:          boolean;
+  colorAdjustment?: ColorAdjustment;
+  cropData?:        CropData;
+  stripExif?:       boolean;
+  resizeData?:      ResizeData;
+  watermark?:       WatermarkConfig;
+}
+
 export type OutputFormat = 'original' | 'png' | 'jpeg' | 'webp';
 
 export interface AppContextType {
@@ -95,6 +106,10 @@ export interface AppContextType {
   applyWatermarkToSelected: (watermark: WatermarkConfig | undefined) => void;
   toggleStripExifOnSelected: () => void;
   replaceImageBlob:         (id: string, newBlob: Blob, newFileName: string) => void;
+  canUndo:  boolean;
+  canRedo:  boolean;
+  undo:     () => void;
+  redo:     () => void;
 }
 
 // ─── File / PDF Toolkit types ────────────────────────────────────────────────

@@ -1,5 +1,8 @@
 import { AppProvider } from '@/context/AppContext';
 import { FileProvider } from '@/context/FileContext';
+import { UIProvider } from '@/context/UIContext';
+import { ToastProvider } from '@/context/ToastContext';
+import { ToastContainer } from '@/components/ui/Toast';
 import { ConvertProvider } from '@/context/ConvertContext';
 import { NextIntlClientProvider } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
@@ -59,13 +62,18 @@ export default async function LocaleLayout({
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
-      <AppProvider>
-        <FileProvider>
-          <ConvertProvider>
-            {children}
-          </ConvertProvider>
-        </FileProvider>
-      </AppProvider>
+      <UIProvider>
+        <AppProvider>
+          <FileProvider>
+            <ConvertProvider>
+              <ToastProvider>
+                {children}
+                <ToastContainer />
+              </ToastProvider>
+            </ConvertProvider>
+          </FileProvider>
+        </AppProvider>
+      </UIProvider>
     </NextIntlClientProvider>
   );
 }
