@@ -300,5 +300,15 @@
       "success": "{count}장 추출 완료",
       "empty": "PDF를 업로드하세요"
     }
+  },
+  "convert": {
+    "upload": {
+      "dragDrop": "파일을 드래그하거나 클릭해서 업로드",
+      "dropHere": "여기에 놓으세요"
+    },
+    "tools": {
+      "videoToGif": "동영상 변환",
+      "ocr": "텍스트 추출"
+    }
   }
 }

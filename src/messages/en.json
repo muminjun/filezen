@@ -300,5 +300,15 @@
       "success": "Extracted {count} images",
       "empty": "Upload a PDF to get started"
     }
+  },
+  "convert": {
+    "upload": {
+      "dragDrop": "Drag file here or click to upload",
+      "dropHere": "Drop here"
+    },
+    "tools": {
+      "videoToGif": "Video Converter",
+      "ocr": "Text Extraction"
+    }
   }
 }

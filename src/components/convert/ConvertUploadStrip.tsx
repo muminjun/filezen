@@ -2,6 +2,7 @@
 
 import { useCallback } from 'react';
 import { useDropzone, Accept } from 'react-dropzone';
+import { useTranslations } from 'next-intl';
 import { Upload } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -20,6 +21,8 @@ export function ConvertUploadStrip({
   multiple = false,
   disabled = false,
 }: Props) {
+  const t = useTranslations('convert.upload');
+
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       if (acceptedFiles.length > 0) onFiles(acceptedFiles);
@@ -67,7 +70,7 @@ export function ConvertUploadStrip({
             isDragActive && 'text-primary',
           )}
         >
-          {isDragActive ? '여기에 놓으세요' : '파일을 드래그하거나 클릭해서 업로드'}
+          {isDragActive ? t('dropHere') : t('dragDrop')}
         </span>
         <span className="truncate text-[11px] text-muted-foreground/80 font-medium">
           {formatHint}
