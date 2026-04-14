@@ -5,7 +5,8 @@
   },
   "drawer": {
     "images": "Images",
-    "files": "Files"
+    "files": "Files",
+    "convert": "Convert"
   },
   "upload": {
     "dragDrop": "Drag images here or click to upload",
@@ -121,6 +122,34 @@
   "filePage": {
     "title": "File Conversion",
     "comingSoon": "PDF, video, and other file conversion coming soon"
+  },
+  "collage": {
+    "tab": "Collage",
+    "aspectRatio": "Canvas Ratio",
+    "styleGap": "Gap",
+    "styleRadius": "Radius",
+    "styleBackground": "Background",
+    "stylePadding": "Padding",
+    "uploadPhoto": "+ Upload Photo",
+    "fromImageTab": "From Image Tab",
+    "export": "Export",
+    "exportFormat": "Format",
+    "exportScale": "Resolution",
+    "exportScale1x": "1x (Original)",
+    "exportScale2x": "2x (Recommended)",
+    "exportScale3x": "3x (High-res)",
+    "exporting": "Exporting...",
+    "splitH": "Split Horizontal",
+    "splitV": "Split Vertical",
+    "merge": "Merge",
+    "replacePhoto": "Replace Photo",
+    "removePhoto": "Remove Photo",
+    "emptyCell": "Click to add photo",
+    "selectFromImageTab": "Select from Image Tab",
+    "selectFromImageTabHint": "Select a photo uploaded in the Image tab",
+    "confirm": "Apply",
+    "cancel": "Cancel",
+    "noImages": "No images in Image tab"
   },
   "language": {
     "ko": "한글",
@@ -304,6 +333,16 @@
       "extracting": "Extracting... {current}/{total}",
       "success": "Extracted {count} images",
       "empty": "Upload a PDF to get started"
+    }
+  },
+  "convert": {
+    "upload": {
+      "dragDrop": "Drag file here or click to upload",
+      "dropHere": "Drop here"
+    },
+    "tools": {
+      "videoToGif": "Video Converter",
+      "ocr": "Text Extraction"
     }
   }
 }

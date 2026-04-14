@@ -2,9 +2,11 @@
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
+export type ActiveTab = 'image' | 'file' | 'collage' | 'convert';
+
 interface UIContextType {
-  activeTab: 'image' | 'file';
-  setActiveTab: (tab: 'image' | 'file') => void;
+  activeTab: ActiveTab;
+  setActiveTab: (tab: ActiveTab) => void;
   pendingPdfFiles: File[] | null;
   setPendingPdfFiles: (files: File[] | null) => void;
 }
@@ -18,7 +20,7 @@ export function useUIContext(): UIContextType {
 }
 
 export function UIProvider({ children }: { children: ReactNode }) {
-  const [activeTab, setActiveTab] = useState<'image' | 'file'>('image');
+  const [activeTab, setActiveTab] = useState<ActiveTab>('image');
   const [pendingPdfFiles, setPendingPdfFiles] = useState<File[] | null>(null);
 
   return (

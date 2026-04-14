@@ -3,6 +3,7 @@ import { FileProvider } from '@/context/FileContext';
 import { UIProvider } from '@/context/UIContext';
 import { ToastProvider } from '@/context/ToastContext';
 import { ToastContainer } from '@/components/ui/Toast';
+import { ConvertProvider } from '@/context/ConvertContext';
 import { NextIntlClientProvider } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 import type { ReactNode } from 'react';
@@ -64,10 +65,12 @@ export default async function LocaleLayout({
       <UIProvider>
         <AppProvider>
           <FileProvider>
-            <ToastProvider>
-              {children}
-              <ToastContainer />
-            </ToastProvider>
+            <ConvertProvider>
+              <ToastProvider>
+                {children}
+                <ToastContainer />
+              </ToastProvider>
+            </ConvertProvider>
           </FileProvider>
         </AppProvider>
       </UIProvider>

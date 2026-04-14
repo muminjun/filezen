@@ -137,3 +137,12 @@ export interface FileContextType {
   activeTool: FileToolMode;
   setActiveTool: (tool: FileToolMode) => void;
 }
+
+// ─── Convert Toolkit types ────────────────────────────────────────────────────
+
+export type ConvertToolMode = 'video-to-gif' | 'ocr';
+
+export interface ConvertContextType {
+  activeTool: ConvertToolMode;
+  setActiveTool: (tool: ConvertToolMode) => void;
+}
