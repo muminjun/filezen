@@ -67,7 +67,6 @@ export function DrawerLayout({ imageTab, fileTab, collageTab, convertTab }: Draw
 
       {/* ── Main content ── */}
       <main className="relative flex flex-1 flex-col overflow-hidden min-w-0">
-        {/* Top-right controls (desktop only) */}
         <div className="hidden sm:flex absolute top-4 right-6 z-50 items-center gap-2">
           <LanguageSwitcher />
         </div>

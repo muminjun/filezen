@@ -12,7 +12,7 @@ export function useConvertContext(): ConvertContextType {
 }
 
 export function ConvertProvider({ children }: { children: ReactNode }) {
-  const [activeTool, setActiveTool] = useState<ConvertToolMode>('video-to-gif');
+  const [activeTool, setActiveTool] = useState<ConvertToolMode>('icon');
 
   return (
     <ConvertContext.Provider value={{ activeTool, setActiveTool }}>

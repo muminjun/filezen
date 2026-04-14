@@ -330,13 +330,49 @@
     }
   },
   "convert": {
-    "upload": {
-      "dragDrop": "Drag file here or click to upload",
-      "dropHere": "Drop here"
-    },
     "tools": {
+      "icon": "Icon Generator",
+      "social": "Social Presets",
+      "palette": "Color Palette",
       "videoToGif": "Video Converter",
       "ocr": "Text Extraction"
+    },
+    "upload": {
+      "dragDrop": "Drag images here or click to upload",
+      "dropHere": "Drop here",
+      "formats": "PNG, JPG, WebP · 50MB each"
+    },
+    "icon": {
+      "empty": "Upload an image to generate icons",
+      "bgLabel": "Background",
+      "bgTransparent": "Transparent",
+      "bgSolid": "Solid color",
+      "outputLabel": "Select output files",
+      "download": "Download Icon Set ZIP",
+      "downloading": "Generating...",
+      "selectAll": "Select All",
+      "deselectAll": "Deselect All"
+    },
+    "social": {
+      "empty": "Upload images to resize",
+      "platformLabel": "Platform",
+      "cropMode": "Crop mode",
+      "centerCrop": "Center Crop",
+      "letterBox": "Letter Box",
+      "download": "Download ZIP",
+      "downloading": "Processing...",
+      "selectAll": "Select All",
+      "deselectAll": "Deselect All"
+    },
+    "palette": {
+      "empty": "Upload an image to extract colors",
+      "countLabel": "Color count",
+      "extract": "Extract Colors",
+      "extracting": "Extracting...",
+      "copied": "Copied!",
+      "copyJson": "Copy JSON",
+      "copyCss": "Copy CSS vars",
+      "format": "Format"
     }
   }
 }
