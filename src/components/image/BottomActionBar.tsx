@@ -2,11 +2,12 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { RotateCw, Download, FlipHorizontal, Pencil, FileText, Wand2, Undo2, Redo2 } from 'lucide-react';
+import { RotateCw, Download, FlipHorizontal, Pencil, FileText, Wand2, Undo2, Redo2, Sparkles, ImageIcon } from 'lucide-react';
 import { BgRemoveTool } from './tools/BgRemoveTool';
+import { AiUpscaleTool } from './tools/AiUpscaleTool';
+import { BgReplaceTool } from './tools/BgReplaceTool';
+import { ImageToPdfTool } from './tools/ImageToPdfTool';
 import { cn } from '@/lib/utils';
-import { downloadBytes } from '@/lib/utils';
-import { imagesToPdf } from '@/lib/pdfConvert';
 import { useAppContext } from '@/context/AppContext';
 import {
   Select,
@@ -29,9 +30,7 @@ interface Props {
 
 export function BottomActionBar({ onEditClick }: Props) {
   const t = useTranslations('actionBar');
-  const tFile = useTranslations('file.convert');
   const {
-    images,
     selectedIds,
     rotateSelected,
     flipSelected,
@@ -47,21 +46,10 @@ export function BottomActionBar({ onEditClick }: Props) {
     redo,
   } = useAppContext();
   const [customAngle, setCustomAngle] = useState('');
-  const [isExportingPdf, setIsExportingPdf] = useState(false);
   const [showBgRemove, setShowBgRemove] = useState(false);
-
-  const handleExportAsPdf = async () => {
-    const selected = images.filter((img) => selectedIds.has(img.id));
-    if (selected.length === 0) return;
-    setIsExportingPdf(true);
-    try {
-      const files = selected.map((img) => img.file);
-      const bytes = await imagesToPdf(files, 'a4');
-      downloadBytes(bytes, 'images.pdf');
-    } finally {
-      setIsExportingPdf(false);
-    }
-  };
+  const [showAiUpscale, setShowAiUpscale] = useState(false);
+  const [showBgReplace, setShowBgReplace] = useState(false);
+  const [showImgToPdf, setShowImgToPdf] = useState(false);
 
   const hasSelection = selectedIds.size > 0;
 
@@ -180,6 +168,36 @@ export function BottomActionBar({ onEditClick }: Props) {
           <Wand2 size={14} />
         </button>
 
+        {/* AI Upscale */}
+        <button
+          onClick={() => setShowAiUpscale(true)}
+          disabled={!hasSelection}
+          title={t('aiUpscale')}
+          className={cn(
+            'flex items-center justify-center rounded-lg px-2 py-1.5 transition-all active:scale-95',
+            hasSelection
+              ? 'bg-muted text-foreground hover:bg-muted/80'
+              : 'opacity-35 text-muted-foreground cursor-not-allowed',
+          )}
+        >
+          <Sparkles size={14} />
+        </button>
+
+        {/* BG Replace */}
+        <button
+          onClick={() => setShowBgReplace(true)}
+          disabled={!hasSelection}
+          title={t('bgReplace')}
+          className={cn(
+            'flex items-center justify-center rounded-lg px-2 py-1.5 transition-all active:scale-95',
+            hasSelection
+              ? 'bg-muted text-foreground hover:bg-muted/80'
+              : 'opacity-35 text-muted-foreground cursor-not-allowed',
+          )}
+        >
+          <ImageIcon size={14} />
+        </button>
+
         {/* Download */}
         <button
           onClick={downloadAsZip}
@@ -195,14 +213,14 @@ export function BottomActionBar({ onEditClick }: Props) {
           ZIP
         </button>
 
-        {/* Export as PDF */}
+        {/* Image to PDF */}
         <button
-          onClick={handleExportAsPdf}
-          disabled={!hasSelection || isExportingPdf}
-          title={tFile('exportAsPdf')}
+          onClick={() => setShowImgToPdf(true)}
+          disabled={!hasSelection}
+          title={t('imageToPdf')}
           className={cn(
             'flex items-center gap-1 rounded-lg px-3 py-1.5 text-[11px] font-semibold transition-all active:scale-95',
-            hasSelection && !isExportingPdf
+            hasSelection
               ? 'bg-muted text-foreground hover:bg-muted/80'
               : 'bg-muted text-muted-foreground opacity-50 cursor-not-allowed'
           )}
@@ -372,6 +390,32 @@ export function BottomActionBar({ onEditClick }: Props) {
 
         <div className="ml-auto flex flex-shrink-0 items-center gap-2 pl-2">
           <button
+            onClick={() => setShowAiUpscale(true)}
+            disabled={!hasSelection}
+            className={cn(
+              'flex items-center gap-2 rounded-md px-3 py-1.5 text-xs font-medium transition-all active:scale-95 cursor-pointer whitespace-nowrap',
+              hasSelection
+                ? 'bg-muted text-foreground hover:bg-muted/80'
+                : 'cursor-not-allowed bg-muted text-muted-foreground opacity-50',
+            )}
+          >
+            <Sparkles size={14} className="flex-shrink-0" />
+            {t('aiUpscale')}
+          </button>
+          <button
+            onClick={() => setShowBgReplace(true)}
+            disabled={!hasSelection}
+            className={cn(
+              'flex items-center gap-2 rounded-md px-3 py-1.5 text-xs font-medium transition-all active:scale-95 cursor-pointer whitespace-nowrap',
+              hasSelection
+                ? 'bg-muted text-foreground hover:bg-muted/80'
+                : 'cursor-not-allowed bg-muted text-muted-foreground opacity-50',
+            )}
+          >
+            <ImageIcon size={14} className="flex-shrink-0" />
+            {t('bgReplace')}
+          </button>
+          <button
             onClick={() => setShowBgRemove(true)}
             disabled={!hasSelection}
             className={cn(
@@ -385,17 +429,17 @@ export function BottomActionBar({ onEditClick }: Props) {
             {t('bgRemove')}
           </button>
           <button
-            onClick={handleExportAsPdf}
-            disabled={!hasSelection || isExportingPdf}
+            onClick={() => setShowImgToPdf(true)}
+            disabled={!hasSelection}
             className={cn(
               'flex items-center gap-2 rounded-md px-3 py-1.5 text-xs font-medium transition-all active:scale-95 cursor-pointer whitespace-nowrap',
-              hasSelection && !isExportingPdf
+              hasSelection
                 ? 'bg-muted text-foreground hover:bg-muted/80'
                 : 'cursor-not-allowed bg-muted text-muted-foreground opacity-50'
             )}
           >
             <FileText size={14} className="flex-shrink-0" />
-            {isExportingPdf ? tFile('exportingPdf') : tFile('exportAsPdf')}
+            {t('imageToPdf')}
           </button>
           <button
             onClick={downloadAsZip}
@@ -414,6 +458,9 @@ export function BottomActionBar({ onEditClick }: Props) {
       </div>
 
       {showBgRemove && <BgRemoveTool onClose={() => setShowBgRemove(false)} />}
+      {showAiUpscale && <AiUpscaleTool onClose={() => setShowAiUpscale(false)} />}
+      {showBgReplace && <BgReplaceTool onClose={() => setShowBgReplace(false)} />}
+      {showImgToPdf && <ImageToPdfTool onClose={() => setShowImgToPdf(false)} />}
     </>
   );
 }
