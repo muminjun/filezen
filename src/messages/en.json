@@ -49,7 +49,10 @@
     "bgRemove": "Remove BG",
     "bgRemoving": "Processing...",
     "bgRemoveHint": "AI removes background. First run downloads ~40MB model.",
-    "bgRemoveDone": "Background removed"
+    "bgRemoveDone": "Background removed",
+    "aiUpscale": "AI Upscale",
+    "bgReplace": "BG Replace",
+    "imageToPdf": "To PDF"
   },
   "editDrawer": {
     "title": "Edit",
@@ -341,7 +344,10 @@
       "social": "Social Presets",
       "palette": "Color Palette",
       "videoToGif": "Video Converter",
-      "ocr": "Text Extraction"
+      "ocr": "Text Extraction",
+      "gifEditor": "GIF Editor",
+      "qrBarcode": "QR / Barcode",
+      "audio": "Audio Convert"
     },
     "upload": {
       "dragDrop": "Drag images here or click to upload",
@@ -379,6 +385,79 @@
       "copyJson": "Copy JSON",
       "copyCss": "Copy CSS vars",
       "format": "Format"
+    },
+    "gifEditor": {
+      "empty": "Upload images to create an animated GIF",
+      "uploadHint": "PNG, JPG, WebP · up to 20 frames",
+      "delay": "Frame delay (ms)",
+      "loop": "Loop",
+      "loopForever": "Forever",
+      "loopOnce": "Once",
+      "moveUp": "Move Up",
+      "moveDown": "Move Down",
+      "remove": "Remove",
+      "generate": "Generate GIF",
+      "generating": "Encoding...",
+      "done": "Download GIF"
+    },
+    "qrBarcode": {
+      "tabQr": "QR Code",
+      "tabBarcode": "Barcode",
+      "inputLabel": "Content",
+      "inputPlaceholderQr": "https://example.com",
+      "inputPlaceholderBarcode": "1234567890",
+      "fgColor": "Foreground",
+      "bgColor": "Background",
+      "size": "Size (px)",
+      "barcodeFormat": "Format",
+      "downloadPng": "Download PNG",
+      "downloadSvg": "Download SVG"
+    },
+    "audio": {
+      "empty": "Upload an audio file to convert",
+      "uploadHint": "MP3, WAV, OGG, FLAC · up to 500MB",
+      "outputFormat": "Output Format",
+      "loadingWasm": "Loading ffmpeg.wasm (~30MB)…",
+      "converting": "Converting… {pct}%",
+      "done": "Download converted file",
+      "waveform": "Waveform"
     }
+  },
+  "aiUpscale": {
+    "title": "AI Upscale",
+    "hint": "Upscales images using Real-ESRGAN. First run downloads ~20MB model.",
+    "scale": "Scale",
+    "loading": "Loading model…",
+    "processing": "Upscaling {current}/{total}…",
+    "done": "Upscaling complete",
+    "start": "Start",
+    "close": "Close"
+  },
+  "bgReplace": {
+    "title": "Replace Background",
+    "hint": "Remove background then replace with color, gradient, or image.",
+    "modeColor": "Solid Color",
+    "modeGradient": "Gradient",
+    "modeImage": "Custom Image",
+    "color1": "Color",
+    "color2": "Color 2",
+    "gradientAngle": "Angle",
+    "uploadBg": "Upload background image",
+    "removing": "Removing background…",
+    "compositing": "Compositing…",
+    "done": "Done",
+    "start": "Apply",
+    "close": "Close"
+  },
+  "imageToPdf": {
+    "title": "Export to PDF",
+    "pageSize": "Page Size",
+    "sizeA4": "A4",
+    "sizeLetter": "Letter",
+    "sizeFit": "Fit to image",
+    "margin": "Margin (pt)",
+    "creating": "Creating PDF…",
+    "create": "Create PDF",
+    "close": "Close"
   }
 }
