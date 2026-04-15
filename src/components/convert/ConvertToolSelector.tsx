@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Layers, MonitorSmartphone, Palette, Clapperboard, ScanText } from 'lucide-react';
+import { Layers, MonitorSmartphone, Palette, Clapperboard, ScanText, Film, QrCode, Music } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import { useConvertContext } from '@/context/ConvertContext';
@@ -13,6 +13,9 @@ const TOOLS: Array<{ mode: ConvertToolMode; icon: React.ReactNode; labelKey: str
   { mode: 'palette',      icon: <Palette size={14} />,           labelKey: 'palette' },
   { mode: 'video-to-gif', icon: <Clapperboard size={14} />,      labelKey: 'videoToGif' },
   { mode: 'ocr',          icon: <ScanText size={14} />,          labelKey: 'ocr' },
+  { mode: 'gif-editor',  icon: <Film size={14} />,              labelKey: 'gifEditor' },
+  { mode: 'qr-barcode',  icon: <QrCode size={14} />,            labelKey: 'qrBarcode' },
+  { mode: 'audio',       icon: <Music size={14} />,             labelKey: 'audio' },
 ];
 
 export function ConvertToolSelector() {
