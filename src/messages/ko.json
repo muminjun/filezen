@@ -49,7 +49,10 @@
     "bgRemove": "배경 제거",
     "bgRemoving": "처리 중...",
     "bgRemoveHint": "AI가 배경을 제거합니다. 최초 실행 시 ~40MB 모델을 다운로드합니다.",
-    "bgRemoveDone": "배경 제거 완료"
+    "bgRemoveDone": "배경 제거 완료",
+    "aiUpscale": "AI 업스케일",
+    "bgReplace": "배경 교체",
+    "imageToPdf": "PDF 변환"
   },
   "editDrawer": {
     "title": "편집",
@@ -341,7 +344,10 @@
       "social": "소셜 프리셋",
       "palette": "색상 팔레트",
       "videoToGif": "동영상 변환",
-      "ocr": "텍스트 추출"
+      "ocr": "텍스트 추출",
+      "gifEditor": "GIF 에디터",
+      "qrBarcode": "QR / 바코드",
+      "audio": "오디오 변환"
     },
     "upload": {
       "dragDrop": "이미지를 드래그하거나 클릭해서 업로드",
@@ -379,6 +385,79 @@
       "copyJson": "JSON 복사",
       "copyCss": "CSS 변수 복사",
       "format": "표시 형식"
+    },
+    "gifEditor": {
+      "empty": "이미지를 업로드해서 움직이는 GIF를 만드세요",
+      "uploadHint": "PNG, JPG, WebP · 최대 20프레임",
+      "delay": "프레임 지연 (ms)",
+      "loop": "반복",
+      "loopForever": "무한 반복",
+      "loopOnce": "1회만",
+      "moveUp": "위로",
+      "moveDown": "아래로",
+      "remove": "삭제",
+      "generate": "GIF 생성",
+      "generating": "인코딩 중...",
+      "done": "GIF 다운로드"
+    },
+    "qrBarcode": {
+      "tabQr": "QR 코드",
+      "tabBarcode": "바코드",
+      "inputLabel": "내용",
+      "inputPlaceholderQr": "https://example.com",
+      "inputPlaceholderBarcode": "1234567890",
+      "fgColor": "전경색",
+      "bgColor": "배경색",
+      "size": "크기 (px)",
+      "barcodeFormat": "형식",
+      "downloadPng": "PNG 다운로드",
+      "downloadSvg": "SVG 다운로드"
+    },
+    "audio": {
+      "empty": "오디오 파일을 업로드하세요",
+      "uploadHint": "MP3, WAV, OGG, FLAC · 최대 500MB",
+      "outputFormat": "출력 형식",
+      "loadingWasm": "ffmpeg.wasm 로딩 중 (~30MB)…",
+      "converting": "변환 중… {pct}%",
+      "done": "변환된 파일 다운로드",
+      "waveform": "파형"
     }
+  },
+  "aiUpscale": {
+    "title": "AI 업스케일",
+    "hint": "Real-ESRGAN으로 이미지를 고해상도로 변환합니다. 최초 실행 시 ~20MB 모델을 다운로드합니다.",
+    "scale": "배율",
+    "loading": "모델 로딩 중…",
+    "processing": "{current}/{total}장 처리 중…",
+    "done": "업스케일 완료",
+    "start": "시작",
+    "close": "닫기"
+  },
+  "bgReplace": {
+    "title": "배경 교체",
+    "hint": "배경을 제거한 후 단색·그라데이션·이미지로 교체합니다.",
+    "modeColor": "단색",
+    "modeGradient": "그라데이션",
+    "modeImage": "사용자 이미지",
+    "color1": "색상",
+    "color2": "색상 2",
+    "gradientAngle": "각도",
+    "uploadBg": "배경 이미지 업로드",
+    "removing": "배경 제거 중…",
+    "compositing": "합성 중…",
+    "done": "완료",
+    "start": "적용",
+    "close": "닫기"
+  },
+  "imageToPdf": {
+    "title": "PDF로 내보내기",
+    "pageSize": "페이지 크기",
+    "sizeA4": "A4",
+    "sizeLetter": "Letter",
+    "sizeFit": "이미지 크기에 맞춤",
+    "margin": "여백 (pt)",
+    "creating": "PDF 생성 중…",
+    "create": "PDF 생성",
+    "close": "닫기"
   }
 }
