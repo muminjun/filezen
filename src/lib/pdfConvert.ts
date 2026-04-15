@@ -73,7 +73,8 @@ function imageToPngBlob(file: File): Promise<Blob> {
  */
 export async function imagesToPdf(
   files: File[],
-  pageSize: 'a4' | 'letter' | 'fit'
+  pageSize: 'a4' | 'letter' | 'fit',
+  marginPt: number = 0,
 ): Promise<Uint8Array> {
   const doc = await PDFDocument.create();
 
@@ -113,27 +114,23 @@ export async function imagesToPdf(
 
     const page = doc.addPage([pgWidth, pgHeight]);
 
-    // Scale image to fill the page (cover)
-    const imgRatio = embedded.width / embedded.height;
-    const pgRatio = pgWidth / pgHeight;
+    const availW = pgWidth  - marginPt * 2;
+    const availH = pgHeight - marginPt * 2;
 
-    let drawWidth: number;
-    let drawHeight: number;
-
-    if (imgRatio > pgRatio) {
-      // Image is wider relative to page — match height, crop sides
-      drawHeight = pgHeight;
-      drawWidth = pgHeight * imgRatio;
+    const mImgRatio = embedded.width / embedded.height;
+    const mPgRatio  = availW / availH;
+    let mDrawW: number, mDrawH: number;
+    if (mImgRatio > mPgRatio) {
+      mDrawH = availH;
+      mDrawW = availH * mImgRatio;
     } else {
-      // Image is taller relative to page — match width, crop top/bottom
-      drawWidth = pgWidth;
-      drawHeight = pgWidth / imgRatio;
+      mDrawW = availW;
+      mDrawH = availW / mImgRatio;
     }
+    const mx = marginPt + (availW - mDrawW) / 2;
+    const my = marginPt + (availH - mDrawH) / 2;
 
-    const x = (pgWidth - drawWidth) / 2;
-    const y = (pgHeight - drawHeight) / 2;
-
-    page.drawImage(embedded, { x, y, width: drawWidth, height: drawHeight });
+    page.drawImage(embedded, { x: mx, y: my, width: mDrawW, height: mDrawH });
   }
 
   return doc.save();
