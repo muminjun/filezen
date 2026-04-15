@@ -7,6 +7,9 @@ import { SocialPresetTool } from './tools/SocialPresetTool';
 import { ColorPaletteTool } from './tools/ColorPaletteTool';
 import { VideoTool } from './tools/VideoTool';
 import { OcrTool } from './tools/OcrTool';
+import { GifEditorTool } from './tools/GifEditorTool';
+import { QrBarcodeTool } from './tools/QrBarcodeTool';
+import { AudioTool } from './tools/AudioTool';
 
 export function ConvertPage() {
   const { activeTool } = useConvertContext();
@@ -20,6 +23,9 @@ export function ConvertPage() {
         {activeTool === 'palette'      && <ColorPaletteTool />}
         {activeTool === 'video-to-gif' && <VideoTool />}
         {activeTool === 'ocr'          && <OcrTool />}
+        {activeTool === 'gif-editor'   && <GifEditorTool />}
+        {activeTool === 'qr-barcode'   && <QrBarcodeTool />}
+        {activeTool === 'audio'        && <AudioTool />}
       </div>
     </div>
   );
