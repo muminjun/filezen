@@ -167,12 +167,12 @@ export function CanvasPage() {
         isExporting={isExporting}
         onExport={handleExport}
       />
+      <CanvasToolbar
+        activeTool={activeTool}
+        onToolChange={handleToolChange}
+        onImageUpload={handleImageUpload}
+      />
       <div className="flex flex-1 overflow-hidden">
-        <CanvasToolbar
-          activeTool={activeTool}
-          onToolChange={handleToolChange}
-          onImageUpload={handleImageUpload}
-        />
         <div ref={containerRef} className="flex flex-1 overflow-hidden" onClick={handleStageClick}>
           <CanvasStage
             state={state}

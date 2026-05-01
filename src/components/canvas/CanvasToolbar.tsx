@@ -36,14 +36,14 @@ export function CanvasToolbar({ activeTool, onToolChange, onImageUpload }: Canva
   };
 
   return (
-    <aside className="hidden sm:flex w-14 flex-shrink-0 flex-col items-center border-r border-border bg-card py-4 gap-1">
+    <div className="flex flex-shrink-0 items-center gap-1 border-b border-border bg-card px-3 py-1.5">
       {TOOLS.map(({ id, icon, label }) => (
         <button
           key={id}
           title={label}
           onClick={() => handleToolClick(id)}
           className={cn(
-            'flex h-9 w-9 items-center justify-center rounded-md transition-colors',
+            'flex h-8 w-8 items-center justify-center rounded-md transition-colors',
             activeTool === id
               ? 'bg-accent text-accent-foreground'
               : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
@@ -52,6 +52,6 @@ export function CanvasToolbar({ activeTool, onToolChange, onImageUpload }: Canva
           {icon}
         </button>
       ))}
-    </aside>
+    </div>
   );
 }
