@@ -1,13 +1,16 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import dynamic from 'next/dynamic';
 import type Konva from 'konva';
+import { Undo2, Redo2, Download } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { useCanvasHistory } from '@/hooks/useCanvasHistory';
 import { useCanvasExport } from '@/hooks/useCanvasExport';
 import { CanvasToolbar } from './CanvasToolbar';
-import { CanvasTopbar } from './CanvasTopbar';
 import { CanvasProperties } from './CanvasProperties';
+import { CANVAS_PRESETS } from '@/types/canvas';
 import type {
   CanvasElement, CanvasBackground, CanvasSize, ToolType,
   ImageEl, TextEl, ShapeEl,
@@ -33,6 +36,11 @@ export function CanvasPage() {
   const [showBackground, setShowBackground] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
+  const [portalTarget, setPortalTarget] = useState<Element | null>(null);
+
+  useEffect(() => {
+    setPortalTarget(document.getElementById('topbar-portal-target'));
+  }, []);
 
   useEffect(() => {
     const update = () => {
@@ -155,18 +163,58 @@ export function CanvasPage() {
 
   const selectedEl = state.selectedId ? state.elements.find((el) => el.id === state.selectedId) ?? null : null;
 
+  const topbarControls = (
+    <>
+      {/* 비율 프리셋 */}
+      <div className="flex items-center gap-1">
+        {CANVAS_PRESETS.map((preset) => (
+          <button
+            key={preset.label}
+            onClick={() => handleSizeChange(preset)}
+            className={cn(
+              'rounded px-2.5 py-1 text-xs font-medium transition-colors',
+              state.canvasSize.label === preset.label
+                ? 'bg-primary text-primary-foreground'
+                : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
+            )}
+          >
+            {preset.label}
+          </button>
+        ))}
+      </div>
+      {/* Undo / Redo / Export */}
+      <div className="flex items-center gap-1 ml-auto">
+        <button
+          onClick={undo}
+          disabled={!canUndo}
+          title="실행취소 (Cmd+Z)"
+          className="flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground disabled:opacity-30 disabled:pointer-events-none"
+        >
+          <Undo2 size={16} />
+        </button>
+        <button
+          onClick={redo}
+          disabled={!canRedo}
+          title="다시실행 (Cmd+Shift+Z)"
+          className="flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground disabled:opacity-30 disabled:pointer-events-none"
+        >
+          <Redo2 size={16} />
+        </button>
+        <button
+          onClick={handleExport}
+          disabled={isExporting}
+          className="ml-2 flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
+        >
+          <Download size={14} />
+          {isExporting ? '내보내는 중...' : '내보내기'}
+        </button>
+      </div>
+    </>
+  );
+
   return (
     <div className="flex flex-col h-full overflow-hidden">
-      <CanvasTopbar
-        canvasSize={state.canvasSize}
-        onSizeChange={handleSizeChange}
-        canUndo={canUndo}
-        canRedo={canRedo}
-        onUndo={undo}
-        onRedo={redo}
-        isExporting={isExporting}
-        onExport={handleExport}
-      />
+      {portalTarget && createPortal(topbarControls, portalTarget)}
       <CanvasToolbar
         activeTool={activeTool}
         onToolChange={handleToolChange}
