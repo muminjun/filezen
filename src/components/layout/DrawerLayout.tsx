@@ -73,10 +73,12 @@ export function DrawerLayout({ imageTab, fileTab, collageTab, convertTab }: Draw
       </aside>
 
       {/* ── Main content ── */}
-      <main className="relative flex flex-1 flex-col overflow-hidden min-w-0">
-        <div className="hidden sm:flex absolute top-4 right-6 z-50 items-center gap-2">
+      <main className="flex flex-1 flex-col overflow-hidden min-w-0">
+        {/* Desktop common header — LanguageSwitcher always on right, tab content injected via portal */}
+        <header className="hidden sm:flex h-12 flex-shrink-0 items-center border-b border-border bg-card px-4 gap-2">
+          <div id="topbar-portal-target" className="flex flex-1 items-center min-w-0" />
           <LanguageSwitcher />
-        </div>
+        </header>
 
         {/* Mobile top bar */}
         <div className="sm:hidden flex flex-shrink-0 items-center justify-between border-b border-border bg-card px-4 py-2.5">
