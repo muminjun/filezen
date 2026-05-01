@@ -27,7 +27,7 @@ export function CanvasTopbar({
   onExport,
 }: CanvasTopbarProps) {
   return (
-    <div className="flex h-12 flex-shrink-0 items-center justify-between border-b border-border bg-card pl-4 pr-24 gap-4">
+    <div className="flex h-12 flex-shrink-0 items-center border-b border-border bg-card px-4 gap-4">
       {/* 비율 프리셋 */}
       <div className="flex items-center gap-1">
         {CANVAS_PRESETS.map((preset) => (
@@ -46,8 +46,8 @@ export function CanvasTopbar({
         ))}
       </div>
 
-      {/* Undo / Redo / Export */}
-      <div className="flex items-center gap-1">
+      {/* Undo / Redo / Export — ml-auto + mr-36으로 LanguageSwitcher(absolute right-6) 영역 회피 */}
+      <div className="flex items-center gap-1 ml-auto mr-36">
         <button
           onClick={onUndo}
           disabled={!canUndo}
