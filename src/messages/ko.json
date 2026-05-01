@@ -127,7 +127,7 @@
     "comingSoon": "PDF, 동영상 등 파일 변환 기능을 준비 중입니다"
   },
   "collage": {
-    "tab": "콜라주",
+    "tab": "캔버스",
     "aspectRatio": "캔버스 비율",
     "styleGap": "간격",
     "styleRadius": "모서리",
