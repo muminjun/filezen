@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-export type ActiveTab = 'image' | 'file' | 'collage' | 'convert';
+export type ActiveTab = 'image' | 'file' | 'collage' | 'convert' | 'frame';
 
 interface UIContextType {
   activeTab: ActiveTab;
