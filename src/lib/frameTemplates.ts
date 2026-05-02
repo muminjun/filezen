@@ -33,6 +33,7 @@ export const DEFAULT_FRAME_OPTIONS: FrameOptionsState = {
   borderWidth: 0,
 };
 
+// photoCount >= 0, cols >= 1
 export function buildEqualSlots(photoCount: number, cols: number): SlotDef[] {
   const slots: SlotDef[] = [];
   for (let i = 0; i < photoCount; i++) {
@@ -58,6 +59,15 @@ export const FRAME_TEMPLATES: FrameTemplate[] = [
       { col: 1, row: 1, colSpan: 1, rowSpan: 1 },
       { col: 1, row: 2, colSpan: 1, rowSpan: 1 },
     ],
+  },
+  {
+    id: 'pb-3',
+    labelKey: 'pb-3',
+    category: 'photobooth',
+    canvasRatio: [2, 3],
+    outputWidth: 1200,
+    grid: { cols: 1, rows: 3 },
+    slots: buildEqualSlots(3, 1),
   },
   {
     id: 'pb-4',
@@ -90,19 +100,10 @@ export const FRAME_TEMPLATES: FrameTemplate[] = [
     ],
   },
   {
-    id: 'pb-3',
-    labelKey: 'pb-3',
-    category: 'photobooth',
-    canvasRatio: [2, 3] as [number, number],
-    outputWidth: 1200,
-    grid: { cols: 1, rows: 3 },
-    slots: buildEqualSlots(3, 1),
-  },
-  {
     id: 'pb-9',
     labelKey: 'pb-9',
     category: 'photobooth',
-    canvasRatio: [2, 3] as [number, number],
+    canvasRatio: [2, 3],
     outputWidth: 1200,
     grid: { cols: 3, rows: 3 },
     slots: buildEqualSlots(9, 3),
@@ -111,7 +112,7 @@ export const FRAME_TEMPLATES: FrameTemplate[] = [
     id: 'pb-12',
     labelKey: 'pb-12',
     category: 'photobooth',
-    canvasRatio: [2, 3] as [number, number],
+    canvasRatio: [2, 3],
     outputWidth: 1200,
     grid: { cols: 3, rows: 4 },
     slots: buildEqualSlots(12, 3),
@@ -189,7 +190,7 @@ export function getOrientedRatio(
 // 두 인접 1×1 슬롯을 병합. 인접하지 않거나 병합 불가이면 원본 반환.
 export function mergeSlots(
   slots: SlotDef[],
-  _grid: { cols: number; rows: number },
+  _grid: { cols: number; rows: number }, // reserved — bounds validation not yet implemented
   indexA: number,
   indexB: number,
 ): SlotDef[] {
@@ -211,10 +212,11 @@ export function mergeSlots(
   return result;
 }
 
-// 병합된 슬롯을 인접한 두 1×1 슬롯으로 분리. 이미 1×1이면 원본 반환.
+// 병합된 슬롯을 두 슬롯으로 분리 (좌→좌+우, 또는 상→상+하).
+// 이미 1×1이면 원본 반환. colSpan/rowSpan > 2인 경우 slotB는 1×1이 아닐 수 있음.
 export function splitSlot(
   slots: SlotDef[],
-  _grid: { cols: number; rows: number },
+  _grid: { cols: number; rows: number }, // reserved — bounds validation not yet implemented
   index: number,
 ): SlotDef[] {
   const slot = slots[index];
