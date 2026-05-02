@@ -33,67 +33,69 @@ export function FrameOptions({
   return (
     <div className="flex flex-col gap-5 p-4">
       {/* 레이아웃 섹션 */}
-      <div className="flex flex-col gap-3">
-        <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-          {t('layout')}
-        </span>
+      {template.category === 'photobooth' && (
+        <div className="flex flex-col gap-3">
+          <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            {t('layout')}
+          </span>
 
-        {/* 사진 수 스테퍼 */}
-        <div className="flex items-center justify-between">
-          <span className="text-xs text-foreground">{t('photoCount')}</span>
-          <div className="flex items-center overflow-hidden rounded-md border border-border">
-            <button
-              onClick={() => onPhotoCountChange(photoCount - 1)}
-              disabled={photoCount <= 1}
-              className="border-r border-border bg-card px-2.5 py-1 text-sm font-medium text-foreground hover:bg-muted disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed transition-colors"
-            >
-              −
-            </button>
-            <span className="min-w-[2rem] bg-card px-2 py-1 text-center text-xs font-semibold">
-              {photoCount}
-            </span>
-            <button
-              onClick={() => onPhotoCountChange(photoCount + 1)}
-              disabled={photoCount >= 16}
-              className="border-l border-border bg-card px-2.5 py-1 text-sm font-medium text-foreground hover:bg-muted disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed transition-colors"
-            >
-              +
-            </button>
+          {/* 사진 수 스테퍼 */}
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-foreground">{t('photoCount')}</span>
+            <div className="flex items-center overflow-hidden rounded-md border border-border">
+              <button
+                onClick={() => onPhotoCountChange(photoCount - 1)}
+                disabled={photoCount <= 1}
+                className="border-r border-border bg-card px-2.5 py-1 text-sm font-medium text-foreground hover:bg-muted disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed transition-colors"
+              >
+                −
+              </button>
+              <span className="min-w-[2rem] bg-card px-2 py-1 text-center text-xs font-semibold">
+                {photoCount}
+              </span>
+              <button
+                onClick={() => onPhotoCountChange(photoCount + 1)}
+                disabled={photoCount >= 16}
+                className="border-l border-border bg-card px-2.5 py-1 text-sm font-medium text-foreground hover:bg-muted disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed transition-colors"
+              >
+                +
+              </button>
+            </div>
           </div>
-        </div>
 
-        {/* 열 수 스테퍼 */}
-        <div className="flex items-center justify-between">
-          <span className="text-xs text-foreground">{t('cols')}</span>
-          <div className="flex items-center overflow-hidden rounded-md border border-border">
-            <button
-              onClick={() => onColsChange(cols - 1)}
-              disabled={cols <= 1}
-              className="border-r border-border bg-card px-2.5 py-1 text-sm font-medium text-foreground hover:bg-muted disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed transition-colors"
-            >
-              −
-            </button>
-            <span className="min-w-[2rem] bg-card px-2 py-1 text-center text-xs font-semibold">
-              {cols}
-            </span>
-            <button
-              onClick={() => onColsChange(cols + 1)}
-              disabled={cols >= 4}
-              className="border-l border-border bg-card px-2.5 py-1 text-sm font-medium text-foreground hover:bg-muted disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed transition-colors"
-            >
-              +
-            </button>
+          {/* 열 수 스테퍼 */}
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-foreground">{t('cols')}</span>
+            <div className="flex items-center overflow-hidden rounded-md border border-border">
+              <button
+                onClick={() => onColsChange(cols - 1)}
+                disabled={cols <= 1}
+                className="border-r border-border bg-card px-2.5 py-1 text-sm font-medium text-foreground hover:bg-muted disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed transition-colors"
+              >
+                −
+              </button>
+              <span className="min-w-[2rem] bg-card px-2 py-1 text-center text-xs font-semibold">
+                {cols}
+              </span>
+              <button
+                onClick={() => onColsChange(cols + 1)}
+                disabled={cols >= 4}
+                className="border-l border-border bg-card px-2.5 py-1 text-sm font-medium text-foreground hover:bg-muted disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed transition-colors"
+              >
+                +
+              </button>
+            </div>
           </div>
-        </div>
 
-        {/* 그리드 에디터 */}
-        <GridEditor
-          slots={template.slots}
-          grid={template.grid}
-          onMerge={onMerge}
-          onSplit={onSplit}
-        />
-      </div>
+          {/* 그리드 에디터 */}
+          <GridEditor
+            slots={template.slots}
+            grid={template.grid}
+            onMerge={onMerge}
+            onSplit={onSplit}
+          />
+        </div>
+      )}
 
       {isSingleSlot && isNonSquare && (
         <div className="flex flex-col gap-2">

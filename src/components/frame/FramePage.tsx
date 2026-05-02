@@ -75,35 +75,45 @@ export function FramePage() {
 
   const handleColsChange = (c: number) => {
     const clamped = Math.max(1, Math.min(4, c));
-    const photoCount = activeTemplate.slots.length;
-    const rows = Math.ceil(photoCount / clamped);
-    setActiveTemplate((prev) => ({
-      ...prev,
-      slots: buildEqualSlots(photoCount, clamped),
-      grid: { cols: clamped, rows },
-    }));
+    setActiveTemplate((prev) => {
+      const photoCount = prev.slots.length;
+      const rows = Math.ceil(photoCount / clamped);
+      return { ...prev, slots: buildEqualSlots(photoCount, clamped), grid: { cols: clamped, rows } };
+    });
   };
 
   const handleSlotMerge = (indexA: number, indexB: number) => {
-    const newSlots = mergeSlots(activeTemplate.slots, activeTemplate.grid, indexA, indexB);
-    if (newSlots === activeTemplate.slots) return;
-    setActiveTemplate((prev) => ({ ...prev, slots: newSlots }));
-    setSlotImages((prev) => {
-      const next = [...prev];
-      next.splice(indexB, 1);
-      return next;
+    let merged = false;
+    setActiveTemplate((prev) => {
+      const newSlots = mergeSlots(prev.slots, prev.grid, indexA, indexB);
+      if (newSlots === prev.slots) return prev;
+      merged = true;
+      return { ...prev, slots: newSlots };
     });
+    if (merged) {
+      setSlotImages((prev) => {
+        const next = [...prev];
+        next.splice(indexB, 1);
+        return next;
+      });
+    }
   };
 
   const handleSlotSplit = (index: number) => {
-    const newSlots = splitSlot(activeTemplate.slots, activeTemplate.grid, index);
-    if (newSlots === activeTemplate.slots) return;
-    setActiveTemplate((prev) => ({ ...prev, slots: newSlots }));
-    setSlotImages((prev) => {
-      const next = [...prev];
-      next.splice(index + 1, 0, null);
-      return next;
+    let split = false;
+    setActiveTemplate((prev) => {
+      const newSlots = splitSlot(prev.slots, prev.grid, index);
+      if (newSlots === prev.slots) return prev;
+      split = true;
+      return { ...prev, slots: newSlots };
     });
+    if (split) {
+      setSlotImages((prev) => {
+        const next = [...prev];
+        next.splice(index + 1, 0, null);
+        return next;
+      });
+    }
   };
 
   const handleSlotImage = (index: number, file: File) => {

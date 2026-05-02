@@ -69,7 +69,7 @@ export function GridEditor({ slots, grid, onMerge, onSplit }: Props) {
         return (
           <button
             type="button"
-            key={i}
+            key={`${slot.col}-${slot.row}-${slot.colSpan}-${slot.rowSpan}`}
             onClick={() => handleClick(i)}
             aria-pressed={!isMerged && selected === i}
             aria-label={`슬롯 ${i + 1}${isMerged ? ' (병합됨)' : ''}`}
