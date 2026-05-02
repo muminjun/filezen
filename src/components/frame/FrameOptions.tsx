@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import type { FrameTemplate, FrameOptionsState } from '@/lib/frameTemplates';
+import { GridEditor } from './GridEditor';
 
 const GAP_COLORS = ['#ffffff', '#000000', '#f5f5f5', '#1a1a1a', '#ffd6e0', '#d6eaff'];
 
@@ -10,10 +11,19 @@ interface Props {
   template: FrameTemplate;
   options: FrameOptionsState;
   onChange: (opts: FrameOptionsState) => void;
+  onPhotoCountChange: (n: number) => void;
+  onColsChange: (c: number) => void;
+  onMerge: (indexA: number, indexB: number) => void;
+  onSplit: (index: number) => void;
 }
 
-export function FrameOptions({ template, options, onChange }: Props) {
+export function FrameOptions({
+  template, options, onChange,
+  onPhotoCountChange, onColsChange, onMerge, onSplit,
+}: Props) {
   const t = useTranslations('frame.options');
+  const photoCount = template.slots.length;
+  const cols = template.grid.cols;
   const isSingleSlot = template.slots.length === 1;
   const isNonSquare = template.canvasRatio[0] !== template.canvasRatio[1];
 
@@ -22,6 +32,69 @@ export function FrameOptions({ template, options, onChange }: Props) {
 
   return (
     <div className="flex flex-col gap-5 p-4">
+      {/* 레이아웃 섹션 */}
+      <div className="flex flex-col gap-3">
+        <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+          {t('layout')}
+        </span>
+
+        {/* 사진 수 스테퍼 */}
+        <div className="flex items-center justify-between">
+          <span className="text-xs text-foreground">{t('photoCount')}</span>
+          <div className="flex items-center overflow-hidden rounded-md border border-border">
+            <button
+              onClick={() => onPhotoCountChange(photoCount - 1)}
+              disabled={photoCount <= 1}
+              className="border-r border-border bg-card px-2.5 py-1 text-sm font-medium text-foreground hover:bg-muted disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed transition-colors"
+            >
+              −
+            </button>
+            <span className="min-w-[2rem] bg-card px-2 py-1 text-center text-xs font-semibold">
+              {photoCount}
+            </span>
+            <button
+              onClick={() => onPhotoCountChange(photoCount + 1)}
+              disabled={photoCount >= 16}
+              className="border-r border-border bg-card px-2.5 py-1 text-sm font-medium text-foreground hover:bg-muted disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed transition-colors"
+            >
+              +
+            </button>
+          </div>
+        </div>
+
+        {/* 열 수 스테퍼 */}
+        <div className="flex items-center justify-between">
+          <span className="text-xs text-foreground">{t('cols')}</span>
+          <div className="flex items-center overflow-hidden rounded-md border border-border">
+            <button
+              onClick={() => onColsChange(cols - 1)}
+              disabled={cols <= 1}
+              className="border-r border-border bg-card px-2.5 py-1 text-sm font-medium text-foreground hover:bg-muted disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed transition-colors"
+            >
+              −
+            </button>
+            <span className="min-w-[2rem] bg-card px-2 py-1 text-center text-xs font-semibold">
+              {cols}
+            </span>
+            <button
+              onClick={() => onColsChange(cols + 1)}
+              disabled={cols >= 4}
+              className="border-r border-border bg-card px-2.5 py-1 text-sm font-medium text-foreground hover:bg-muted disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed transition-colors"
+            >
+              +
+            </button>
+          </div>
+        </div>
+
+        {/* 그리드 에디터 */}
+        <GridEditor
+          slots={template.slots}
+          grid={template.grid}
+          onMerge={onMerge}
+          onSplit={onSplit}
+        />
+      </div>
+
       {isSingleSlot && isNonSquare && (
         <div className="flex flex-col gap-2">
           <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
