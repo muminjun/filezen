@@ -470,7 +470,8 @@
     },
     "slot": {
       "empty": "사진 추가",
-      "remove": "제거"
+      "remove": "사진 삭제",
+      "reset": "초기화"
     },
     "options": {
       "layout": "레이아웃",

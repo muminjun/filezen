@@ -469,8 +469,9 @@
       "social-tw": "Twitter Post"
     },
     "slot": {
-      "empty": "Add Photo",
-      "remove": "Remove"
+      "empty": "Add photo",
+      "remove": "Remove photo",
+      "reset": "Reset"
     },
     "options": {
       "layout": "Layout",
