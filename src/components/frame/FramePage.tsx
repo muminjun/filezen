@@ -8,6 +8,10 @@ import {
   DEFAULT_FRAME_OPTIONS,
   getNaturalOrientation,
   getTemplate,
+  buildEqualSlots,
+  mergeSlots,
+  splitSlot,
+  type FrameTemplate,
   type FrameOptionsState,
 } from '@/lib/frameTemplates';
 import { exportFrame } from '@/lib/frameExport';
@@ -17,7 +21,9 @@ import { FrameOptions } from './FrameOptions';
 
 export function FramePage() {
   const t = useTranslations('frame');
-  const [templateId, setTemplateId] = useState<string>(FRAME_TEMPLATES[0].id);
+  const [activeTemplate, setActiveTemplate] = useState<FrameTemplate>(
+    () => structuredClone(FRAME_TEMPLATES[0]) as FrameTemplate,
+  );
   const [slotImages, setSlotImages] = useState<(File | null)[]>(
     () => Array(FRAME_TEMPLATES[0].slots.length).fill(null),
   );
@@ -25,8 +31,6 @@ export function FramePage() {
   const [isExporting, setIsExporting] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
   const [previewWidth, setPreviewWidth] = useState(320);
-
-  const template = getTemplate(templateId)!;
 
   useEffect(() => {
     const element = previewRef.current;
@@ -48,17 +52,63 @@ export function FramePage() {
 
   const handleTemplateChange = (id: string) => {
     const tmpl = getTemplate(id)!;
-    setTemplateId(id);
+    setActiveTemplate(structuredClone(tmpl) as FrameTemplate);
     setSlotImages(Array(tmpl.slots.length).fill(null));
-    setOptions((prev) => ({
+    setOptions((prev) => ({ ...prev, orientation: getNaturalOrientation(tmpl) }));
+  };
+
+  const handlePhotoCountChange = (n: number) => {
+    const clamped = Math.max(1, Math.min(16, n));
+    const cols = activeTemplate.grid.cols;
+    const rows = Math.ceil(clamped / cols);
+    setActiveTemplate((prev) => ({
       ...prev,
-      orientation: getNaturalOrientation(tmpl),
+      slots: buildEqualSlots(clamped, cols),
+      grid: { cols, rows },
     }));
+    setSlotImages((prev) => {
+      const next: (File | null)[] = Array(clamped).fill(null);
+      for (let i = 0; i < Math.min(prev.length, clamped); i++) next[i] = prev[i] ?? null;
+      return next;
+    });
+  };
+
+  const handleColsChange = (c: number) => {
+    const clamped = Math.max(1, Math.min(4, c));
+    const photoCount = activeTemplate.slots.length;
+    const rows = Math.ceil(photoCount / clamped);
+    setActiveTemplate((prev) => ({
+      ...prev,
+      slots: buildEqualSlots(photoCount, clamped),
+      grid: { cols: clamped, rows },
+    }));
+  };
+
+  const handleSlotMerge = (indexA: number, indexB: number) => {
+    const newSlots = mergeSlots(activeTemplate.slots, activeTemplate.grid, indexA, indexB);
+    if (newSlots === activeTemplate.slots) return;
+    setActiveTemplate((prev) => ({ ...prev, slots: newSlots }));
+    setSlotImages((prev) => {
+      const next = [...prev];
+      next.splice(indexB, 1);
+      return next;
+    });
+  };
+
+  const handleSlotSplit = (index: number) => {
+    const newSlots = splitSlot(activeTemplate.slots, activeTemplate.grid, index);
+    if (newSlots === activeTemplate.slots) return;
+    setActiveTemplate((prev) => ({ ...prev, slots: newSlots }));
+    setSlotImages((prev) => {
+      const next = [...prev];
+      next.splice(index + 1, 0, null);
+      return next;
+    });
   };
 
   const handleSlotImage = (index: number, file: File) => {
     setSlotImages((prev) => {
-      const next = Array(template.slots.length).fill(null).map((_, i) => prev[i] ?? null);
+      const next = Array(activeTemplate.slots.length).fill(null).map((_, i) => prev[i] ?? null);
       next[index] = file;
       return next;
     });
@@ -83,13 +133,13 @@ export function FramePage() {
   const handleExport = async () => {
     setIsExporting(true);
     try {
-      await exportFrame(template, slotImages, options, previewWidth);
+      await exportFrame(activeTemplate, slotImages, options, previewWidth);
     } finally {
       setIsExporting(false);
     }
   };
 
-  const normalizedSlotImages = Array(template.slots.length)
+  const normalizedSlotImages = Array(activeTemplate.slots.length)
     .fill(null)
     .map((_, i) => slotImages[i] ?? null);
 
@@ -97,14 +147,14 @@ export function FramePage() {
     <div className="flex h-full flex-col overflow-hidden">
       <FrameTemplateSelector
         templates={FRAME_TEMPLATES}
-        selectedId={templateId}
+        selectedId={activeTemplate.id}
         onSelect={handleTemplateChange}
       />
 
       <div className="flex flex-1 flex-col overflow-hidden sm:flex-row">
         <div className="flex flex-1 items-center justify-center overflow-hidden p-4">
           <FrameCanvas
-            template={template}
+            template={activeTemplate}
             slotImages={normalizedSlotImages}
             options={options}
             previewRef={previewRef}
@@ -116,9 +166,13 @@ export function FramePage() {
 
         <div className="flex flex-shrink-0 flex-col overflow-y-auto border-t border-border sm:w-64 sm:border-l sm:border-t-0">
           <FrameOptions
-            template={template}
+            template={activeTemplate}
             options={options}
             onChange={setOptions}
+            onPhotoCountChange={handlePhotoCountChange}
+            onColsChange={handleColsChange}
+            onMerge={handleSlotMerge}
+            onSplit={handleSlotSplit}
           />
           <div className="px-4 pb-4">
             <button
