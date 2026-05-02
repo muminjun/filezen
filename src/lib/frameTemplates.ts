@@ -33,6 +33,19 @@ export const DEFAULT_FRAME_OPTIONS: FrameOptionsState = {
   borderWidth: 0,
 };
 
+export function buildEqualSlots(photoCount: number, cols: number): SlotDef[] {
+  const slots: SlotDef[] = [];
+  for (let i = 0; i < photoCount; i++) {
+    slots.push({
+      col: (i % cols) + 1,
+      row: Math.floor(i / cols) + 1,
+      colSpan: 1,
+      rowSpan: 1,
+    });
+  }
+  return slots;
+}
+
 export const FRAME_TEMPLATES: FrameTemplate[] = [
   {
     id: 'pb-2',
@@ -75,6 +88,33 @@ export const FRAME_TEMPLATES: FrameTemplate[] = [
       { col: 1, row: 3, colSpan: 1, rowSpan: 1 },
       { col: 2, row: 3, colSpan: 1, rowSpan: 1 },
     ],
+  },
+  {
+    id: 'pb-3',
+    labelKey: 'pb-3',
+    category: 'photobooth',
+    canvasRatio: [2, 3] as [number, number],
+    outputWidth: 1200,
+    grid: { cols: 1, rows: 3 },
+    slots: buildEqualSlots(3, 1),
+  },
+  {
+    id: 'pb-9',
+    labelKey: 'pb-9',
+    category: 'photobooth',
+    canvasRatio: [2, 3] as [number, number],
+    outputWidth: 1200,
+    grid: { cols: 3, rows: 3 },
+    slots: buildEqualSlots(9, 3),
+  },
+  {
+    id: 'pb-12',
+    labelKey: 'pb-12',
+    category: 'photobooth',
+    canvasRatio: [2, 3] as [number, number],
+    outputWidth: 1200,
+    grid: { cols: 3, rows: 4 },
+    slots: buildEqualSlots(12, 3),
   },
   {
     id: 'social-story',
@@ -144,4 +184,54 @@ export function getOrientedRatio(
   const isCurrentLandscape = w > h;
   const wantLandscape = orientation === 'landscape';
   return isCurrentLandscape === wantLandscape ? [w, h] : [h, w];
+}
+
+// 두 인접 1×1 슬롯을 병합. 인접하지 않거나 병합 불가이면 원본 반환.
+export function mergeSlots(
+  slots: SlotDef[],
+  _grid: { cols: number; rows: number },
+  indexA: number,
+  indexB: number,
+): SlotDef[] {
+  const a = slots[indexA];
+  const b = slots[indexB];
+  if (a.colSpan !== 1 || a.rowSpan !== 1 || b.colSpan !== 1 || b.rowSpan !== 1) return slots;
+
+  const isHorizontal = a.row === b.row && Math.abs(a.col - b.col) === 1;
+  const isVertical = a.col === b.col && Math.abs(a.row - b.row) === 1;
+  if (!isHorizontal && !isVertical) return slots;
+
+  const mergedSlot: SlotDef = isHorizontal
+    ? { col: Math.min(a.col, b.col), row: a.row, colSpan: 2, rowSpan: 1 }
+    : { col: a.col, row: Math.min(a.row, b.row), colSpan: 1, rowSpan: 2 };
+
+  const result = [...slots];
+  result[indexA] = mergedSlot;
+  result.splice(indexB, 1);
+  return result;
+}
+
+// 병합된 슬롯을 인접한 두 1×1 슬롯으로 분리. 이미 1×1이면 원본 반환.
+export function splitSlot(
+  slots: SlotDef[],
+  _grid: { cols: number; rows: number },
+  index: number,
+): SlotDef[] {
+  const slot = slots[index];
+  if (slot.colSpan === 1 && slot.rowSpan === 1) return slots;
+
+  let slotA: SlotDef;
+  let slotB: SlotDef;
+
+  if (slot.colSpan > 1) {
+    slotA = { col: slot.col,     row: slot.row, colSpan: 1,                  rowSpan: slot.rowSpan };
+    slotB = { col: slot.col + 1, row: slot.row, colSpan: slot.colSpan - 1,   rowSpan: slot.rowSpan };
+  } else {
+    slotA = { col: slot.col, row: slot.row,     colSpan: slot.colSpan, rowSpan: 1 };
+    slotB = { col: slot.col, row: slot.row + 1, colSpan: slot.colSpan, rowSpan: slot.rowSpan - 1 };
+  }
+
+  const result = [...slots];
+  result.splice(index, 1, slotA, slotB);
+  return result;
 }
