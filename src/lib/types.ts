@@ -140,7 +140,7 @@ export interface FileContextType {
 
 // ─── Convert Toolkit types ────────────────────────────────────────────────────
 
-export type ConvertToolMode = 'icon' | 'social' | 'palette' | 'video-to-gif' | 'ocr' | 'gif-editor' | 'qr-barcode' | 'audio';
+export type ConvertToolMode = 'icon' | 'palette' | 'video-to-gif' | 'ocr' | 'gif-editor' | 'qr-barcode' | 'audio';
 
 export interface ConvertContextType {
   activeTool: ConvertToolMode;
