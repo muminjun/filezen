@@ -56,6 +56,9 @@ export function FrameSlot({
     moved: boolean;
   }>({ active: false, startX: 0, startY: 0, startOffsetX: 0, startOffsetY: 0, moved: false });
 
+  const transformRef = useRef<SlotTransform>(transform);
+  useEffect(() => { transformRef.current = transform; }, [transform]);
+
   useEffect(() => {
     if (!file) { setPreview(null); return; }
     const url = URL.createObjectURL(file);
@@ -126,18 +129,25 @@ export function FrameSlot({
     dragRef.current.active = false;
   };
 
-  const handleWheel = (e: React.WheelEvent<HTMLImageElement>) => {
-    e.preventDefault();
-    const delta = e.deltaY > 0 ? -0.1 : 0.1;
-    const newScale = clamp(transform.scale + delta, 1.0, 3.0);
-    // scale 변경 시 offset도 새 scale 기준으로 재클램핑
-    const { maxX, maxY } = getMaxOffset(newScale);
-    onTransformChange({
-      scale: newScale,
-      offsetX: clamp(transform.offsetX, -maxX, maxX),
-      offsetY: clamp(transform.offsetY, -maxY, maxY),
-    });
-  };
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    const handleWheel = (e: WheelEvent) => {
+      if (!preview) return;
+      e.preventDefault();
+      const current = transformRef.current;
+      const delta = e.deltaY > 0 ? -0.1 : 0.1;
+      const newScale = clamp(current.scale + delta, 1.0, 3.0);
+      const { maxX, maxY } = getMaxOffset(newScale);
+      onTransformChange({
+        scale: newScale,
+        offsetX: clamp(current.offsetX, -maxX, maxX),
+        offsetY: clamp(current.offsetY, -maxY, maxY),
+      });
+    };
+    container.addEventListener('wheel', handleWheel, { passive: false });
+    return () => container.removeEventListener('wheel', handleWheel);
+  }, [preview, onTransformChange]);
 
   const handleFileDragStart = (e: React.DragEvent) => {
     e.dataTransfer.setData('text/plain', String(index));
@@ -187,7 +197,6 @@ export function FrameSlot({
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
-            onWheel={handleWheel}
             style={{
               transform: `translate(${transform.offsetX}px, ${transform.offsetY}px) scale(${transform.scale})`,
               transformOrigin: 'center',
