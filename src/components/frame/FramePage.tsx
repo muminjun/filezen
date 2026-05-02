@@ -11,8 +11,10 @@ import {
   buildEqualSlots,
   mergeSlots,
   splitSlot,
+  DEFAULT_TRANSFORM,
   type FrameTemplate,
   type FrameOptionsState,
+  type SlotTransform,
 } from '@/lib/frameTemplates';
 import { exportFrame } from '@/lib/frameExport';
 import { FrameTemplateSelector } from './FrameTemplateSelector';
@@ -27,6 +29,10 @@ export function FramePage() {
   const [slotImages, setSlotImages] = useState<(File | null)[]>(
     () => Array(FRAME_TEMPLATES[0].slots.length).fill(null),
   );
+  const [slotTransforms, setSlotTransforms] = useState<SlotTransform[]>(
+    () => Array(FRAME_TEMPLATES[0].slots.length).fill(DEFAULT_TRANSFORM),
+  );
+  const [editingSlot, setEditingSlot] = useState<number | null>(null);
   const [options, setOptions] = useState<FrameOptionsState>(DEFAULT_FRAME_OPTIONS);
   const [isExporting, setIsExporting] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
@@ -54,6 +60,8 @@ export function FramePage() {
     const tmpl = getTemplate(id)!;
     setActiveTemplate(structuredClone(tmpl) as FrameTemplate);
     setSlotImages(Array(tmpl.slots.length).fill(null));
+    setSlotTransforms(Array(tmpl.slots.length).fill(DEFAULT_TRANSFORM));
+    setEditingSlot(null);
     setOptions((prev) => ({ ...prev, orientation: getNaturalOrientation(tmpl) }));
   };
 
@@ -69,6 +77,11 @@ export function FramePage() {
       for (let i = 0; i < Math.min(prev.length, clamped); i++) next[i] = prev[i] ?? null;
       return next;
     });
+    setSlotTransforms((prev) => {
+      const next: SlotTransform[] = Array(clamped).fill(DEFAULT_TRANSFORM);
+      for (let i = 0; i < Math.min(prev.length, clamped); i++) next[i] = prev[i];
+      return next;
+    });
   };
 
   const handleColsChange = (c: number) => {
@@ -78,6 +91,7 @@ export function FramePage() {
       const rows = Math.ceil(photoCount / clamped);
       return { ...prev, slots: buildEqualSlots(photoCount, clamped), grid: { cols: clamped, rows } };
     });
+    // slotTransforms 길이 불변, 내용 유지
   };
 
   const handleSlotMerge = (indexA: number, indexB: number) => {
@@ -85,6 +99,11 @@ export function FramePage() {
     if (newSlots === activeTemplate.slots) return;
     setActiveTemplate((prev) => ({ ...prev, slots: newSlots }));
     setSlotImages((prev) => {
+      const next = [...prev];
+      next.splice(indexB, 1);
+      return next;
+    });
+    setSlotTransforms((prev) => {
       const next = [...prev];
       next.splice(indexB, 1);
       return next;
@@ -100,12 +119,30 @@ export function FramePage() {
       next.splice(index + 1, 0, null);
       return next;
     });
+    setSlotTransforms((prev) => {
+      const next = [...prev];
+      next.splice(index + 1, 0, DEFAULT_TRANSFORM);
+      return next;
+    });
   };
 
   const handleSlotImage = (index: number, file: File) => {
     setSlotImages((prev) => {
       const next = Array(activeTemplate.slots.length).fill(null).map((_, i) => prev[i] ?? null);
       next[index] = file;
+      return next;
+    });
+    setSlotTransforms((prev) => {
+      const next = [...prev];
+      next[index] = DEFAULT_TRANSFORM;
+      return next;
+    });
+  };
+
+  const handleTransformChange = (index: number, t: SlotTransform) => {
+    setSlotTransforms((prev) => {
+      const next = [...prev];
+      next[index] = t;
       return next;
     });
   };
@@ -154,9 +191,14 @@ export function FramePage() {
             slotImages={normalizedSlotImages}
             options={options}
             previewRef={previewRef}
+            slotTransforms={slotTransforms}
+            editingSlot={editingSlot}
             onSlotImage={handleSlotImage}
             onSlotClear={handleSlotClear}
             onSlotSwap={handleSlotSwap}
+            onTransformChange={handleTransformChange}
+            onEditStart={(i) => setEditingSlot(i)}
+            onEditEnd={() => setEditingSlot(null)}
           />
         </div>
 

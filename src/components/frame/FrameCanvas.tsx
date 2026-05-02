@@ -1,22 +1,30 @@
 'use client';
 
 import { FrameSlot } from './FrameSlot';
-import { getOrientedRatio } from '@/lib/frameTemplates';
+import { getOrientedRatio, DEFAULT_TRANSFORM } from '@/lib/frameTemplates';
 import type { Ref } from 'react';
-import type { FrameTemplate, FrameOptionsState } from '@/lib/frameTemplates';
+import type { FrameTemplate, FrameOptionsState, SlotTransform } from '@/lib/frameTemplates';
 
 interface Props {
   template: FrameTemplate;
   slotImages: (File | null)[];
   options: FrameOptionsState;
   previewRef?: Ref<HTMLDivElement>;
+  slotTransforms: SlotTransform[];
+  editingSlot: number | null;
   onSlotImage: (index: number, file: File) => void;
   onSlotClear: (index: number) => void;
   onSlotSwap: (a: number, b: number) => void;
+  onTransformChange: (index: number, t: SlotTransform) => void;
+  onEditStart: (index: number) => void;
+  onEditEnd: () => void;
 }
 
 export function FrameCanvas({
-  template, slotImages, options, previewRef, onSlotImage, onSlotClear, onSlotSwap,
+  template, slotImages, options, previewRef,
+  slotTransforms, editingSlot,
+  onSlotImage, onSlotClear, onSlotSwap,
+  onTransformChange, onEditStart, onEditEnd,
 }: Props) {
   const [ratioW, ratioH] = getOrientedRatio(template, options.orientation);
 
@@ -50,9 +58,14 @@ export function FrameCanvas({
             slot={slot}
             file={slotImages[i] ?? null}
             borderRadius={options.borderRadius}
+            transform={slotTransforms[i] ?? DEFAULT_TRANSFORM}
+            isEditing={editingSlot === i}
             onFile={(file) => onSlotImage(i, file)}
             onClear={() => onSlotClear(i)}
             onSwap={onSlotSwap}
+            onTransformChange={(t) => onTransformChange(i, t)}
+            onEditStart={() => onEditStart(i)}
+            onEditEnd={onEditEnd}
           />
         ))}
       </div>
