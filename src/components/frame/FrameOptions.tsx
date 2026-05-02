@@ -55,7 +55,7 @@ export function FrameOptions({
             <button
               onClick={() => onPhotoCountChange(photoCount + 1)}
               disabled={photoCount >= 16}
-              className="border-r border-border bg-card px-2.5 py-1 text-sm font-medium text-foreground hover:bg-muted disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed transition-colors"
+              className="border-l border-border bg-card px-2.5 py-1 text-sm font-medium text-foreground hover:bg-muted disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed transition-colors"
             >
               +
             </button>
@@ -79,7 +79,7 @@ export function FrameOptions({
             <button
               onClick={() => onColsChange(cols + 1)}
               disabled={cols >= 4}
-              className="border-r border-border bg-card px-2.5 py-1 text-sm font-medium text-foreground hover:bg-muted disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed transition-colors"
+              className="border-l border-border bg-card px-2.5 py-1 text-sm font-medium text-foreground hover:bg-muted disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed transition-colors"
             >
               +
             </button>
