@@ -1,5 +1,5 @@
-import type { FrameTemplate, FrameOptionsState } from './frameTemplates';
-import { getOrientedRatio } from './frameTemplates';
+import type { FrameTemplate, FrameOptionsState, SlotTransform } from './frameTemplates';
+import { getOrientedRatio, DEFAULT_TRANSFORM } from './frameTemplates';
 
 function loadImage(file: File): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
@@ -29,27 +29,44 @@ function roundRectPath(
   ctx.closePath();
 }
 
-function drawCenterCrop(
+function drawTransformedImage(
   ctx: CanvasRenderingContext2D,
   img: HTMLImageElement,
-  dx: number, dy: number, dw: number, dh: number,
-) {
+  dx: number,
+  dy: number,
+  dw: number,
+  dh: number,
+  transform: SlotTransform,
+): void {
+  const { offsetX, offsetY, scale } = transform;
   const srcRatio = img.naturalWidth / img.naturalHeight;
   const dstRatio = dw / dh;
-  let sx = 0, sy = 0, sw = img.naturalWidth, sh = img.naturalHeight;
+
+  let sxBase: number, syBase: number, swBase: number, shBase: number;
   if (srcRatio > dstRatio) {
-    sw = Math.round(img.naturalHeight * dstRatio);
-    sx = Math.round((img.naturalWidth - sw) / 2);
+    swBase = img.naturalHeight * dstRatio;
+    sxBase = (img.naturalWidth - swBase) / 2;
+    syBase = 0;
+    shBase = img.naturalHeight;
   } else {
-    sh = Math.round(img.naturalWidth / dstRatio);
-    sy = Math.round((img.naturalHeight - sh) / 2);
+    shBase = img.naturalWidth / dstRatio;
+    syBase = (img.naturalHeight - shBase) / 2;
+    sxBase = 0;
+    swBase = img.naturalWidth;
   }
+
+  const sw = swBase / scale;
+  const sh = shBase / scale;
+  const sx = sxBase + (swBase - sw) / 2 - offsetX * (swBase / dw);
+  const sy = syBase + (shBase - sh) / 2 - offsetY * (shBase / dh);
+
   ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
 }
 
 export async function exportFrame(
   template: FrameTemplate,
   slotImages: (File | null)[],
+  slotTransforms: SlotTransform[],
   opts: FrameOptionsState,
   previewWidth: number,
 ): Promise<void> {
@@ -97,7 +114,7 @@ export async function exportFrame(
     ctx.save();
     roundRectPath(ctx, x, y, w, h, borderRadius);
     ctx.clip();
-    drawCenterCrop(ctx, img, x, y, w, h);
+    drawTransformedImage(ctx, img, x, y, w, h, slotTransforms[i] ?? DEFAULT_TRANSFORM);
     ctx.restore();
   }
 

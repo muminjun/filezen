@@ -171,7 +171,7 @@ export function FramePage() {
   const handleExport = async () => {
     setIsExporting(true);
     try {
-      await exportFrame(activeTemplate, slotImages, options, previewWidth);
+      await exportFrame(activeTemplate, slotImages, slotTransforms, options, previewWidth);
     } finally {
       setIsExporting(false);
     }
