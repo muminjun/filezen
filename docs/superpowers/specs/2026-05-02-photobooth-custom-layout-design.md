@@ -112,9 +112,9 @@ const [activeTemplate, setActiveTemplate] = useState<FrameTemplate>(
 
 | 핸들러 | 트리거 | 동작 |
 |---|---|---|
-| `handleTemplateChange(id)` | 프리셋 탭 클릭 | 해당 템플릿 deep copy → `activeTemplate` 세팅, `slotImages` 리셋 |
-| `handlePhotoCountChange(n)` | 사진 수 스테퍼 | `buildEqualSlots(n, cols)` → `activeTemplate.slots` 교체, `slotImages` 조정 |
-| `handleColsChange(c)` | 열 수 스테퍼 | `buildEqualSlots(photoCount, c)` → `activeTemplate.slots` 교체, `slotImages` 조정 |
+| `handleTemplateChange(id)` | 프리셋 탭 클릭 | 해당 템플릿 deep copy → `activeTemplate` 세팅, `slotImages` 리셋, `options.orientation`을 `getNaturalOrientation(tmpl)`로 갱신 (기존 동작 유지) |
+| `handlePhotoCountChange(n)` | 사진 수 스테퍼 | `buildEqualSlots(n, cols)` → `activeTemplate.slots` 교체, `activeTemplate.grid`를 `{ cols, rows: Math.ceil(n / cols) }`로 갱신, `slotImages` 조정 |
+| `handleColsChange(c)` | 열 수 스테퍼 | `buildEqualSlots(photoCount, c)` → `activeTemplate.slots` 교체, `activeTemplate.grid`를 `{ cols: c, rows: Math.ceil(photoCount / c) }`로 갱신, `slotImages` 조정 |
 | `handleSlotMerge(a, b)` | GridEditor 클릭 | `mergeSlots(...)` → `activeTemplate.slots` 교체 |
 | `handleSlotSplit(i)` | GridEditor 재클릭 | `splitSlot(...)` → `activeTemplate.slots` 교체 |
 
@@ -157,9 +157,11 @@ interface Props {
 | 파일 | 변경 종류 |
 |---|---|
 | `src/lib/frameTemplates.ts` | 수정 — 프리셋 3개 추가, 헬퍼 함수 3개 추가 |
-| `src/components/frame/FramePage.tsx` | 수정 — `templateId` → `activeTemplate`, 핸들러 4개 추가 |
+| `src/components/frame/FramePage.tsx` | 수정 — `templateId` → `activeTemplate`, 핸들러 추가 (grid·orientation 갱신 포함) |
 | `src/components/frame/FrameOptions.tsx` | 수정 — 레이아웃 섹션(사진 수·열 수 스테퍼) 추가 |
 | `src/components/frame/GridEditor.tsx` | 신규 — 슬롯 병합/분리 에디터 |
+| `src/messages/ko.json` | 수정 — `frame.templates.pb-3`, `pb-9`, `pb-12` 키 추가 |
+| `src/messages/en.json` | 수정 — `frame.templates.pb-3`, `pb-9`, `pb-12` 키 추가 |
 | `src/components/frame/FrameCanvas.tsx` | 유지 |
 | `src/components/frame/FrameSlot.tsx` | 유지 |
 | `src/lib/frameExport.ts` | 유지 |
