@@ -459,6 +459,9 @@
       "pb-2": "2-Shot",
       "pb-4": "4-Shot",
       "pb-6": "6-Shot",
+      "pb-3": "3-Shot",
+      "pb-9": "9-Shot",
+      "pb-12": "12-Shot",
       "social-story": "Story",
       "social-feed-sq": "Feed Square",
       "social-feed-port": "Feed Portrait",
@@ -470,6 +473,9 @@
       "remove": "Remove"
     },
     "options": {
+      "layout": "Layout",
+      "photoCount": "Photos",
+      "cols": "Columns",
       "orientation": "Orientation",
       "portrait": "Portrait",
       "landscape": "Landscape",
