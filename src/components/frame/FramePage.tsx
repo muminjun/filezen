@@ -161,6 +161,11 @@ export function FramePage() {
       [next[a], next[b]] = [next[b], next[a]];
       return next;
     });
+    setSlotTransforms((prev) => {
+      const next = [...prev];
+      [next[a], next[b]] = [next[b], next[a]];
+      return next;
+    });
   };
 
   const handleExport = async () => {
