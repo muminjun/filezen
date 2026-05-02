@@ -57,10 +57,13 @@ function drawTransformedImage(
 
   const sw = swBase / scale;
   const sh = shBase / scale;
-  const sx = sxBase + (swBase - sw) / 2 - offsetX * (swBase / dw);
-  const sy = syBase + (shBase - sh) / 2 - offsetY * (shBase / dh);
+  const sx = sxBase + (swBase - sw) / 2 - offsetX * (sw / dw);
+  const sy = syBase + (shBase - sh) / 2 - offsetY * (sh / dh);
 
-  ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
+  const clampedSx = Math.max(0, Math.min(sx, img.naturalWidth - sw));
+  const clampedSy = Math.max(0, Math.min(sy, img.naturalHeight - sh));
+
+  ctx.drawImage(img, clampedSx, clampedSy, sw, sh, dx, dy, dw, dh);
 }
 
 export async function exportFrame(
