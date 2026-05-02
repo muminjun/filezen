@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import type { SlotDef } from '@/lib/frameTemplates';
 
@@ -13,6 +13,10 @@ interface Props {
 
 export function GridEditor({ slots, grid, onMerge, onSplit }: Props) {
   const [selected, setSelected] = useState<number | null>(null);
+
+  useEffect(() => {
+    setSelected(null);
+  }, [slots]);
 
   const handleClick = (index: number) => {
     const slot = slots[index];
@@ -63,9 +67,12 @@ export function GridEditor({ slots, grid, onMerge, onSplit }: Props) {
       {slots.map((slot, i) => {
         const isMerged = slot.colSpan > 1 || slot.rowSpan > 1;
         return (
-          <div
+          <button
+            type="button"
             key={i}
             onClick={() => handleClick(i)}
+            aria-pressed={!isMerged && selected === i}
+            aria-label={`슬롯 ${i + 1}${isMerged ? ' (병합됨)' : ''}`}
             style={{
               gridColumn: `${slot.col} / span ${slot.colSpan}`,
               gridRow: `${slot.row} / span ${slot.rowSpan}`,
@@ -80,7 +87,7 @@ export function GridEditor({ slots, grid, onMerge, onSplit }: Props) {
             )}
           >
             {i + 1}
-          </div>
+          </button>
         );
       })}
     </div>
