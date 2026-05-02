@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Plus, X } from 'lucide-react';
+import { Plus, RotateCcw, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTranslations } from 'next-intl';
 import type { SlotDef, SlotTransform } from '@/lib/frameTemplates';
@@ -233,9 +233,10 @@ export function FrameSlot({
               <button
                 type="button"
                 onClick={() => onTransformChange(DEFAULT_TRANSFORM)}
-                className="flex-shrink-0 rounded px-1.5 py-0.5 text-xs text-white hover:bg-white/20"
+                title={t('reset')}
+                className="flex-shrink-0 flex items-center justify-center rounded p-1 text-white hover:bg-white/20"
               >
-                {t('reset')}
+                <RotateCcw size={12} />
               </button>
             </div>
           )}
