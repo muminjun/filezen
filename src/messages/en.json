@@ -6,7 +6,8 @@
   "drawer": {
     "images": "Images",
     "files": "Files",
-    "convert": "Convert"
+    "convert": "Convert",
+    "frame": "Frame"
   },
   "upload": {
     "dragDrop": "Drag images here or click to upload",
@@ -341,7 +342,6 @@
   "convert": {
     "tools": {
       "icon": "Icon Generator",
-      "social": "Social Presets",
       "palette": "Color Palette",
       "videoToGif": "Video Converter",
       "ocr": "Text Extraction",
@@ -362,17 +362,6 @@
       "outputLabel": "Select output files",
       "download": "Download Icon Set ZIP",
       "downloading": "Generating...",
-      "selectAll": "Select All",
-      "deselectAll": "Deselect All"
-    },
-    "social": {
-      "empty": "Upload images to resize",
-      "platformLabel": "Platform",
-      "cropMode": "Crop mode",
-      "centerCrop": "Center Crop",
-      "letterBox": "Letter Box",
-      "download": "Download ZIP",
-      "downloading": "Processing...",
       "selectAll": "Select All",
       "deselectAll": "Deselect All"
     },
@@ -459,5 +448,38 @@
     "creating": "Creating PDF…",
     "create": "Create PDF",
     "close": "Close"
+  },
+  "frame": {
+    "tab": "Frame",
+    "categories": {
+      "photobooth": "Photo Booth",
+      "social": "Social"
+    },
+    "templates": {
+      "pb-2": "2-Shot",
+      "pb-4": "4-Shot",
+      "pb-6": "6-Shot",
+      "social-story": "Story",
+      "social-feed-sq": "Feed Square",
+      "social-feed-port": "Feed Portrait",
+      "social-yt": "YouTube Thumbnail",
+      "social-tw": "Twitter Post"
+    },
+    "slot": {
+      "empty": "Add Photo",
+      "remove": "Remove"
+    },
+    "options": {
+      "orientation": "Orientation",
+      "portrait": "Portrait",
+      "landscape": "Landscape",
+      "gapColor": "Gap Color",
+      "gapSize": "Gap Size",
+      "borderRadius": "Corner Radius",
+      "borderColor": "Border Color",
+      "borderWidth": "Border Width"
+    },
+    "export": "Export",
+    "exporting": "Processing..."
   }
 }
