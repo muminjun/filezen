@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import {
@@ -139,18 +139,23 @@ export function FramePage() {
     });
   };
 
-  const handleTransformChange = (index: number, t: SlotTransform) => {
+  const handleTransformChange = useCallback((index: number, t: SlotTransform) => {
     setSlotTransforms((prev) => {
       const next = [...prev];
       next[index] = t;
       return next;
     });
-  };
+  }, []);
 
   const handleSlotClear = (index: number) => {
     setSlotImages((prev) => {
       const next = [...prev];
       next[index] = null;
+      return next;
+    });
+    setSlotTransforms((prev) => {
+      const next = [...prev];
+      next[index] = DEFAULT_TRANSFORM;
       return next;
     });
   };
