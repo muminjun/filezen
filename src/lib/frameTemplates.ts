@@ -5,6 +5,18 @@ export interface SlotDef {
   rowSpan: number;
 }
 
+export type SlotTransform = {
+  offsetX: number; // px, 0 = 중앙
+  offsetY: number; // px, 0 = 중앙
+  scale: number;   // 1.0 = 원본 fit, 최대 3.0
+};
+
+export const DEFAULT_TRANSFORM: SlotTransform = {
+  offsetX: 0,
+  offsetY: 0,
+  scale: 1,
+};
+
 export interface FrameTemplate {
   id: string;
   labelKey: string;
