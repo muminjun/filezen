@@ -20,6 +20,7 @@ import { exportFrame } from '@/lib/frameExport';
 import { FrameTemplateSelector } from './FrameTemplateSelector';
 import { FrameCanvas } from './FrameCanvas';
 import { FrameOptions } from './FrameOptions';
+import { FrameOptionsSheet } from './FrameOptionsSheet';
 
 export function FramePage() {
   const t = useTranslations('frame');
@@ -195,7 +196,7 @@ export function FramePage() {
       />
 
       <div className="flex flex-1 flex-col overflow-hidden sm:flex-row">
-        <div className="flex flex-1 items-center justify-center overflow-hidden p-4">
+        <div className="flex flex-1 items-center justify-center overflow-hidden p-4 sm:pb-4 pb-[46vh]">
           <FrameCanvas
             template={activeTemplate}
             slotImages={normalizedSlotImages}
@@ -212,7 +213,7 @@ export function FramePage() {
           />
         </div>
 
-        <div className="flex flex-shrink-0 flex-col overflow-y-auto border-t border-border sm:w-64 sm:border-l sm:border-t-0">
+        <div className="hidden sm:flex flex-shrink-0 flex-col overflow-y-auto sm:w-64 sm:border-l sm:border-t-0">
           <FrameOptions
             template={activeTemplate}
             options={options}
@@ -236,6 +237,21 @@ export function FramePage() {
               {isExporting ? t('exporting') : t('export')}
             </button>
           </div>
+        </div>
+
+        {/* Mobile bottom sheet */}
+        <div className="sm:hidden">
+          <FrameOptionsSheet
+            template={activeTemplate}
+            options={options}
+            onChange={setOptions}
+            onPhotoCountChange={handlePhotoCountChange}
+            onColsChange={handleColsChange}
+            onMerge={handleSlotMerge}
+            onSplit={handleSlotSplit}
+            isExporting={isExporting}
+            onExport={handleExport}
+          />
         </div>
       </div>
     </div>
