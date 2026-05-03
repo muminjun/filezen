@@ -43,14 +43,15 @@ export function FrameOptionsSheet({
       snapPoints={[...SNAP_POINTS]}
       activeSnapPoint={snap}
       setActiveSnapPoint={(s) => {
-          if (s !== null && (SNAP_POINTS as readonly (string | number)[]).includes(s)) {
-            setSnap(s as SnapPoint);
-          }
-        }}
+        if (s !== null && (SNAP_POINTS as readonly (string | number)[]).includes(s)) {
+          setSnap(s as SnapPoint);
+        }
+      }}
       fadeFromIndex={2}
     >
       <Drawer.Portal>
         <Drawer.Content
+          aria-label={t('options')}
           className="fixed bottom-14 left-0 right-0 z-40 flex flex-col rounded-t-2xl border-t border-border bg-card shadow-lg focus:outline-none h-[calc(88vh-3.5rem)]"
         >
           <div role="presentation" className="flex justify-center pt-3 pb-1 flex-shrink-0">
