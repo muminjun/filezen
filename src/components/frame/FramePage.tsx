@@ -239,7 +239,7 @@ export function FramePage() {
           </div>
         </div>
 
-        {/* Mobile bottom sheet */}
+        
         <div className="sm:hidden">
           <FrameOptionsSheet
             template={activeTemplate}
