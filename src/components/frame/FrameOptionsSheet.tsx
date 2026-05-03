@@ -34,12 +34,15 @@ export function FrameOptionsSheet({
   onExport,
 }: FrameOptionsSheetProps) {
   const t = useTranslations('frame');
+  const [open, setOpen] = useState(true);
   const [snap, setSnap] = useState<SnapPoint>(0.45);
 
   return (
     <Drawer.Root
-      open
+      open={open}
+      onOpenChange={(v) => { if (!v) setOpen(true); }}
       modal={false}
+      dismissible={false}
       snapPoints={[...SNAP_POINTS]}
       activeSnapPoint={snap}
       setActiveSnapPoint={(s) => {
@@ -52,8 +55,11 @@ export function FrameOptionsSheet({
       <Drawer.Portal>
         <Drawer.Content
           aria-label={t('tab')}
+          aria-describedby={undefined}
           className="fixed bottom-14 left-0 right-0 z-40 flex flex-col rounded-t-2xl border-t border-border bg-card shadow-lg focus:outline-none h-[calc(88vh-3.5rem)]"
         >
+          <Drawer.Title className="sr-only">{t('tab')}</Drawer.Title>
+
           <div role="presentation" className="flex justify-center pt-3 pb-1 flex-shrink-0">
             <div aria-hidden="true" className="h-1 w-10 rounded-full bg-muted-foreground/30" />
           </div>
