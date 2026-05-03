@@ -1,6 +1,7 @@
 'use client';
 
 import { Rect, Circle } from 'react-konva';
+import type Konva from 'konva';
 import type { ShapeEl } from '@/types/canvas';
 
 interface ShapeElementProps {
@@ -11,6 +12,23 @@ interface ShapeElementProps {
 }
 
 export function ShapeElement({ el, isSelected, onSelect, onChange }: ShapeElementProps) {
+  const handleDragEnd = (e: Konva.KonvaEventObject<DragEvent>) => {
+    onChange({ x: e.target.x(), y: e.target.y() });
+  };
+
+  const handleTransformEnd = (e: Konva.KonvaEventObject<Event>) => {
+    const node = e.target;
+    onChange({
+      x: node.x(),
+      y: node.y(),
+      width: Math.max(10, node.width() * node.scaleX()),
+      height: Math.max(10, node.height() * node.scaleY()),
+      rotation: node.rotation(),
+    });
+    node.scaleX(1);
+    node.scaleY(1);
+  };
+
   const common = {
     id: el.id,
     rotation: el.rotation,
@@ -21,19 +39,8 @@ export function ShapeElement({ el, isSelected, onSelect, onChange }: ShapeElemen
     draggable: true,
     onClick: onSelect,
     onTap: onSelect,
-    onDragEnd: (e: any) => onChange({ x: e.target.x(), y: e.target.y() }),
-    onTransformEnd: (e: any) => {
-      const node = e.target;
-      onChange({
-        x: node.x(),
-        y: node.y(),
-        width: Math.max(10, node.width() * node.scaleX()),
-        height: Math.max(10, node.height() * node.scaleY()),
-        rotation: node.rotation(),
-      });
-      node.scaleX(1);
-      node.scaleY(1);
-    },
+    onDragEnd: handleDragEnd,
+    onTransformEnd: handleTransformEnd,
   };
 
   if (el.shape === 'circle') {

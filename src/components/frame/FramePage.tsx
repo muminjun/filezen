@@ -20,6 +20,7 @@ import { exportFrame } from '@/lib/frameExport';
 import { FrameTemplateSelector } from './FrameTemplateSelector';
 import { FrameCanvas } from './FrameCanvas';
 import { FrameOptions } from './FrameOptions';
+import { FrameActionBar } from './FrameActionBar';
 
 export function FramePage() {
   const t = useTranslations('frame');
@@ -212,7 +213,7 @@ export function FramePage() {
           />
         </div>
 
-        <div className="flex flex-shrink-0 flex-col overflow-y-auto border-t border-border sm:w-64 sm:border-l sm:border-t-0">
+        <div className="hidden sm:flex flex-shrink-0 flex-col overflow-y-auto sm:w-64 sm:border-l sm:border-t-0">
           <FrameOptions
             template={activeTemplate}
             options={options}
@@ -224,6 +225,7 @@ export function FramePage() {
           />
           <div className="px-4 pb-4">
             <button
+              type="button"
               onClick={handleExport}
               disabled={isExporting}
               className={cn(
@@ -237,6 +239,18 @@ export function FramePage() {
             </button>
           </div>
         </div>
+
+        <FrameActionBar
+          template={activeTemplate}
+          options={options}
+          onChange={setOptions}
+          onPhotoCountChange={handlePhotoCountChange}
+          onColsChange={handleColsChange}
+          onMerge={handleSlotMerge}
+          onSplit={handleSlotSplit}
+          isExporting={isExporting}
+          onExport={handleExport}
+        />
       </div>
     </div>
   );

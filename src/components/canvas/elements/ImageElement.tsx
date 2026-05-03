@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Image as KonvaImage } from 'react-konva';
 import type { ImageEl } from '@/types/canvas';
 
@@ -13,7 +13,6 @@ interface ImageElementProps {
 
 export function ImageElement({ el, isSelected, onSelect, onChange }: ImageElementProps) {
   const [img, setImg] = useState<HTMLImageElement | null>(null);
-  const ref = useRef<any>(null);
 
   useEffect(() => {
     const image = new window.Image();
@@ -23,7 +22,6 @@ export function ImageElement({ el, isSelected, onSelect, onChange }: ImageElemen
 
   return (
     <KonvaImage
-      ref={ref}
       id={el.id}
       image={img ?? undefined}
       x={el.x}

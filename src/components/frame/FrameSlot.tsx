@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Plus, RotateCcw, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTranslations } from 'next-intl';
@@ -43,8 +43,11 @@ export function FrameSlot({
   const t = useTranslations('frame.slot');
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [preview, setPreview] = useState<string | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
+  const preview = useMemo(() => {
+    if (!file) return null;
+    return URL.createObjectURL(file);
+  }, [file]);
 
   // 드래그 추적용 ref (렌더 불필요)
   const dragRef = useRef<{
@@ -60,11 +63,10 @@ export function FrameSlot({
   useEffect(() => { transformRef.current = transform; }, [transform]);
 
   useEffect(() => {
-    if (!file) { setPreview(null); return; }
-    const url = URL.createObjectURL(file);
-    setPreview(url);
-    return () => URL.revokeObjectURL(url);
-  }, [file]);
+    return () => {
+      if (preview) URL.revokeObjectURL(preview);
+    };
+  }, [preview]);
 
   // 편집 모드일 때 외부 클릭 감지 → onEditEnd
   useEffect(() => {

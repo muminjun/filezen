@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import dynamic from 'next/dynamic';
 import type Konva from 'konva';
@@ -28,6 +28,16 @@ function computeScale(containerW: number, containerH: number, canvasW: number, c
   return Math.min(scaleX, scaleY, 1);
 }
 
+function getTopbarPortalTarget() {
+  if (typeof document === 'undefined') return null;
+  return document.getElementById('topbar-portal-target');
+}
+
+function subscribeTopbarPortalTarget(onStoreChange: () => void) {
+  const frame = requestAnimationFrame(onStoreChange);
+  return () => cancelAnimationFrame(frame);
+}
+
 export function CanvasPage() {
   const { state, push, undo, redo, canUndo, canRedo } = useCanvasHistory();
   const stageRef = useRef<Konva.Stage | null>(null);
@@ -36,11 +46,11 @@ export function CanvasPage() {
   const [showBackground, setShowBackground] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
-  const [portalTarget, setPortalTarget] = useState<Element | null>(null);
-
-  useEffect(() => {
-    setPortalTarget(document.getElementById('topbar-portal-target'));
-  }, []);
+  const portalTarget = useSyncExternalStore(
+    subscribeTopbarPortalTarget,
+    getTopbarPortalTarget,
+    () => null,
+  );
 
   useEffect(() => {
     const update = () => {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import type { SavedAdjustment, ColorAdjustment } from '@/lib/types';
 
 const LS_RECENT = 'filezen_recent_adjustments';
@@ -25,13 +25,8 @@ function loadJson<T>(key: string, fallback: T): T {
 }
 
 export function useSavedAdjustments() {
-  const [saved, setSaved]   = useState<SavedAdjustment[]>([]);
-  const [recent, setRecent] = useState<ColorAdjustment[]>([]);
-
-  useEffect(() => {
-    setSaved(loadJson<SavedAdjustment[]>(LS_SAVED, []));
-    setRecent(loadJson<ColorAdjustment[]>(LS_RECENT, []));
-  }, []);
+  const [saved, setSaved]   = useState<SavedAdjustment[]>(() => loadJson<SavedAdjustment[]>(LS_SAVED, []));
+  const [recent, setRecent] = useState<ColorAdjustment[]>(() => loadJson<ColorAdjustment[]>(LS_RECENT, []));
 
   const saveAdjustment = useCallback((name: string, adjustment: ColorAdjustment) => {
     const entry: SavedAdjustment = {

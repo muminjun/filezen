@@ -2,7 +2,7 @@
 // Real-ESRGAN x2/x4 업스케일링 - onnxruntime-web 기반
 // 모델 소스: Hugging Face onnx-community
 
-import type { InferenceSession, Tensor } from 'onnxruntime-web';
+import type { InferenceSession } from 'onnxruntime-web';
 
 const MODEL_URLS: Record<2 | 4, string> = {
   2: 'https://huggingface.co/onnx-community/realesrgan-x2plus/resolve/main/model.onnx',
@@ -12,7 +12,7 @@ const MODEL_URLS: Record<2 | 4, string> = {
 const TILE_SIZE    = 128;
 const TILE_OVERLAP = 8;
 
-let sessions: Partial<Record<2 | 4, InferenceSession>> = {};
+const sessions: Partial<Record<2 | 4, InferenceSession>> = {};
 
 async function getSession(scale: 2 | 4): Promise<InferenceSession> {
   if (sessions[scale]) return sessions[scale]!;

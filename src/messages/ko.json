@@ -484,7 +484,8 @@
       "gapSize": "여백 크기",
       "borderRadius": "모서리 둥글기",
       "borderColor": "테두리 색",
-      "borderWidth": "테두리 두께"
+      "borderWidth": "테두리 두께",
+      "style": "스타일"
     },
     "export": "내보내기",
     "exporting": "처리 중..."

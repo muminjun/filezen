@@ -32,7 +32,8 @@ export function DrawerLayout({ imageTab, fileTab, collageTab, frameTab, convertT
   const { isDragging, fileType } = useGlobalDrop();
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-background">
+    <div className="flex h-screen w-full flex-col overflow-hidden bg-background">
+      <div className="flex flex-1 overflow-hidden min-h-0">
       {/* ── Desktop sidebar ── */}
       <aside className="hidden sm:flex w-14 flex-shrink-0 flex-col items-center border-r border-border bg-card py-4 gap-2">
         <Link
@@ -107,40 +108,42 @@ export function DrawerLayout({ imageTab, fileTab, collageTab, frameTab, convertT
           {activeTab === 'convert' && convertTab}
         </div>
 
-        {/* ── Mobile bottom nav ── */}
-        <nav className="sm:hidden flex flex-shrink-0 items-center justify-around border-t border-border bg-card px-2 pb-safe">
-          <MobileNavItem
-            icon={<ImageIcon size={22} />}
-            label={t('images')}
-            active={activeTab === 'image'}
-            onClick={() => setActiveTab('image')}
-          />
-          <MobileNavItem
-            icon={<FolderIcon size={22} />}
-            label={t('files')}
-            active={activeTab === 'file'}
-            onClick={() => setActiveTab('file')}
-          />
-          <MobileNavItem
-            icon={<LayoutGridIcon size={22} />}
-            label={tc('tab')}
-            active={activeTab === 'collage'}
-            onClick={() => setActiveTab('collage')}
-          />
-          <MobileNavItem
-            icon={<Frame size={22} />}
-            label={tf('tab')}
-            active={activeTab === 'frame'}
-            onClick={() => setActiveTab('frame')}
-          />
-          <MobileNavItem
-            icon={<Wand2 size={22} />}
-            label={t('convert')}
-            active={activeTab === 'convert'}
-            onClick={() => setActiveTab('convert')}
-          />
-        </nav>
       </main>
+      </div>
+
+      {/* ── Mobile bottom nav ── outside main to avoid stacking context issue with sheet portal */}
+      <nav className="sm:hidden z-50 flex flex-shrink-0 items-center justify-around border-t border-border bg-card px-2 pb-safe">
+        <MobileNavItem
+          icon={<ImageIcon size={22} />}
+          label={t('images')}
+          active={activeTab === 'image'}
+          onClick={() => setActiveTab('image')}
+        />
+        <MobileNavItem
+          icon={<FolderIcon size={22} />}
+          label={t('files')}
+          active={activeTab === 'file'}
+          onClick={() => setActiveTab('file')}
+        />
+        <MobileNavItem
+          icon={<LayoutGridIcon size={22} />}
+          label={tc('tab')}
+          active={activeTab === 'collage'}
+          onClick={() => setActiveTab('collage')}
+        />
+        <MobileNavItem
+          icon={<Frame size={22} />}
+          label={tf('tab')}
+          active={activeTab === 'frame'}
+          onClick={() => setActiveTab('frame')}
+        />
+        <MobileNavItem
+          icon={<Wand2 size={22} />}
+          label={t('convert')}
+          active={activeTab === 'convert'}
+          onClick={() => setActiveTab('convert')}
+        />
+      </nav>
       <DropOverlay visible={isDragging} fileType={fileType} />
     </div>
   );

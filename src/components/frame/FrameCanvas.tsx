@@ -34,7 +34,7 @@ export function FrameCanvas({
   return (
     <div
       ref={previewRef}
-      className="w-full max-w-xs sm:max-w-sm"
+      className="max-h-full w-full max-w-xs sm:max-w-sm"
       style={{ aspectRatio: `${ratioW} / ${ratioH}` }}
     >
       <div

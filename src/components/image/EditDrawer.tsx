@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, type SyntheticEvent } from 'react';
 import { useTranslations } from 'next-intl';
 import { X } from 'lucide-react';
 import ReactCrop, { type Crop, type PercentCrop } from 'react-image-crop';
@@ -64,6 +64,7 @@ export function EditDrawer({ isOpen, onClose }: Props) {
     height: initialCrop.height * 100,
   });
   const [showDiscardModal, setShowDiscardModal] = useState(false);
+  const [previewSize, setPreviewSize] = useState({ width: 1920, height: 1080 });
   const dragStartY = useRef<number | null>(null);
   const imgRef     = useRef<HTMLImageElement>(null);
 
@@ -85,7 +86,7 @@ export function EditDrawer({ isOpen, onClose }: Props) {
     } else {
       onClose();
     }
-  }, [hasChanges, onClose]);
+  }, [hasChanges, onClose, setShowDiscardModal]);
 
   const handleDiscard = useCallback(() => {
     setAdjustment({ ...initialAdj });
@@ -99,7 +100,7 @@ export function EditDrawer({ isOpen, onClose }: Props) {
     });
     setShowDiscardModal(false);
     onClose();
-  }, [initialAdj, initialCrop, onClose]);
+  }, [initialAdj, initialCrop, onClose, setAdjustment, setCrop, setCropData, setShowDiscardModal]);
 
   const handleApply = useCallback(() => {
     applyEditToSelected({ colorAdjustment: adjustment, cropData });
@@ -138,7 +139,7 @@ export function EditDrawer({ isOpen, onClose }: Props) {
         setCrop({ unit: '%', x: 0, y: 0, width: 100, height: 100 });
       }
     }
-  }, []);
+  }, [setCrop, setCropData]);
 
   const handleReactCropChange = useCallback((_: Crop, pct: PercentCrop) => {
     setCrop(pct);
@@ -149,7 +150,14 @@ export function EditDrawer({ isOpen, onClose }: Props) {
       width: pct.width / 100,
       height: pct.height / 100,
     }));
-  }, []);
+  }, [setCrop, setCropData]);
+
+  const handlePreviewLoad = useCallback((e: SyntheticEvent<HTMLImageElement>) => {
+    setPreviewSize({
+      width: e.currentTarget.naturalWidth,
+      height: e.currentTarget.naturalHeight,
+    });
+  }, [setPreviewSize]);
 
   const handleHandleTouchStart = useCallback((e: React.TouchEvent) => {
     dragStartY.current = e.touches[0].clientY;
@@ -165,7 +173,7 @@ export function EditDrawer({ isOpen, onClose }: Props) {
         onClose();
       }
     }
-  }, [hasChanges, onClose]);
+  }, [hasChanges, onClose, setShowDiscardModal]);
 
   const handleHandleTouchEnd = useCallback(() => {
     dragStartY.current = null;
@@ -282,6 +290,7 @@ export function EditDrawer({ isOpen, onClose }: Props) {
               ref={imgRef}
               src={previewImage.previewUrl}
               alt="preview"
+              onLoad={handlePreviewLoad}
               style={{
                 filter: cssFilter || undefined,
                 transform: (() => {
@@ -333,8 +342,8 @@ export function EditDrawer({ isOpen, onClose }: Props) {
 
           <ResizeSection
             resizeData={previewImage.resizeData}
-            previewWidth={imgRef.current?.naturalWidth ?? 1920}
-            previewHeight={imgRef.current?.naturalHeight ?? 1080}
+            previewWidth={previewSize.width}
+            previewHeight={previewSize.height}
             onChange={applyResizeToSelected}
           />
 
