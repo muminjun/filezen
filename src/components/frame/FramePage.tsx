@@ -225,6 +225,7 @@ export function FramePage() {
           />
           <div className="px-4 pb-4">
             <button
+              type="button"
               onClick={handleExport}
               disabled={isExporting}
               className={cn(
@@ -239,7 +240,6 @@ export function FramePage() {
           </div>
         </div>
 
-        
         <div className="sm:hidden">
           <FrameOptionsSheet
             template={activeTemplate}
