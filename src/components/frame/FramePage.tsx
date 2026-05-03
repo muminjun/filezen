@@ -20,7 +20,7 @@ import { exportFrame } from '@/lib/frameExport';
 import { FrameTemplateSelector } from './FrameTemplateSelector';
 import { FrameCanvas } from './FrameCanvas';
 import { FrameOptions } from './FrameOptions';
-import { FrameOptionsSheet } from './FrameOptionsSheet';
+import { FrameActionBar } from './FrameActionBar';
 
 export function FramePage() {
   const t = useTranslations('frame');
@@ -196,7 +196,7 @@ export function FramePage() {
       />
 
       <div className="flex flex-1 flex-col overflow-hidden sm:flex-row">
-        <div className="flex flex-1 items-center justify-center overflow-hidden p-4 sm:pb-4 pb-[46vh]">
+        <div className="flex flex-1 items-center justify-center overflow-hidden p-4">
           <FrameCanvas
             template={activeTemplate}
             slotImages={normalizedSlotImages}
@@ -240,19 +240,17 @@ export function FramePage() {
           </div>
         </div>
 
-        <div className="sm:hidden">
-          <FrameOptionsSheet
-            template={activeTemplate}
-            options={options}
-            onChange={setOptions}
-            onPhotoCountChange={handlePhotoCountChange}
-            onColsChange={handleColsChange}
-            onMerge={handleSlotMerge}
-            onSplit={handleSlotSplit}
-            isExporting={isExporting}
-            onExport={handleExport}
-          />
-        </div>
+        <FrameActionBar
+          template={activeTemplate}
+          options={options}
+          onChange={setOptions}
+          onPhotoCountChange={handlePhotoCountChange}
+          onColsChange={handleColsChange}
+          onMerge={handleSlotMerge}
+          onSplit={handleSlotSplit}
+          isExporting={isExporting}
+          onExport={handleExport}
+        />
       </div>
     </div>
   );

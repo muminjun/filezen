@@ -484,7 +484,8 @@
       "gapSize": "Gap Size",
       "borderRadius": "Corner Radius",
       "borderColor": "Border Color",
-      "borderWidth": "Border Width"
+      "borderWidth": "Border Width",
+      "style": "Style"
     },
     "export": "Export",
     "exporting": "Processing..."
