@@ -16,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
+import type { OutputFormat } from '@/lib/types';
 
 const PRESET_DEGREES = [90, 180, 270] as const;
 const ROTATION_LABEL_KEYS = {
@@ -352,7 +353,7 @@ export function BottomActionBar({ onEditClick }: Props) {
         <div className="h-5 w-px flex-shrink-0 bg-border" />
 
         <div className="flex flex-shrink-0 items-center gap-2">
-          <Select value={outputFormat} onValueChange={(val) => setOutputFormat(val as any)}>
+          <Select value={outputFormat} onValueChange={(val) => setOutputFormat(val as OutputFormat)}>
             <SelectTrigger className="h-8 w-[100px] text-xs cursor-pointer">
               <SelectValue placeholder={t('format')}>
                 {outputFormat === 'original'

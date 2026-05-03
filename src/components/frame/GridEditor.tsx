@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import type { SlotDef } from '@/lib/frameTemplates';
 
@@ -12,11 +12,18 @@ interface Props {
 }
 
 export function GridEditor({ slots, grid, onMerge, onSplit }: Props) {
-  const [selected, setSelected] = useState<number | null>(null);
+  const slotsSignature = slots
+    .map((slot) => `${slot.col}:${slot.row}:${slot.colSpan}:${slot.rowSpan}`)
+    .join('|');
+  const [selection, setSelection] = useState<{
+    slotsSignature: string;
+    index: number | null;
+  }>({ slotsSignature, index: null });
 
-  useEffect(() => {
-    setSelected(null);
-  }, [slots]);
+  const selected = selection.slotsSignature === slotsSignature ? selection.index : null;
+  const setSelected = (index: number | null) => {
+    setSelection({ slotsSignature, index });
+  };
 
   const handleClick = (index: number) => {
     const slot = slots[index];
