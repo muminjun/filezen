@@ -42,22 +42,24 @@ export function FrameOptionsSheet({
       modal={false}
       snapPoints={[...SNAP_POINTS]}
       activeSnapPoint={snap}
-      setActiveSnapPoint={(s) => setSnap(s as SnapPoint)}
+      setActiveSnapPoint={(s) => {
+          if (s !== null && (SNAP_POINTS as readonly (string | number)[]).includes(s)) {
+            setSnap(s as SnapPoint);
+          }
+        }}
       fadeFromIndex={2}
     >
       <Drawer.Portal>
         <Drawer.Content
-          className="fixed bottom-14 left-0 right-0 z-40 flex flex-col rounded-t-2xl border-t border-border bg-card shadow-lg focus:outline-none"
-          style={{ height: 'calc(88vh - 3.5rem)' }}
+          className="fixed bottom-14 left-0 right-0 z-40 flex flex-col rounded-t-2xl border-t border-border bg-card shadow-lg focus:outline-none h-[calc(88vh-3.5rem)]"
         >
-          {/* 드래그 핸들 */}
-          <div className="flex justify-center pt-3 pb-1 flex-shrink-0">
-            <div className="h-1 w-10 rounded-full bg-muted-foreground/30" />
+          <div role="presentation" className="flex justify-center pt-3 pb-1 flex-shrink-0">
+            <div aria-hidden="true" className="h-1 w-10 rounded-full bg-muted-foreground/30" />
           </div>
 
-          {/* 내보내기 버튼 — 항상 노출 */}
           <div className="px-4 pt-2 pb-3 flex-shrink-0">
             <button
+              type="button"
               onClick={onExport}
               disabled={isExporting}
               className={cn(
@@ -71,7 +73,6 @@ export function FrameOptionsSheet({
             </button>
           </div>
 
-          {/* 옵션 영역 — 스크롤 가능 */}
           <div className="overflow-y-auto flex-1">
             <FrameOptions
               template={template}
