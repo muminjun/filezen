@@ -196,7 +196,7 @@ export function FramePage() {
       />
 
       <div className="flex flex-1 flex-col overflow-hidden sm:flex-row">
-        <div className="flex flex-1 items-center justify-center overflow-hidden p-4">
+        <div className="flex flex-1 items-center justify-center overflow-hidden p-4" style={{ touchAction: 'none' }}>
           <FrameCanvas
             template={activeTemplate}
             slotImages={normalizedSlotImages}
