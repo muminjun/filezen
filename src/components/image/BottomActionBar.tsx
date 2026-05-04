@@ -64,7 +64,7 @@ export function BottomActionBar({ onEditClick }: Props) {
   return (
     <>
       {/* ── Mobile toolbar ── */}
-      <div className="sm:hidden flex flex-shrink-0 items-center gap-1.5 border-t border-border bg-card px-3 py-2">
+      <div className="sm:hidden flex flex-shrink-0 items-center gap-1.5 border-t border-border bg-card px-3 pt-2 pb-safe">
         {/* Selection badge */}
         <span className={cn(
           'min-w-[28px] rounded-full px-2 py-0.5 text-center text-[11px] font-semibold tabular-nums transition-colors',
@@ -82,7 +82,7 @@ export function BottomActionBar({ onEditClick }: Props) {
               disabled={!hasSelection}
               title={t(ROTATION_LABEL_KEYS[deg])}
               className={cn(
-                'flex items-center gap-0.5 rounded-lg px-2 py-1.5 text-[11px] font-medium transition-all active:scale-95',
+                'flex items-center gap-0.5 rounded-lg px-2 py-2.5 text-[11px] font-medium transition-all active:scale-95',
                 hasSelection
                   ? 'bg-muted text-foreground hover:bg-muted/80'
                   : 'opacity-35 text-muted-foreground cursor-not-allowed'
@@ -99,7 +99,7 @@ export function BottomActionBar({ onEditClick }: Props) {
             disabled={!canUndo}
             title="실행 취소 (Ctrl+Z)"
             className={cn(
-              'flex items-center justify-center rounded-lg px-2 py-1.5 transition-all active:scale-95',
+              'flex items-center justify-center rounded-lg px-2 py-2.5 transition-all active:scale-95',
               canUndo
                 ? 'bg-muted text-foreground hover:bg-muted/80'
                 : 'opacity-35 text-muted-foreground cursor-not-allowed'
@@ -114,7 +114,7 @@ export function BottomActionBar({ onEditClick }: Props) {
             disabled={!canRedo}
             title="다시 실행 (Ctrl+Shift+Z)"
             className={cn(
-              'flex items-center justify-center rounded-lg px-2 py-1.5 transition-all active:scale-95',
+              'flex items-center justify-center rounded-lg px-2 py-2.5 transition-all active:scale-95',
               canRedo
                 ? 'bg-muted text-foreground hover:bg-muted/80'
                 : 'opacity-35 text-muted-foreground cursor-not-allowed'
@@ -129,7 +129,7 @@ export function BottomActionBar({ onEditClick }: Props) {
             disabled={!hasSelection}
             title={t('flipHorizontal')}
             className={cn(
-              'flex items-center justify-center rounded-lg px-2 py-1.5 transition-all active:scale-95',
+              'flex items-center justify-center rounded-lg px-2 py-2.5 transition-all active:scale-95',
               hasSelection
                 ? 'bg-muted text-foreground hover:bg-muted/80'
                 : 'opacity-35 text-muted-foreground cursor-not-allowed'
@@ -144,7 +144,7 @@ export function BottomActionBar({ onEditClick }: Props) {
             disabled={!hasSelection}
             title={t('edit')}
             className={cn(
-              'flex items-center justify-center rounded-lg px-2 py-1.5 transition-all active:scale-95',
+              'flex items-center justify-center rounded-lg px-2 py-2.5 transition-all active:scale-95',
               hasSelection
                 ? 'text-primary border border-primary/30 hover:bg-primary/10'
                 : 'opacity-35 text-muted-foreground cursor-not-allowed border border-border'
@@ -160,7 +160,7 @@ export function BottomActionBar({ onEditClick }: Props) {
           disabled={!hasSelection}
           title={t('bgRemove')}
           className={cn(
-            'flex items-center justify-center rounded-lg px-2 py-1.5 transition-all active:scale-95',
+            'flex items-center justify-center rounded-lg px-2 py-2.5 transition-all active:scale-95',
             hasSelection
               ? 'bg-muted text-foreground hover:bg-muted/80'
               : 'opacity-35 text-muted-foreground cursor-not-allowed',
@@ -175,7 +175,7 @@ export function BottomActionBar({ onEditClick }: Props) {
           disabled={!hasSelection}
           title={t('aiUpscale')}
           className={cn(
-            'flex items-center justify-center rounded-lg px-2 py-1.5 transition-all active:scale-95',
+            'flex items-center justify-center rounded-lg px-2 py-2.5 transition-all active:scale-95',
             hasSelection
               ? 'bg-muted text-foreground hover:bg-muted/80'
               : 'opacity-35 text-muted-foreground cursor-not-allowed',
@@ -190,7 +190,7 @@ export function BottomActionBar({ onEditClick }: Props) {
           disabled={!hasSelection}
           title={t('bgReplace')}
           className={cn(
-            'flex items-center justify-center rounded-lg px-2 py-1.5 transition-all active:scale-95',
+            'flex items-center justify-center rounded-lg px-2 py-2.5 transition-all active:scale-95',
             hasSelection
               ? 'bg-muted text-foreground hover:bg-muted/80'
               : 'opacity-35 text-muted-foreground cursor-not-allowed',
@@ -204,7 +204,7 @@ export function BottomActionBar({ onEditClick }: Props) {
           onClick={downloadAsZip}
           disabled={!hasSelection || isDownloading}
           className={cn(
-            'flex items-center gap-1 rounded-lg px-3 py-1.5 text-[11px] font-semibold transition-all active:scale-95',
+            'flex items-center gap-1 rounded-lg px-3 py-2.5 text-[11px] font-semibold transition-all active:scale-95',
             hasSelection && !isDownloading
               ? 'bg-primary text-primary-foreground'
               : 'bg-muted text-muted-foreground opacity-50 cursor-not-allowed'
@@ -220,7 +220,7 @@ export function BottomActionBar({ onEditClick }: Props) {
           disabled={!hasSelection}
           title={t('imageToPdf')}
           className={cn(
-            'flex items-center gap-1 rounded-lg px-3 py-1.5 text-[11px] font-semibold transition-all active:scale-95',
+            'flex items-center gap-1 rounded-lg px-3 py-2.5 text-[11px] font-semibold transition-all active:scale-95',
             hasSelection
               ? 'bg-muted text-foreground hover:bg-muted/80'
               : 'bg-muted text-muted-foreground opacity-50 cursor-not-allowed'

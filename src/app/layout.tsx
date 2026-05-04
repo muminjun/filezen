@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
@@ -11,6 +11,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "FileZen - Image Converter",
   description: "Convert and resize images instantly. Client-side processing, no uploads.",
+};
+
+export const viewport: Viewport = {
+  viewportFit: 'cover',
 };
 
 export default function RootLayout({

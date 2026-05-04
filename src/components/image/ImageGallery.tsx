@@ -152,7 +152,7 @@ export function ImageGallery() {
                 onDragEnd={onDragEnd}
                 draggable
                 className={cn(
-                  'cursor-move transition-opacity',
+                  'cursor-pointer sm:cursor-move transition-opacity',
                   draggedIndex === index && 'opacity-30'
                 )}
               >
