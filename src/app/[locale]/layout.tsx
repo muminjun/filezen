@@ -16,29 +16,56 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'seo' });
 
+  const baseUrl = 'https://filezen.app';
+
   return {
     title: t('title'),
     description: t('description'),
     keywords: t('keywords'),
+    metadataBase: new URL(baseUrl),
     alternates: {
-      canonical: `/${locale}`,
+      canonical: `${baseUrl}/${locale}`,
       languages: {
-        en: '/en',
-        ko: '/ko',
+        'en': `${baseUrl}/en`,
+        'ko': `${baseUrl}/ko`,
+        'x-default': `${baseUrl}/en`,
       },
     },
     openGraph: {
       title: t('title'),
       description: t('description'),
-      url: `https://filezen.app/${locale}`, // Placeholder URL
+      url: `${baseUrl}/${locale}`,
       siteName: 'FileZen',
       locale: locale === 'ko' ? 'ko_KR' : 'en_US',
       type: 'website',
+      images: [
+        {
+          url: `${baseUrl}/opengraph-image`,
+          width: 1200,
+          height: 630,
+          alt: 'FileZen — All-in-One File Toolkit',
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
       title: t('title'),
       description: t('description'),
+      images: [`${baseUrl}/opengraph-image`],
+    },
+    icons: {
+      icon: '/logo.svg',
+      apple: '/logo.svg',
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
     },
   };
 }
