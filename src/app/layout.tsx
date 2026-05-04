@@ -15,6 +15,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   viewportFit: 'cover',
+  userScalable: false,
 };
 
 export default function RootLayout({
@@ -25,11 +26,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistMono.variable} h-full antialiased`}
+      className={`${geistMono.variable} h-dvh antialiased`}
       style={{ fontFamily: "'SUIT Variable', -apple-system, BlinkMacSystemFont, sans-serif" }}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col">
+      <body className="h-full overflow-hidden flex flex-col">
         <ThemeProvider>
           {children}
         </ThemeProvider>

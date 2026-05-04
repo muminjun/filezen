@@ -64,7 +64,7 @@ export function BottomActionBar({ onEditClick }: Props) {
   return (
     <>
       {/* ── Mobile toolbar ── */}
-      <div className="sm:hidden flex flex-shrink-0 items-center gap-1.5 border-t border-border bg-card px-3 pt-2 pb-safe">
+      <div className="sm:hidden flex flex-shrink-0 items-center gap-1.5 border-t border-border bg-card px-3 pt-2 pb-2">
         {/* Selection badge */}
         <span className={cn(
           'min-w-[28px] rounded-full px-2 py-0.5 text-center text-[11px] font-semibold tabular-nums transition-colors',

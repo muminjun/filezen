@@ -32,7 +32,7 @@ export function DrawerLayout({ imageTab, fileTab, collageTab, frameTab, convertT
   const { isDragging, fileType } = useGlobalDrop();
 
   return (
-    <div className="flex h-screen w-full flex-col overflow-hidden bg-background">
+    <div className="flex h-full w-full flex-col overflow-hidden bg-background">
       <div className="flex flex-1 overflow-hidden min-h-0">
       {/* ── Desktop sidebar ── */}
       <aside className="hidden sm:flex w-14 flex-shrink-0 flex-col items-center border-r border-border bg-card py-4 gap-2">

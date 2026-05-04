@@ -49,7 +49,6 @@ export function FrameSlot({
     return URL.createObjectURL(file);
   }, [file]);
 
-  // 드래그 추적용 ref (렌더 불필요)
   const dragRef = useRef<{
     active: boolean;
     startX: number;
@@ -58,6 +57,11 @@ export function FrameSlot({
     startOffsetY: number;
     moved: boolean;
   }>({ active: false, startX: 0, startY: 0, startOffsetX: 0, startOffsetY: 0, moved: false });
+
+  // 멀티터치 pinch 추적
+  const pointersRef = useRef<Map<number, { x: number; y: number }>>(new Map());
+  const lastPinchDistRef = useRef<number | null>(null);
+  const startScaleRef = useRef<number>(1);
 
   const transformRef = useRef<SlotTransform>(transform);
   useEffect(() => { transformRef.current = transform; }, [transform]);
@@ -89,48 +93,91 @@ export function FrameSlot({
     };
   };
 
-  const handlePointerDown = (e: React.PointerEvent<HTMLImageElement>) => {
+  // 컨테이너에서 포인터 이벤트 처리 (단일 드래그 + 핀치줌 모두)
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!preview) return;
     e.preventDefault();
     e.currentTarget.setPointerCapture(e.pointerId);
-    dragRef.current = {
-      active: true,
-      startX: e.clientX,
-      startY: e.clientY,
-      startOffsetX: transform.offsetX,
-      startOffsetY: transform.offsetY,
-      moved: false,
-    };
-  };
+    pointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
 
-  const handlePointerMove = (e: React.PointerEvent<HTMLImageElement>) => {
-    const d = dragRef.current;
-    if (!d.active) return;
-    const dx = e.clientX - d.startX;
-    const dy = e.clientY - d.startY;
-    if (Math.abs(dx) > 2 || Math.abs(dy) > 2) d.moved = true;
-    if (!d.moved) return;
-
-    const rawX = d.startOffsetX + dx;
-    const rawY = d.startOffsetY + dy;
-    const { maxX, maxY } = getMaxOffset(transform.scale);
-    onTransformChange({
-      ...transform,
-      offsetX: clamp(rawX, -maxX, maxX),
-      offsetY: clamp(rawY, -maxY, maxY),
-    });
-  };
-
-  const handlePointerUp = (e: React.PointerEvent<HTMLImageElement>) => {
-    const d = dragRef.current;
-    if (!d.active) return;
-    e.currentTarget.releasePointerCapture(e.pointerId);
-    if (!d.moved) {
-      // 클릭 판정 → 편집 모드 진입
-      onEditStart();
+    if (pointersRef.current.size === 1) {
+      dragRef.current = {
+        active: true,
+        startX: e.clientX,
+        startY: e.clientY,
+        startOffsetX: transformRef.current.offsetX,
+        startOffsetY: transformRef.current.offsetY,
+        moved: false,
+      };
+      lastPinchDistRef.current = null;
+    } else if (pointersRef.current.size === 2) {
+      // 두 번째 손가락 → pinch 시작, drag 취소
+      dragRef.current.active = false;
+      startScaleRef.current = transformRef.current.scale;
+      const pts = Array.from(pointersRef.current.values());
+      lastPinchDistRef.current = Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts[0].y);
     }
-    dragRef.current.active = false;
   };
 
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!preview) return;
+    e.preventDefault();
+    pointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+    const pts = Array.from(pointersRef.current.values());
+
+    if (pts.length === 2 && lastPinchDistRef.current !== null) {
+      // 핀치줌
+      const dist = Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts[0].y);
+      const ratio = dist / lastPinchDistRef.current;
+      const current = transformRef.current;
+      const newScale = clamp(current.scale * ratio, 1.0, 3.0);
+      const { maxX, maxY } = getMaxOffset(newScale);
+      onTransformChange({
+        scale: newScale,
+        offsetX: clamp(current.offsetX, -maxX, maxX),
+        offsetY: clamp(current.offsetY, -maxY, maxY),
+      });
+      lastPinchDistRef.current = dist;
+    } else if (pts.length === 1 && dragRef.current.active) {
+      // 단일 드래그
+      const dx = e.clientX - dragRef.current.startX;
+      const dy = e.clientY - dragRef.current.startY;
+      if (Math.abs(dx) > 2 || Math.abs(dy) > 2) dragRef.current.moved = true;
+      if (!dragRef.current.moved) return;
+
+      const rawX = dragRef.current.startOffsetX + dx;
+      const rawY = dragRef.current.startOffsetY + dy;
+      const { maxX, maxY } = getMaxOffset(transformRef.current.scale);
+      onTransformChange({
+        ...transformRef.current,
+        offsetX: clamp(rawX, -maxX, maxX),
+        offsetY: clamp(rawY, -maxY, maxY),
+      });
+    }
+  };
+
+  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    e.currentTarget.releasePointerCapture(e.pointerId);
+    const d = dragRef.current;
+    const wasActive = d.active;
+    const wasMoved = d.moved;
+
+    pointersRef.current.delete(e.pointerId);
+
+    if (pointersRef.current.size < 2) {
+      lastPinchDistRef.current = null;
+    }
+
+    if (pointersRef.current.size === 0) {
+      d.active = false;
+      if (wasActive && !wasMoved) {
+        onEditStart();
+      }
+    }
+  };
+
+  // 데스크탑 wheel로 줌
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -175,8 +222,13 @@ export function FrameSlot({
         gridRow: `${slot.row} / span ${slot.rowSpan}`,
         borderRadius: `${borderRadius}px`,
         overflow: 'hidden',
+        touchAction: preview ? 'none' : 'auto',
       }}
       className={cn('relative', isDragOver && 'ring-2 ring-primary ring-inset')}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onPointerCancel={handlePointerUp}
       onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
       onDragLeave={() => setIsDragOver(false)}
       onDrop={handleDrop}
@@ -196,9 +248,6 @@ export function FrameSlot({
             alt=""
             draggable
             onDragStart={handleFileDragStart}
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerUp}
             style={{
               transform: `translate(${transform.offsetX}px, ${transform.offsetY}px) scale(${transform.scale})`,
               transformOrigin: 'center',
@@ -206,7 +255,7 @@ export function FrameSlot({
               height: '100%',
               objectFit: 'cover',
               userSelect: 'none',
-              cursor: 'grab',
+              pointerEvents: 'none',
               display: 'block',
             }}
           />
