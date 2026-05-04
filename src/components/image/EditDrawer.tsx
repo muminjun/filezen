@@ -206,7 +206,7 @@ export function EditDrawer({ isOpen, onClose }: Props) {
           isOpen ? 'translate-x-0' : 'translate-x-full',
           // Mobile overrides
           'max-[680px]:!left-0 max-[680px]:!right-0 max-[680px]:!top-auto',
-          'max-[680px]:!h-[78vh] max-[680px]:!w-full',
+          'max-[680px]:!h-[80dvh] max-[680px]:!w-full',
           'max-[680px]:!rounded-t-[16px]',
           'max-[680px]:!border-l-0 max-[680px]:!border-t max-[680px]:!border-[#2a2a2c]',
           'max-[680px]:!translate-x-0',
@@ -278,7 +278,7 @@ export function EditDrawer({ isOpen, onClose }: Props) {
         )}
 
         {/* Preview area — ReactCrop with color filter */}
-        <div className="flex h-[44vh] flex-shrink-0 items-center justify-center overflow-hidden bg-black max-[680px]:h-[30vh]">
+        <div className="flex h-[44vh] flex-shrink-0 items-center justify-center overflow-hidden bg-black max-[680px]:h-[30dvh]">
           <ReactCrop
             crop={crop}
             onChange={handleReactCropChange}
@@ -302,7 +302,7 @@ export function EditDrawer({ isOpen, onClose }: Props) {
                   return parts.length ? parts.join(' ') : undefined;
                 })(),
               }}
-              className="max-h-[44vh] max-w-full object-contain max-[680px]:max-h-[30vh]"
+              className="max-h-[44vh] max-w-full object-contain max-[680px]:max-h-[30dvh]"
             />
           </ReactCrop>
         </div>
@@ -354,7 +354,7 @@ export function EditDrawer({ isOpen, onClose }: Props) {
         </div>
 
         {/* Footer */}
-        <div className="flex flex-shrink-0 gap-2.5 border-t border-[#2a2a2c] bg-[#1c1c1e] px-5 py-3">
+        <div className="flex flex-shrink-0 gap-2.5 border-t border-[#2a2a2c] bg-[#1c1c1e] px-5 pt-3 pb-safe">
           <button
             onClick={handleApplyToThis}
             className="flex-1 rounded-[10px] bg-[#2c2c2e] py-3 text-[13px] font-semibold text-[#ddd] transition-opacity active:opacity-75"
