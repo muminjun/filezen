@@ -9,12 +9,21 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "FileZen - Image Converter",
-  description: "Convert and resize images instantly. Client-side processing, no uploads.",
+  title: {
+    default: 'FileZen — All-in-One Image, PDF & File Converter',
+    template: '%s | FileZen',
+  },
+  description: 'Convert, edit and process files instantly in your browser. No uploads. Image conversion, PDF editing, photo frames, GIF, OCR, AI upscale & more.',
+  metadataBase: new URL('https://filezen.app'),
+  icons: {
+    icon: '/logo.svg',
+    apple: '/logo.svg',
+  },
 };
 
 export const viewport: Viewport = {
   viewportFit: 'cover',
+  userScalable: false,
 };
 
 export default function RootLayout({
@@ -25,11 +34,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistMono.variable} h-full antialiased`}
+      className={`${geistMono.variable} h-dvh antialiased`}
       style={{ fontFamily: "'SUIT Variable', -apple-system, BlinkMacSystemFont, sans-serif" }}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col">
+      <body className="h-full overflow-hidden flex flex-col">
         <ThemeProvider>
           {children}
         </ThemeProvider>
