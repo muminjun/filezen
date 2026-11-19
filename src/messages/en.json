@@ -305,21 +305,25 @@
     },
     "sign": {
       "title": "Sign PDF",
-      "signaturePad": "Draw your signature",
-      "clear": "Clear",
       "pageLabel": "Insert on page",
-      "sizeLabel": "Signature size",
-      "positionLabel": "Position",
-      "positionHint": "Distance from bottom-left corner (pt)",
-      "x": "X",
-      "y": "Y",
-      "width": "Width",
-      "height": "Height",
+      "placeSignature": "Draw & Place Signature",
+      "signaturePlaced": "Signature placed — ready to apply",
       "apply": "Add Signature & Download",
       "applying": "Processing...",
       "success": "Signature added",
-      "noSignature": "Please draw your signature first",
-      "empty": "Upload a PDF to get started"
+      "empty": "Upload a PDF to get started",
+      "item": "Signature",
+      "modal": {
+        "sign": "Sign",
+        "clear": "Clear",
+        "cancel": "Cancel",
+        "useSignature": "Use signature",
+        "confirm": "Confirm",
+        "delete": "Delete",
+        "signingTitle": "Draw your signature",
+        "signingDescription": "Use your mouse, trackpad, Apple Pencil, or finger.",
+        "emptySignatureHint": "Draw a signature to continue."
+      }
     },
     "extract": {
       "title": "PDF to Images",

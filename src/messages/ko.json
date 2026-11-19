@@ -305,21 +305,25 @@
     },
     "sign": {
       "title": "PDF 서명",
-      "signaturePad": "서명을 그려주세요",
-      "clear": "지우기",
       "pageLabel": "삽입 페이지",
-      "sizeLabel": "서명 크기",
-      "positionLabel": "위치",
-      "positionHint": "좌하단 기준 거리 (pt)",
-      "x": "X",
-      "y": "Y",
-      "width": "가로",
-      "height": "세로",
+      "placeSignature": "서명 그리기 & 배치",
+      "signaturePlaced": "서명 배치 완료 — 적용 가능",
       "apply": "서명 삽입 후 다운로드",
       "applying": "처리 중...",
       "success": "서명 삽입 완료",
-      "noSignature": "서명을 먼저 그려주세요",
-      "empty": "PDF를 업로드하세요"
+      "empty": "PDF를 업로드하세요",
+      "item": "서명",
+      "modal": {
+        "sign": "서명",
+        "clear": "지우기",
+        "cancel": "취소",
+        "useSignature": "이 서명 사용",
+        "confirm": "확인",
+        "delete": "삭제",
+        "signingTitle": "서명을 그려주세요",
+        "signingDescription": "마우스, 트랙패드, Apple Pencil 또는 손가락으로 그릴 수 있어요.",
+        "emptySignatureHint": "서명을 그려야 계속할 수 있어요."
+      }
     },
     "extract": {
       "title": "PDF → 이미지 추출",

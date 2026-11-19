@@ -22,7 +22,7 @@ export async function addPdfWatermark(
   options: PdfWatermarkOptions,
 ): Promise<Uint8Array> {
   const bytes  = new Uint8Array(await file.arrayBuffer());
-  const pdfDoc = await PDFDocument.load(bytes);
+  const pdfDoc = await PDFDocument.load(bytes, { ignoreEncryption: true });
   const font   = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
   const pages  = pdfDoc.getPages();
   const { r, g, b } = hexToRgb(options.color);

@@ -27,7 +27,7 @@ export async function compressPdf(
 
 async function compressLow(file: File): Promise<Uint8Array> {
   const srcBytes = new Uint8Array(await file.arrayBuffer());
-  const doc = await PDFDocument.load(srcBytes);
+  const doc = await PDFDocument.load(srcBytes, { ignoreEncryption: true });
 
   // Strip common metadata fields
   doc.setCreator('');
@@ -50,7 +50,7 @@ async function compressRasterize(
 
   // Load source to get original page dimensions (in points)
   const srcBytes = new Uint8Array(await file.arrayBuffer());
-  const srcDoc = await PDFDocument.load(srcBytes);
+  const srcDoc = await PDFDocument.load(srcBytes, { ignoreEncryption: true });
   const srcPages = srcDoc.getPages();
 
   // Build new PDF with rasterized pages

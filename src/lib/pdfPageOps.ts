@@ -11,7 +11,7 @@ export async function buildModifiedPdf(
   pages: Array<{ originalIndex: number; rotation: number }>
 ): Promise<Uint8Array> {
   const srcBytes = new Uint8Array(await file.arrayBuffer());
-  const srcDoc = await PDFDocument.load(srcBytes);
+  const srcDoc = await PDFDocument.load(srcBytes, { ignoreEncryption: true });
   const newDoc = await PDFDocument.create();
 
   for (const { originalIndex, rotation } of pages) {

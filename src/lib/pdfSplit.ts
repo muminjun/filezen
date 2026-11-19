@@ -9,7 +9,7 @@ async function extractPages(srcDoc: PDFDocument, pageIndices: number[]): Promise
 
 /** Split every page into its own PDF. Returns one Uint8Array per page. */
 export async function splitPdfAll(file: File): Promise<Uint8Array[]> {
-  const srcDoc = await PDFDocument.load(new Uint8Array(await file.arrayBuffer()));
+  const srcDoc = await PDFDocument.load(new Uint8Array(await file.arrayBuffer()), { ignoreEncryption: true });
   const results: Uint8Array[] = [];
   for (let i = 0; i < srcDoc.getPageCount(); i++) {
     results.push(await extractPages(srcDoc, [i]));
@@ -19,7 +19,7 @@ export async function splitPdfAll(file: File): Promise<Uint8Array[]> {
 
 /** Extract only the given page indices (0-based) into a single PDF. */
 export async function splitPdfSelection(file: File, pageIndices: number[]): Promise<Uint8Array> {
-  const srcDoc = await PDFDocument.load(new Uint8Array(await file.arrayBuffer()));
+  const srcDoc = await PDFDocument.load(new Uint8Array(await file.arrayBuffer()), { ignoreEncryption: true });
   return extractPages(srcDoc, pageIndices);
 }
 
@@ -51,7 +51,7 @@ export async function splitPdfByRange(
   file: File,
   rangeStr: string
 ): Promise<Array<{ pages: number[]; bytes: Uint8Array }>> {
-  const srcDoc = await PDFDocument.load(new Uint8Array(await file.arrayBuffer()));
+  const srcDoc = await PDFDocument.load(new Uint8Array(await file.arrayBuffer()), { ignoreEncryption: true });
   const groups = parseRangeString(rangeStr, srcDoc.getPageCount());
   const results: Array<{ pages: number[]; bytes: Uint8Array }> = [];
   for (const group of groups) {
