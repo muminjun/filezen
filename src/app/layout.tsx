@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { SITE_URL } from "@/lib/site";
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -14,7 +15,7 @@ export const metadata: Metadata = {
     template: '%s | FileZen',
   },
   description: 'Convert, edit and process files instantly in your browser. No uploads. Image conversion, PDF editing, photo frames, GIF, OCR, AI upscale & more.',
-  metadataBase: new URL('https://filezen.app'),
+  metadataBase: new URL(SITE_URL),
   icons: {
     icon: `${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/logo.svg`,
     apple: `${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/logo.svg`,

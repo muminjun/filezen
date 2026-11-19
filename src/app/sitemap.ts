@@ -1,25 +1,14 @@
 import { MetadataRoute } from 'next';
+import { locales } from '@/i18n';
+import { SITE_URL } from '@/lib/site';
 
 export const dynamic = 'force-static';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://filezen.app'; // Placeholder
-  const locales = ['en', 'ko'];
-  
-  const entries = locales.flatMap((locale) => [
-    {
-      url: `${baseUrl}/${locale}`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}/${locale}/file`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.8,
-    },
-  ]);
-
-  return entries;
+  return locales.map((locale) => ({
+    url: `${SITE_URL}/${locale}/`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 1,
+  }));
 }

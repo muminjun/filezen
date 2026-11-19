@@ -7,6 +7,7 @@ import { ConvertProvider } from '@/context/ConvertContext';
 import { NextIntlClientProvider } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { locales } from '@/i18n';
+import { SITE_URL } from '@/lib/site';
 import type { ReactNode } from 'react';
 
 export function generateStaticParams() {
@@ -21,31 +22,29 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'seo' });
 
-  const baseUrl = 'https://filezen.app';
-
   return {
     title: t('title'),
     description: t('description'),
     keywords: t('keywords'),
-    metadataBase: new URL(baseUrl),
+    metadataBase: new URL(SITE_URL),
     alternates: {
-      canonical: `${baseUrl}/${locale}`,
+      canonical: `${SITE_URL}/${locale}/`,
       languages: {
-        'en': `${baseUrl}/en`,
-        'ko': `${baseUrl}/ko`,
-        'x-default': `${baseUrl}/en`,
+        'en': `${SITE_URL}/en/`,
+        'ko': `${SITE_URL}/ko/`,
+        'x-default': `${SITE_URL}/en/`,
       },
     },
     openGraph: {
       title: t('title'),
       description: t('description'),
-      url: `${baseUrl}/${locale}`,
+      url: `${SITE_URL}/${locale}/`,
       siteName: 'FileZen',
       locale: locale === 'ko' ? 'ko_KR' : 'en_US',
       type: 'website',
       images: [
         {
-          url: `${baseUrl}/opengraph-image`,
+          url: `${SITE_URL}/og.png`,
           width: 1200,
           height: 630,
           alt: 'FileZen — All-in-One File Toolkit',
@@ -56,7 +55,7 @@ export async function generateMetadata({
       card: 'summary_large_image',
       title: t('title'),
       description: t('description'),
-      images: [`${baseUrl}/opengraph-image`],
+      images: [`${SITE_URL}/og.png`],
     },
     icons: {
       icon: `${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/logo.svg`,

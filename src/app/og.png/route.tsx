@@ -1,10 +1,10 @@
 import { ImageResponse } from 'next/og';
 
 export const dynamic = 'force-static';
-export const size = { width: 1200, height: 630 };
-export const contentType = 'image/png';
 
-export default function OgImage() {
+const size = { width: 1200, height: 630 };
+
+export function GET() {
   return new ImageResponse(
     (
       <div
@@ -88,7 +88,7 @@ export default function OgImage() {
           display: 'flex', alignItems: 'center', gap: '8px',
           color: '#555555', fontSize: '18px',
         }}>
-          <span>filezen.app</span>
+          <span>muminjun.github.io/filezen</span>
           <span style={{ color: '#333333' }}>·</span>
           <span>No uploads · Privacy first · Free</span>
         </div>

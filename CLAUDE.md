@@ -2,7 +2,7 @@
 
 ## 프로젝트 개요
 - **목적**: 이미지 일괄 변환, 최적화 및 포맷 변경 서비스
-- **기술 스택**: Next.js 16, React 19, TypeScript, Tailwind CSS, Vercel
+- **기술 스택**: Next.js 16, React 19, TypeScript, Tailwind CSS, GitHub Pages (정적 export)
 - **현재 단계**: Phase 1 - UI 컴포넌트 및 기본 기능 개발
 
 ## 하네스 프로그래밍 (Harness Programming) 구조

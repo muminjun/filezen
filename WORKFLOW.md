@@ -200,20 +200,16 @@ PR 업데이트됨
 ### 5. 배포할 때 🚀
 
 ```
-main 브랜치로 merge
+main 브랜치로 merge (push)
   ↓
-/vercel:deploy
-  (또는 /vercel:deploy prod)
-  • 배포 실행
-  • 미리보기 URL 생성
+GitHub Actions "Deploy to GitHub Pages" 자동 실행
+  • NEXT_PUBLIC_BASE_PATH=/filezen 으로 정적 빌드 (out/)
+  • GitHub Pages에 배포
   ↓
-테스트 (미리보기)
-  • 미리보기 환경에서 확인
-  • 문제 없으면 프로덕션으로
-  ↓
-/vercel:status
+gh run list -w "Deploy to GitHub Pages"
   • 배포 상태 확인
-  • 완료됨 표시
+  ↓
+https://muminjun.github.io/filezen/ 에서 확인
   ↓
 완료 🎉
 ```
@@ -414,10 +410,8 @@ A: 한번에 모두 고치려고 하지 말고:
 ### 배포할 때 ✅
 
 - [ ] main 브랜치 merge
-- [ ] `/vercel:deploy` 실행
-- [ ] 미리보기 환경에서 테스트
-- [ ] 프로덕션 배포
-- [ ] `/vercel:status` 확인
+- [ ] GitHub Actions "Deploy to GitHub Pages" 성공 확인
+- [ ] https://muminjun.github.io/filezen/ 에서 확인
 
 ---
 

@@ -29,8 +29,9 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Deploy
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+main에 push하면 GitHub Actions(`.github/workflows/deploy-pages.yml`)가 정적 export(`out/`)를 빌드해 GitHub Pages에 배포한다.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- URL: https://muminjun.github.io/filezen/
+- 로컬에서 같은 빌드 확인: `NEXT_PUBLIC_BASE_PATH=/filezen npm run build`
