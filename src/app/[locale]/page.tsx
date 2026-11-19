@@ -5,8 +5,6 @@ import { CanvasPage } from '@/components/canvas/CanvasPage';
 import { FramePage } from '@/components/frame/FramePage';
 import { ConvertPage } from '@/components/convert/ConvertPage';
 
-export const dynamic = 'force-dynamic';
-
 export default function Home() {
   return (
     <DrawerLayout

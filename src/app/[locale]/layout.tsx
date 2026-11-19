@@ -5,8 +5,13 @@ import { ToastProvider } from '@/context/ToastContext';
 import { ToastContainer } from '@/components/ui/Toast';
 import { ConvertProvider } from '@/context/ConvertContext';
 import { NextIntlClientProvider } from 'next-intl';
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { locales } from '@/i18n';
 import type { ReactNode } from 'react';
+
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }));
+}
 
 export async function generateMetadata({
   params,
@@ -54,8 +59,8 @@ export async function generateMetadata({
       images: [`${baseUrl}/opengraph-image`],
     },
     icons: {
-      icon: '/logo.svg',
-      apple: '/logo.svg',
+      icon: `${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/logo.svg`,
+      apple: `${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/logo.svg`,
     },
     robots: {
       index: true,
@@ -78,6 +83,7 @@ export default async function LocaleLayout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  setRequestLocale(locale);
 
   // Dynamically import messages based on locale
   let messages;

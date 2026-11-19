@@ -2,28 +2,19 @@ import createNextIntlPlugin from 'next-intl/plugin';
 
 const withNextIntl = createNextIntlPlugin('./src/i18n.ts');
 
+// GitHub Pages 프로젝트 페이지는 /<repo> 하위 경로에서 서빙된다 (예: /filezen)
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    serverActions: {
-      bodySizeLimit: '50mb',
-    },
-  },
+  output: 'export',
+  basePath,
+  trailingSlash: true,
+  images: { unoptimized: true },
   turbopack: {
     resolveAlias: {
       '@': './src',
     },
-  },
-  async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: [
-          { key: 'Cross-Origin-Opener-Policy',  value: 'same-origin' },
-          { key: 'Cross-Origin-Embedder-Policy', value: 'require-corp' },
-        ],
-      },
-    ];
   },
   webpack: (config) => {
     config.experiments = {

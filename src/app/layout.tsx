@@ -16,8 +16,8 @@ export const metadata: Metadata = {
   description: 'Convert, edit and process files instantly in your browser. No uploads. Image conversion, PDF editing, photo frames, GIF, OCR, AI upscale & more.',
   metadataBase: new URL('https://filezen.app'),
   icons: {
-    icon: '/logo.svg',
-    apple: '/logo.svg',
+    icon: `${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/logo.svg`,
+    apple: `${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/logo.svg`,
   },
 };
 

@@ -40,7 +40,7 @@ export function DrawerLayout({ imageTab, fileTab, collageTab, frameTab, convertT
           href={`/${locale}`}
           className="mb-4 flex h-8 w-8 cursor-pointer items-center justify-center rounded-md bg-primary/10 text-primary transition-transform hover:scale-105 active:scale-95"
         >
-          <img src="/logo.svg" alt="FileZen" className="h-6 w-6" />
+          <img src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/logo.svg`} alt="FileZen" className="h-6 w-6" />
         </Link>
 
         <DrawerItem
@@ -90,7 +90,7 @@ export function DrawerLayout({ imageTab, fileTab, collageTab, frameTab, convertT
         {/* Mobile top bar */}
         <div className="sm:hidden flex flex-shrink-0 items-center justify-between border-b border-border bg-card px-4 py-2.5">
           <Link href={`/${locale}`} className="flex items-center gap-2">
-            <img src="/logo.svg" alt="FileZen" className="h-6 w-6" />
+            <img src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/logo.svg`} alt="FileZen" className="h-6 w-6" />
             <span className="text-sm font-bold tracking-tight">FileZen</span>
           </Link>
           <div className="flex items-center gap-2">

@@ -15,13 +15,7 @@ import { useSavedAdjustments } from '../hooks/useSavedAdjustments';
 import type { ImageFile, AppContextType, ColorAdjustment, CropData, OutputFormat, ResizeData, WatermarkConfig, ImageEditSnapshot } from '../lib/types';
 
 async function heicToJpegBlob(file: File): Promise<Blob> {
-  // 1. Server-side conversion via API route (sharp handles HEVC-encoded iPhone HEIC)
-  const formData = new FormData();
-  formData.append('file', file);
-  const res = await fetch('/api/heic-convert', { method: 'POST', body: formData });
-  if (res.ok) return res.blob();
-
-  // 2. Native browser decoding (Safari natively supports HEIC)
+  // 1. Native browser decoding (Safari natively supports HEIC)
   const nativeOk = await createImageBitmap(file).then(bm => { bm.close(); return true; }).catch(() => false);
   if (nativeOk) {
     const tempUrl = URL.createObjectURL(file);
@@ -45,7 +39,7 @@ async function heicToJpegBlob(file: File): Promise<Blob> {
     });
   }
 
-  // 3. Last resort: heic2any (works for AV1-based HEIF)
+  // 2. Fallback: heic2any (works for AV1-based HEIF)
   const heic2any = (await import('heic2any')).default;
   const result = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.92 });
   return Array.isArray(result) ? result[0] : result;
